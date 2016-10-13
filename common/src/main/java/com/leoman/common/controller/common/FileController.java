@@ -12,10 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,8 +63,6 @@ public class FileController extends CommonController {
         }
     }
 
-
-
     @RequestMapping(value = "/save/images")
     public void saveImage(HttpServletRequest request,
                           HttpServletResponse response,
@@ -77,7 +79,5 @@ public class FileController extends CommonController {
             WebUtil.print(response, new Result(false).msg(e.getMessage()));
         }
     }
-
-
 
 }

@@ -37,7 +37,7 @@ public class House extends BaseEntity{
     private Integer isDealWait;//交房时间是否待定（1-是，0-否）
 
     @Column(name = "property_limit")
-    private Integer propertyLimit;//Integer
+    private Integer propertyLimit;//产权年限
 
     @Column(name = "decorate_type")
     private Integer decorateType;//装修类型：1-毛胚，2-简装，3-精装，4-豪华装修

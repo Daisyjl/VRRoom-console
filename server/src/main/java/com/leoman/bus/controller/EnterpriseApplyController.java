@@ -3,6 +3,7 @@ package com.leoman.bus.controller;
 import com.leoman.bus.entity.EnterpriseApply;
 import com.leoman.bus.service.EnterpriseApplyService;
 import com.leoman.bus.service.impl.EnterpriseApplyServiceImpl;
+import com.leoman.common.controller.common.CommonController;
 import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.common.factory.DataTableFactory;

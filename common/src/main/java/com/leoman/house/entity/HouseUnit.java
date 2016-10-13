@@ -14,6 +14,9 @@ import java.math.BigDecimal;
 @Table(name = "t_house_unit ")
 public class HouseUnit extends BaseEntity {
 
+    @Column(name = "house_id")
+    private Long houseId;//所在楼盘
+
     @Column(name = "name")
     private String name;//户型名称
 
@@ -29,10 +32,10 @@ public class HouseUnit extends BaseEntity {
     @Column(name = "full_view")
     private String fullView;//360全景
 
-    @Column(name = "3d_model_recog_url")
+    @Column(name = "d3_model_recog_url")
     private String d3ModelRecogUrl;//3D模型识别图
 
-    @Column(name = "3d_model_url")
+    @Column(name = "d3_model_url")
     private String d3ModelUrl;//3D模型
 
     @ManyToOne
@@ -40,7 +43,7 @@ public class HouseUnit extends BaseEntity {
     private Image planeImage;//平面图
 
     @ManyToOne
-    @JoinColumn(name = "3d_image_id")
+    @JoinColumn(name = "d3_image_id")
     private Image d3Image;//3d图
 
     public String getName() {
@@ -113,6 +116,14 @@ public class HouseUnit extends BaseEntity {
 
     public void setD3Image(Image d3Image) {
         this.d3Image = d3Image;
+    }
+
+    public Long getHouseId() {
+        return houseId;
+    }
+
+    public void setHouseId(Long houseId) {
+        this.houseId = houseId;
     }
 }
 

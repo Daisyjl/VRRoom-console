@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
-    <title>新增企业</title>
+    <title>新增/编辑户型</title>
     <%@ include file="../inc/new2/css.jsp" %>
 </head>
 
@@ -23,72 +23,32 @@
         <section class="wrapper">
             <!-- page start-->
 
+            <!-- 户型信息 -->
             <div class="row">
                 <div class="col-lg-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            企业
+                            户型信息
                         </header>
                         <div class="panel-body">
-                            <form class="cmxform form-horizontal adminex-form" id="formId" method="post" >
-                                <input id="id" name="id" type="hidden" value="${enterprise.id}">
-                                <input type="hidden" id="provinceId" value="${enterprise.city.province.id}">
-                                <input type="hidden" id="cityId" value="${enterprise.city.id}">
+                            <form class="cmxform form-horizontal adminex-form">
+                                <input name="id" type="hidden" value="${enterprise.id}">
 
+                                <div id="unitDiv">
                                 <div class="form-group">
-                                    <label class="col-sm-1 control-label" >企业名称</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" name="name" value="${enterprise.name}" class="form-control" required/>
+                                    <label class="col-sm-1 control-label">户型：</label>
+                                    <div class="col-sm-5">
+                                        <a href="javascript:void(0);" onclick="$houseUnit.fn.openModal()">
+                                            <img src="${contextPath}/static/images/add.jpg" style="height: 200px; width: 200px; display: inline; margin-bottom: 5px;" border="1"/>
+                                        </a>
                                     </div>
                                 </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >企业账号</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" name="username" value="${enterprise.username}" class="form-control" required/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >企业密码</label>
-                                    <div class="col-sm-6">
-                                        <input type="password" id="password" name="password" value="" class="form-control" required/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >确认密码</label>
-                                    <div class="col-sm-6">
-                                        <input type="password" id="repassword" name="" value="" class="form-control" equalTo="#password" required/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label">省:</label>
-
-                                    <div class="col-sm-1">
-                                        <select id="provinceSelect" style="width: 150px;" class="form-control"></select>
-                                    </div>
-
-                                    <label class="col-sm-1 control-label">市:</label>
-                                    <div class="col-sm-1">
-                                        <select id="citySelect" style="width: 150px;" class="form-control" name="city.id"></select>
-                                    </div>
-                                </div>
-
-                                <span style="display: none;" id="intro">${enterprise.intro}</span>
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >企业简介</label>
-                                    <div class="col-sm-6">
-                                        <script type="text/plain" id="myEditor" name="intro" style="width:1000px;height:240px;"></script>
-                                    </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label"></label>
                                     <div class="col-sm-6">
-                                        <button type="button" onclick="$enterprise.fn.save()" class="btn btn-primary">保存</button>
-                                        <button type="button" class="btn btn-primary" onclick="history.go(-1);">返回</button>
+                                        <button type="button" onclick="$houseUnit.fn.openModal()" class="btn btn-primary"><i class="fa fa-plus"></i> 添加户型</button>
                                     </div>
                                 </div>
                             </form>
@@ -96,13 +56,123 @@
                     </section>
                 </div>
             </div>
+
         </section>
     </div>
     <!-- main content end-->
+
+    <!-- 户型模板 -->
+    <div class="form-group" style="display: none;" id="unitTemplate">
+        <label class="col-sm-1 control-label">户型：</label>
+        <div class="col-sm-5">
+            <a href="javascript:void(0);" onclick="$houseUnit.fn.openModal()">
+                <img src="${contextPath}/static/images/add.jpg" style="height: 200px; width: 200px; display: inline; margin-bottom: 5px;" border="1"/>
+            </a>
+        </div>
+        <div class="col-sm-2">
+            户型名称：
+            建筑面积：
+            参考总价：
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="pwdModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">新增户型</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="cmxform form-horizontal adminex-form" id="unitForm" enctype="multipart/form-data">
+                        <input type="hidden" name="houseId" value="0">
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" ><span style="color: red;">* </span>户型名称：</label>
+                            <div class="col-sm-6">
+                                <input type="text" name="name" value="" class="form-control" required/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" ><span style="color: red;">* </span>户型类型：</label>
+                            <div class="col-sm-6">
+                                <input type="text" name="typeName" value="" class="form-control" required/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" ><span style="color: red;">* </span>面积：</label>
+                            <div class="col-sm-6">
+                                <input type="text" name="totalArea" value="" class="form-control" number-2="true" required/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" >参考总价：</label>
+                            <div class="col-sm-6">
+                                <input type="text" name="totalPrice" value="" class="form-control" number-2="true"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">户型图上传：</label>
+                            <div class="col-sm-5">
+                                <input type="file" name="planeFile" id="planeFile" style="display:none;"/>
+                                <a href="javascript:void(0);" onclick="$('#planeFile').click();">
+                                    <img id="planeImg" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">3d户型图上传：</label>
+                            <div class="col-sm-5">
+                                <input type="file" name="d3File" id="d3File" style="display:none;"/>
+                                <a href="javascript:void(0);" onclick="$('#d3File').click();">
+                                    <img id="d3Img" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" >360全景：</label>
+                            <div class="col-sm-6">
+                                <input type="text" name="name" value="" class="form-control"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" >3D模型识别图：</label>
+                            <div class="col-sm-6">
+                                <input type="file" name="d3ModelRecogFile" class="default" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" >3D模型：</label>
+                            <div class="col-sm-6">
+                                <input type="file" name="d3ModelFile" class="default" />
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" onclick="$houseUnit.fn.saveAddUnit()" class="btn btn-primary">确定</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
 </section>
 <%@ include file="../inc/new2/foot.jsp" %>
 <script>
-    $enterprise = {
+    $houseUnit = {
         v: {
             list: [],
             chart: null,
@@ -111,84 +181,50 @@
         },
         fn: {
             init: function () {
-                $enterprise.fn.initEdior();//初始化编辑器
-
-                $enterprise.fn.getProviceList();//初始化省份列表
-
-                //初始化省份改变事件
-                $('#provinceSelect').change(function () {
-                    $('#cityId').val('');
-
-                    var provinceId = $(this).val();
-                    $enterprise.fn.getCityList(provinceId);
+                $("#planeFile").uploadPreview({
+                    Img: "planeImg",
                 });
 
-                UM.getEditor('myEditor').setContent($("#intro").html());
-            },
-            initEdior : function() {
-                $enterprise.v.um = UM.getEditor('myEditor');
-            },
-            getProviceList: function () {
-                var provinceId = $('#provinceId').val();
-
-                $.post("${contextPath}/common/area/provinceList", null, function (result) {
-                    var list = result.data.object.provinceList;
-                    if (result.status == 0) {
-                        // 获取返回的省份列表信息，并循环绑定到select中
-                        var content = "<option value=''>请选择所在省份</option>";
-                        jQuery.each(list, function (i, item) {
-                            content += "<option value='" + item.id + "'>" + item.name + "</option>";
-                        });
-                        $('#provinceSelect').append(content);
-                    } else {
-                        $leoman.alertMsg(result.msg);
-                    }
-
-                    if (null != provinceId && provinceId != '') {
-                        $('#provinceSelect').val(provinceId);
-                    }
+                $("#d3File").uploadPreview({
+                    Img: "d3Img",
                 });
 
-                var sourceId = 0;
-                if (null == provinceId || provinceId == '') {
-                    sourceId = $('#provinceSelect option:selected').val();
-                } else {
-                    sourceId = provinceId;
-                }
-
-                $enterprise.fn.getCityList(sourceId);
-            },
-            getCityList: function (sourceId) {
-                $('#citySelect').html('');
-
-                $.post("${contextPath}/common/area/cityList", {provinceId: sourceId}, function (result) {
-                    var list = result.data.object.cityList;
-                    if (result.status == 0) {
-                        // 获取返回的城市列表信息，并循环绑定到select中
-                        var content = "<option value=''>请选择所在城市</option>";
-                        jQuery.each(list, function (i, item) {
-                            content += "<option value='" + item.id + "'>" + item.name + "</option>";
-                        });
-                        $('#citySelect').append(content);
-                    } else {
-                        $leoman.alertMsg(result.msg);
+                $.post("${contextPath}/admin/house/unit/list",{'houseId':0},function(result){
+                    if(result.status == 0){
+                        var list = result.data.object.list;
+                        for(var i=0; i < list.length; i++){
+                            console.info(list[i].name);
+                        }
                     }
-
-                    var cityId = $('#cityId').val();
-                    if (null != cityId && cityId != '') {
-                        $('#citySelect').val(cityId);
+                });
+            },
+            openModal : function (){
+                $("#myModal").modal("show");
+            },
+            //保存弹出的新增户型
+            saveAddUnit : function (){
+                $("#unitForm").ajaxSubmit({
+                    url : "${contextPath}/admin/house/unit/saveAdd",
+                    type : "POST",
+                    success : function(result) {
+                        if(result.status == 0) {
+                            $("#myModal").modal("hide");
+                        }
+                        else {
+                            $leoman.alertMsg(result.msg);
+                        }
                     }
                 });
             },
             save : function() {
                 if(!$("#formId").valid()) return;
-                $("#intro").val($enterprise.v.um.getContent());
+                $("#intro").val($houseUnit.v.um.getContent());
                 $("#formId").ajaxSubmit({
-                    url : "${contextPath}/admin/enterprise/save",
+                    url : "${contextPath}/admin/house/unit/saveAdd",
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            window.location.href = "${contextPath}/admin/enterprise/index";
+                            $("#myModal").modal("hide");
                         }
                         else {
                             $leoman.alertMsg(result.msg);
@@ -199,7 +235,7 @@
         }
     }
     $(function () {
-        $enterprise.fn.init();
+        $houseUnit.fn.init();
     })
 </script>
 </body>

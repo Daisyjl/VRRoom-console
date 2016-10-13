@@ -4,8 +4,6 @@ import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
-import com.leoman.enterprise.entity.Enterprise;
-import com.leoman.enterprise.service.EnterpriseService;
 import com.leoman.house.entity.House;
 import com.leoman.house.entity.HouseUnit;
 import com.leoman.house.service.HouseDynamicService;
@@ -14,16 +12,13 @@ import com.leoman.house.service.HouseUnitService;
 import com.leoman.house.service.impl.HouseServiceImpl;
 import com.leoman.image.entity.Image;
 import com.leoman.image.service.UploadImageService;
-import com.leoman.province.entity.Province;
-import com.leoman.province.service.ProvinceService;
 import com.leoman.utils.JsonUtil;
-import com.leoman.utils.Md5Util;
+import com.leoman.utils.UploadUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,27 +29,21 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 楼层管理
- * Created by Daisy on 2016/10/12.
+ * 楼层户型管理
+ * Created by Daisy on 2016/10/13.
  */
 @Controller
-@RequestMapping(value = "admin/house")
-public class HouseController extends GenericEntityController<House,House,HouseServiceImpl> {
+@RequestMapping(value = "admin/house/unit")
+public class HouseUnitController extends GenericEntityController<House,House,HouseServiceImpl> {
 
     @Autowired
     private HouseService houseService;
-
-    @Autowired
-    private HouseDynamicService houseDynamicService;
 
     @Autowired
     private HouseUnitService houseUnitService;
 
     @Autowired
     private UploadImageService uploadImageService;
-
-    @Autowired
-    private EnterpriseService enterpriseService;
 
     @RequestMapping(value = "/index")
     public String index(){
@@ -63,20 +52,24 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
 
     /**
      * 列表
-     * @param draw
-     * @param start
-     * @param length
      * @return
      */
+//    @RequestMapping(value = "/list", method = RequestMethod.POST)
+//    @ResponseBody
+//    public Map<String, Object> list(Integer draw, Integer start, Integer length) {
+//        int pagenum = getPageNum(start, length);
+//        Query query = Query.forClass(HouseUnit.class, houseUnitService);
+//        query.setPagenum(pagenum);
+//        query.setPagesize(length);
+//        Page<HouseUnit> page = houseUnitService.queryPage(query);
+//        return DataTableFactory.fitting(draw, page);
+//    }
+
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> list(Integer draw, Integer start, Integer length) {
-        int pagenum = getPageNum(start, length);
-        Query query = Query.forClass(House.class, houseService);
-        query.setPagenum(pagenum);
-        query.setPagesize(length);
-        Page<House> page = houseService.queryPage(query);
-        return DataTableFactory.fitting(draw, page);
+    public Result list() {
+        List<HouseUnit> list = houseUnitService.findByHouseId(0l);
+        return new Result().success(createMap("list",list));
     }
 
     /**
@@ -91,8 +84,6 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
             House house = houseService.queryByPK(id);
             model.addAttribute("house", house);
         }
-        List<Enterprise> enterpriseList = enterpriseService.queryAll();
-        model.addAttribute("enterpriseList", enterpriseList);
         return "house/house_add";
     }
 
@@ -102,8 +93,8 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
      * @param model
      * @return
      */
-    @RequestMapping(value = "/editBasic/{id}")
-    public String editBasic(@PathVariable("id") Integer id, Model model){
+    @RequestMapping(value = "/edit")
+    public String edit(Long id, Model model){
         if(id != null){
             House house = houseService.queryByPK(id);
             model.addAttribute("house", house);
@@ -117,25 +108,48 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
      * @param model
      * @return
      */
-    @RequestMapping(value = "/editUnit/{id}")
-    public String editUnit(@PathVariable("id") Long id, Model model){
+    @RequestMapping(value = "/editUnit")
+    public String editUnit(Long id, Model model){
         if(id != null){
             House house = houseService.queryByPK(id);
             model.addAttribute("house", house);
         }
-        model.addAttribute("houseId", id);
         return "house/house_edit_unit";
     }
 
     /**
-     * 保存楼盘户型
+     * 保存新增的楼盘户型
      * @param houseUnit
      * @return
      */
-    @RequestMapping(value = "/saveUnit", method = RequestMethod.POST)
-
+    @RequestMapping(value = "/saveAdd", method = RequestMethod.POST)
     @ResponseBody
-    public Result saveUnit(HouseUnit houseUnit) {
+    public Result saveUnit(HouseUnit houseUnit, MultipartRequest multipartRequest) {
+
+        MultipartFile planeFile = multipartRequest.getFile("planeFile");
+        if (null != planeFile) {
+            Image planeImage = uploadImageService.uploadImage(planeFile);
+            houseUnit.setPlaneImage(planeImage);//平面图
+        }
+
+        MultipartFile d3File = multipartRequest.getFile("d3File");
+        if (null != d3File) {
+            Image d3Image = uploadImageService.uploadImage(d3File);
+            houseUnit.setD3Image(d3Image);//3d图片
+        }
+
+        MultipartFile d3ModelRecogFile = multipartRequest.getFile("d3ModelRecogFile");
+        if (null != d3ModelRecogFile) {
+            String d3ModelRecogUrl = uploadImageService.uploadFile(d3ModelRecogFile);
+            houseUnit.setD3ModelRecogUrl(d3ModelRecogUrl);//3D模型识别图
+        }
+
+        MultipartFile d3ModelFile = multipartRequest.getFile("d3ModelFile");
+        if (null != d3ModelFile) {
+            String d3ModelUrl = uploadImageService.uploadFile(d3ModelFile);
+            houseUnit.setD3ModelUrl(d3ModelUrl);//3D模型
+        }
+
         houseUnitService.save(houseUnit);
         return Result.success();
     }
@@ -146,48 +160,13 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
      * @param model
      * @return
      */
-    @RequestMapping(value = "/editDynamic/{id}")
+    @RequestMapping(value = "/editDynamic")
     public String editDynamic(Long id, Model model){
         if(id != null){
             House house = houseService.queryByPK(id);
             model.addAttribute("house", house);
         }
-        model.addAttribute("houseId", id);
         return "house/house_edit_dynamic";
-    }
-
-    /**
-     * 保存新增
-     * @param house
-     * @return
-     */
-    @RequestMapping(value = "/saveAdd", method = RequestMethod.POST)
-    @ResponseBody
-    public Result saveAdd(House house) {
-//        Result result = houseService.save(house);
-//        return result;
-        return null;
-    }
-
-    /**
-     * 保存楼盘的基本信息
-     * @param house
-     * @param multipartRequest
-     * @return
-     */
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
-    @ResponseBody
-    public Result save(House house, MultipartRequest multipartRequest) {
-
-        MultipartFile coverFile = multipartRequest.getFile("coverFile");
-        if (null != coverFile) {
-            Image image = uploadImageService.uploadImage(coverFile);
-            house.setImage(image);
-        }
-
-        houseService.save(house);
-
-        return new Result().success();
     }
 
     /**

@@ -10,6 +10,8 @@ import com.leoman.house.service.HouseUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 楼盘户型
  * Created by Daisy on 2016/10/11.
@@ -20,5 +22,8 @@ public class HouseUnitServiceImpl extends GenericManagerImpl<HouseUnit,HouseUnit
     @Autowired
     protected HouseUnitDao houseUnitDao;
 
-
+    @Override
+    public List<HouseUnit> findByHouseId(Long houseId) {
+        return houseUnitDao.findByHouseId(houseId);
+    }
 }

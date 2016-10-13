@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
-    <title>Dynamic Table</title>
+    <title>楼盘列表</title>
     <%@ include file="../inc/new2/css.jsp" %>
 </head>
 <body class="sticky-header">
@@ -38,11 +38,11 @@
                         <header class="panel-heading">
                             楼盘列表
                             <span class="tools pull-right" style="margin-right: 10px;margin-left: 10px">
-                               <button class="btn btn-info" type="button" onclick="$enterprise.fn.del();" id="deleteBatch" style="display: none">删除</button>
+                               <button class="btn btn-info" type="button" onclick="$house.fn.del();" id="deleteBatch" style="display: none">删除</button>
                             </span>
                             <span class="tools pull-right">
                                <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i>刷新</button>
-                               <button class="btn btn-info" type="button" onclick="$enterprise.fn.add();">新增楼盘</button>
+                               <button class="btn btn-info" type="button" onclick="$house.fn.add();">新增楼盘</button>
                             </span>
                         </header>
                         <div class="panel-body">
@@ -52,7 +52,13 @@
                                     <tr>
                                         <th style="width: 10%;!important;"><input type="checkbox" class="list-parent-check"
                                                    onclick="$leoman.checkAll(this);"/></th>
-                                        <th style="width: 60%;!important;">企业名称</th>
+                                        <th>楼盘名称</th>
+                                        <th>所属企业</th>
+                                        <th>城市</th>
+                                        <th>开盘状态</th>
+                                        <th>房间数</th>
+                                        <th>资料完善度</th>
+                                        <th>添加时间</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
@@ -66,28 +72,27 @@
     </div>
 </section>
 <%@ include file="../inc/new2/foot.jsp" %>
-<%@ include file="../inc/new2/confirm.jsp" %>
 <script>
-    $enterprise = {
+    $house = {
         v: {
             list: [],
             dTable: null
         },
         fn: {
             init: function () {
-                $enterprise.fn.dataTableInit();
+                $house.fn.dataTableInit();
                 $("#c_search").click(function () {
-                    $enterprise.v.dTable.ajax.reload();
+                    $house.v.dTable.ajax.reload();
                 });
             },
             dataTableInit: function () {
-                $enterprise.v.dTable = $leoman.dataTable($('#dataTables'), {
+                $house.v.dTable = $leoman.dataTable($('#dataTables'), {
                     "processing": true,
                     "serverSide": true,
                     "searching": false,
                     "bSort": false,
                     "ajax": {
-                        "url": "${contextPath}/admin/enterprise/list",
+                        "url": "${contextPath}/admin/house/list",
                         "type": "POST"
                     },
                     "columns": [
@@ -98,21 +103,54 @@
                                 return checkbox;
                             }
                         },
+                        {"data": "name"},
+                        {"data": "enterprise.name"},
+                        {"data": "enterprise.city.name"},
                         {
-                            "data": "name",
-                            "sDefaultContent" : ""
+                            "data": "isOpenWait",
+                            "render": function (data) {
+                                var str = data==0?'未开盘':'已开盘';
+                                return str;
+                            }
+                        },
+                        {
+                            "data": "id",
+                            "render": function (data) {
+                                var str = "0";
+                                return str;
+                            }
+                        },
+                        {
+                            "data": "id",
+                            "render": function (data) {
+                                var str = "0%";
+                                return str;
+                            }
+                        },
+                        {
+                            "data": "createDate",
+                            "render": function (data) {
+                                var date = new Date(data);
+                                return date.format('yyyy-MM-dd h:m:s');
+                            }
                         },
                         {
                             "data": "id",
                             "render": function (data, type, row, meta) {
 
-                                    var edit = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$enterprise.fn.add(\'" + data + "\')\">" +
-                                            "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
+                                var editBasic = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$house.fn.editBasic(\'" + data + "\')\">" +
+                                        "<i class='fa fa-pencil-square-o'></i> 编辑基本信息</button>";
 
-                                    var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$enterprise.fn.del(\'" + data + "\')\">" +
-                                            "<i class='fa fa-trash-o'></i> 删除</button>";
+                                var editUnit = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$house.fn.editUnit(\'" + data + "\')\">" +
+                                    "<i class='fa fa-pencil-square-o'></i> 编辑户型</button>";
 
-                                    return edit  + "&nbsp;" + del;
+                                var editDynamic = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$house.fn.editDynamic(\'" + data + "\')\">" +
+                                        "<i class='fa fa-pencil-square-o'></i> 编辑楼盘动态</button>";
+
+                                var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$house.fn.del(\'" + data + "\')\">" +
+                                        "<i class='fa fa-trash-o'></i> 删除</button>";
+
+                                return editBasic  + "&nbsp;" + editUnit  + "&nbsp;" + editDynamic  + "&nbsp;" + del;
 
                             }
                         }
@@ -128,6 +166,15 @@
                     params = "?id=" + id;
                 }
                 window.location.href = "${contextPath}/admin/house/add" + params;
+            },
+            editBasic : function (id){
+                location.href = "${contextPath}/admin/house/editBasic/"+id;
+            },
+            editUnit : function (id){
+                location.href = "${contextPath}/admin/house/editUnit/"+id;
+            },
+            editDynamic : function (id){
+                location.href = "${contextPath}/admin/house/editDynamic/"+id;
             },
             del: function (id) {
                 var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');
@@ -149,7 +196,7 @@
                                 $('#showText').html('删除错误');
                             }else {
                                 $("#deleteBatch").css('display','none');
-                                $enterprise.v.dTable.ajax.reload(null,false);
+                                $house.v.dTable.ajax.reload(null,false);
                             }
                             $("#confirm").modal("hide");
                         }
@@ -159,9 +206,9 @@
             responseComplete: function (result, action) {
                 if (result.status == "0") {
                     if (action) {
-                        $enterprise.v.dTable.ajax.reload(null, false);
+                        $house.v.dTable.ajax.reload(null, false);
                     } else {
-                        $enterprise.v.dTable.ajax.reload();
+                        $house.v.dTable.ajax.reload();
                     }
                     $leoman.notify(result.msg, "success");
                 } else {
@@ -171,7 +218,7 @@
         }
     }
     $(function () {
-        $enterprise.fn.init();
+        $house.fn.init();
     })
 </script>
 </body>
