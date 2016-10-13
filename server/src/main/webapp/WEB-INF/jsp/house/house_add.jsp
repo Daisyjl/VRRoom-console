@@ -32,7 +32,6 @@
                         </header>
                         <div class="panel-body">
                             <form class="cmxform form-horizontal adminex-form" id="formId" method="post" >
-                                <input id="id" name="id" type="hidden" value="${enterprise.id}">
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >楼盘名称：</label>
@@ -53,7 +52,7 @@
                                     <div class="col-sm-2">
                                         <input type="radio" name="isOpenWait" value="0" checked="checked">待定
                                         &nbsp;
-                                        <input type="radio" name="isOpenWait" value="1">指定开盘时间sdfsdf
+                                        <input type="radio" name="isOpenWait" value="1">指定开盘时间
                                     </div>
                                     <div class="col-sm-2">
                                         <input type="text" class="form-control" required/>
@@ -63,49 +62,60 @@
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >开发商：</label>
                                     <div class="col-sm-2">
-                                        <input type="text" name="username" value="${enterprise.username}" class="form-control" />
+                                        <input type="text" name="developers" value="${enterprise.username}" class="form-control" />
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >交房时间：</label>
                                     <div class="col-sm-2">
-                                        <input type="text" name="username" value="${enterprise.username}" class="form-control" required/>
+                                        <input type="radio" name="isDealWait" value="0" checked="checked">待定
+                                        &nbsp;
+                                        <input type="radio" name="isDealWait" value="1">交房时间
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" name="dealTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >产权年限：</label>
                                     <div class="col-sm-2">
-                                        <input type="text" name="username" value="${enterprise.username}" class="form-control" required/>
+                                        <input type="text" name="propertyLimit" value="${coupon.discountPercent}" class="form-control" number-0="true"/>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >装修类型：</label>
                                     <div class="col-sm-2">
-                                        <input type="text" name="username" value="${enterprise.username}" class="form-control" required/>
+                                        <select class="form-control input-sm" name="decorateType">
+                                            <option value="">---请选择---</option>
+                                            <option value="1">毛胚</option>
+                                            <option value="2">简装</option>
+                                            <option value="3">精装</option>
+                                            <option value="4">豪华装修</option>
+                                        </select>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >容积率：</label>
                                     <div class="col-sm-2">
-                                        <input type="text" name="username" value="${enterprise.username}" class="form-control" required/>
+                                        <input type="text" name="plotTatio" value="${coupon.discountPercent}" class="form-control" number-2="true"/>%
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >绿化比例：</label>
                                     <div class="col-sm-2">
-                                        <input type="text" name="username" value="${enterprise.username}" class="form-control" required/>
+                                        <input type="text" name="greening" value="${coupon.discountPercent}" class="form-control" number-2="true"/>%
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >总户数：</label>
                                     <div class="col-sm-2">
-                                        <input type="text" name="username" value="${enterprise.username}" class="form-control" required/>
+                                        <input type="text" name="householdNum" value="${coupon.discountPercent}" class="form-control" number-0="true"/>%
                                     </div>
                                 </div>
 
@@ -203,6 +213,7 @@
     <!-- main content end-->
 </section>
 <%@ include file="../inc/new2/foot.jsp" %>
+<script src="http://api.map.baidu.com/api?v=2.0&ak=pcExWaLfoopv7vZ5hO1B8ej8"></script>
 <script>
     $enterprise = {
         v: {
@@ -213,7 +224,17 @@
         },
         fn: {
             init: function () {
-
+                $('.form_datetime').datetimepicker({
+                    language: 'zh-CN',
+                    weekStart: 1,
+                    todayBtn: 1,
+                    autoclose: 1,
+                    todayHighlight: 1,
+                    startView: 'hour',
+                    forceParse: 0,
+                    showMeridian: false,
+                    format: 'hh:ii'
+                });
             },
             initEdior : function() {
                 $enterprise.v.um = UM.getEditor('myEditor');
