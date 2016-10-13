@@ -53,7 +53,7 @@
                                     <div class="col-sm-2">
                                         <input type="radio" name="isOpenWait" value="0" checked="checked">待定
                                         &nbsp;
-                                        <input type="radio" name="isOpenWait" value="1">指定开盘时间
+                                        <input type="radio" name="isOpenWait" value="1">指定开盘时间sdfsdf
                                     </div>
                                     <div class="col-sm-2">
                                         <input type="text" class="form-control" required/>
