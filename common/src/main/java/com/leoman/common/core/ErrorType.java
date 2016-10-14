@@ -6,6 +6,7 @@ package com.leoman.common.core;
 public enum ErrorType {
 
     ERROR_CODE_0001("服务器异常", 1),
+    ERROR_CODE_0002("登录超时，请重新登录", 2),
     ERROR_CODE_0003("找不到用户", 3),
     ERROR_CODE_0004("验证码错误", 4),
     ERROR_CODE_0005("旧密码错误", 5),

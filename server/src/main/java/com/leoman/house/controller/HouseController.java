@@ -147,13 +147,33 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
      * @return
      */
     @RequestMapping(value = "/editDynamic/{id}")
-    public String editDynamic(Long id, Model model){
-        if(id != null){
-            House house = houseService.queryByPK(id);
-            model.addAttribute("house", house);
-        }
+    public String editDynamic(@PathVariable("id") Long id, Model model){
         model.addAttribute("houseId", id);
         return "house/house_edit_dynamic";
+    }
+
+    /**
+     * 跳转编辑相册页面
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/editAlbum/{id}")
+    public String editAlbum(@PathVariable("id") Long id, Model model){
+        model.addAttribute("houseId", id);
+        return "house/house_edit_album";
+    }
+
+    /**
+     * 跳转编辑相册页面
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/editAlbumImage/{houseId}_{albumId}")
+    public String editAlbumImage(@PathVariable("houseId") Long houseId,@PathVariable("albumId") Long albumId, Model model){
+        model.addAttribute("houseId", houseId);
+        model.addAttribute("albumId", albumId);
+        return "house/house_edit_album_image";
     }
 
     /**

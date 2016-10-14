@@ -55,6 +55,9 @@
 
 <script src="${contextPath}/html/js/uploadPreview.js"></script>
 
+<!--dropzone-->
+<script src="${contextPath}/static/html/js/dropzone/dropzone.js"></script>
+
 <!-- editor -->
 <script type="text/javascript" charset="utf-8" src="${contextPath}/static/umeditor/js/umeditor.config.js"></script>
 <%@ include file="uneditor-import.jsp" %>

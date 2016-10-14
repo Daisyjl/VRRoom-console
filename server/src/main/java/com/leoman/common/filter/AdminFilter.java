@@ -1,5 +1,7 @@
 package com.leoman.common.filter;
 
+import com.leoman.common.core.ErrorType;
+import com.leoman.common.core.Result;
 import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.common.logger.Logger;
 import com.leoman.entity.Constant;
@@ -75,7 +77,7 @@ public class AdminFilter implements Filter {
         String xRequested = httpRequest.getHeader("X-Requested-With");
         if (xRequested != null && xRequested.indexOf("XMLHttpRequest") != -1) {
             httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            WebUtil.print(httpResponse, "重新登录！");
+            WebUtil.print(httpResponse, new Result().failure(ErrorType.ERROR_CODE_0002));//重新登录
         } else {
             httpResponse.sendRedirect(contextPath + "/admin/login");
         }

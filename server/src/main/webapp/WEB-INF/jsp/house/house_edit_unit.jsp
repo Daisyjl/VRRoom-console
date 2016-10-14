@@ -34,23 +34,26 @@
                             <form class="cmxform form-horizontal adminex-form">
                                 <input name="id" type="hidden" value="${enterprise.id}">
 
-                                <div id="unitDiv">
                                 <div class="form-group">
+                                    <label class="col-sm-1 control-label"></label>
+                                    <div class="col-sm-6">
+                                        <button type="button" onclick="$houseUnit.fn.openModal()" class="btn btn-primary"><i class="fa fa-plus"></i> 添加户型</button>
+                                        <button type="button" onclick="$houseUnit.fn.back()" class="btn btn-primary"><i class="fa fa-reply"></i> 返回</button>
+                                    </div>
+                                </div>
+
+                                <div id="unitDiv">
+                                <%--<div class="form-group">
                                     <label class="col-sm-1 control-label">户型：</label>
                                     <div class="col-sm-5">
                                         <a href="javascript:void(0);" onclick="$houseUnit.fn.openModal()">
                                             <img src="${contextPath}/static/images/add.jpg" style="height: 200px; width: 200px; display: inline; margin-bottom: 5px;" border="1"/>
                                         </a>
                                     </div>
-                                </div>
+                                </div>--%>
                                 </div>
 
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label"></label>
-                                    <div class="col-sm-6">
-                                        <button type="button" onclick="$houseUnit.fn.openModal()" class="btn btn-primary"><i class="fa fa-plus"></i> 添加户型</button>
-                                    </div>
-                                </div>
+
                             </form>
                         </div>
                     </section>
@@ -64,15 +67,22 @@
     <!-- 户型模板 -->
     <div class="form-group" style="display: none;" id="unitTemplate">
         <label class="col-sm-1 control-label">户型：</label>
-        <div class="col-sm-5">
-            <a href="javascript:void(0);" onclick="$houseUnit.fn.openModal()">
-                <img src="${contextPath}/static/images/add.jpg" style="height: 200px; width: 200px; display: inline; margin-bottom: 5px;" border="1"/>
-            </a>
+        <div class="col-sm-2">
+            <img src="" style="height: 200px; width: 200px; display: inline; margin-bottom: 5px;" border="1"/>
         </div>
         <div class="col-sm-2">
-            户型名称：
-            建筑面积：
-            参考总价：
+            <div class="form-group">
+                户型名称：
+            </div>
+            <div class="form-group">
+                建筑面积：
+            </div>
+            <div class="form-group">
+                参考总价：
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" onclick="" class="btn btn-primary"><i class="fa fa-minus"></i> 移除</button>
         </div>
     </div>
 
@@ -86,7 +96,7 @@
                 </div>
                 <div class="modal-body">
                     <form class="cmxform form-horizontal adminex-form" id="unitForm" enctype="multipart/form-data">
-                        <input type="hidden" name="houseId" value="0">
+                        <input type="hidden" name="houseId" value="${house.id}">
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label" ><span style="color: red;">* </span>户型名称：</label>
@@ -139,7 +149,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label" >360全景：</label>
                             <div class="col-sm-6">
-                                <input type="text" name="name" value="" class="form-control"/>
+                                <input type="text" name="fullView" value="" class="form-control"/>
                             </div>
                         </div>
 
@@ -161,7 +171,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" onclick="$houseUnit.fn.saveAddUnit()" class="btn btn-primary">确定</button>
+                    <button type="button" onclick="$houseUnit.fn.saveAddUnit()" class="btn btn-primary">保存</button>
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -189,11 +199,21 @@
                     Img: "d3Img",
                 });
 
-                $.post("${contextPath}/admin/house/unit/list",{'houseId':0},function(result){
+                $("#unitDiv").empty();
+                $.post("${contextPath}/admin/house/unit/list",{'houseId':"${house.id}"},function(result){
                     if(result.status == 0){
                         var list = result.data.object.list;
                         for(var i=0; i < list.length; i++){
-                            console.info(list[i].name);
+                            var unitTemplate = $("#unitTemplate").clone().removeAttr("id");
+                            unitTemplate.find("label").text("户型"+(i+1)+"：");
+                            unitTemplate.find("img").prop("src",list[i].planeImage.path);
+                            unitTemplate.find(".form-group").eq(0).text("户型名称："+list[i].name);
+                            unitTemplate.find(".form-group").eq(1).text("建筑面积："+list[i].totalArea);
+                            unitTemplate.find(".form-group").eq(2).text("参考总价："+list[i].totalPrice);
+                            unitTemplate.find("button").attr("onclick","$houseUnit.fn.delete("+list[i].id+")");
+                            unitTemplate.show();
+                            $("#unitDiv").append(unitTemplate);
+
                         }
                     }
                 });
@@ -208,7 +228,7 @@
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            $("#myModal").modal("hide");
+                            window.location.reload();
                         }
                         else {
                             $leoman.alertMsg(result.msg);
@@ -231,6 +251,20 @@
                         }
                     }
                 });
+            },
+            delete : function (id){
+                $leoman.alertConfirm("您确定要删除该户型吗？",function(){
+                    $.post("${contextPath}/admin/house/unit/delete",{'id':id},function(result){
+                        if(result.status != 0){
+                            window.location.reload();
+                        }else{
+                            $leoman.alertMsg(result.msg);
+                        }
+                    });
+                });
+            },
+            back : function(){
+                window.location.href = "${contextPath}/admin/house/index";
             }
         }
     }

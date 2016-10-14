@@ -66,4 +66,6 @@
 <link href="${contextPath}/static/html/css/style.css" rel="stylesheet">
 <link href="${contextPath}/static/html/css/style-responsive.css" rel="stylesheet">
 
+<link href="${contextPath}/static/html/js/dropzone/css/dropzone.css" rel="stylesheet"/>
+
 

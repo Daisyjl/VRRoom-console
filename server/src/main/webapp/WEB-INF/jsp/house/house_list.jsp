@@ -50,7 +50,7 @@
                                 <table class="display table table-bordered table-striped" id="dataTables" width="100%">
                                     <thead>
                                     <tr>
-                                        <th style="width: 10%;!important;"><input type="checkbox" class="list-parent-check"
+                                        <th><input type="checkbox" class="list-parent-check"
                                                    onclick="$leoman.checkAll(this);"/></th>
                                         <th>楼盘名称</th>
                                         <th>所属企业</th>
@@ -138,19 +138,31 @@
                             "data": "id",
                             "render": function (data, type, row, meta) {
 
-                                var editBasic = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$house.fn.editBasic(\'" + data + "\')\">" +
+                                var editBasic = "<button title='编辑基本信息' class='btn btn-primary btn-circle edit' onclick=\"$house.fn.editBasic(\'" + data + "\')\">" +
                                         "<i class='fa fa-pencil-square-o'></i> 编辑基本信息</button>";
 
-                                var editUnit = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$house.fn.editUnit(\'" + data + "\')\">" +
+                                var editUnit = "<button title='编辑户型' class='btn btn-primary btn-circle edit' onclick=\"$house.fn.editUnit(\'" + data + "\')\">" +
                                     "<i class='fa fa-pencil-square-o'></i> 编辑户型</button>";
 
-                                var editDynamic = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$house.fn.editDynamic(\'" + data + "\')\">" +
+                                var editFloor = "<button title='编辑楼层信息' class='btn btn-primary btn-circle edit' onclick=\"$house.fn.editFloor(\'" + data + "\')\">" +
+                                        "<i class='fa fa-pencil-square-o'></i> 编辑楼层信息</button>";
+
+                                var editRidgepole = "<button title='编辑楼层信息' class='btn btn-primary btn-circle edit' onclick=\"$house.fn.editRidgepole(\'" + data + "\')\">" +
+                                        "<i class='fa fa-pencil-square-o'></i> 编辑楼</button>";
+
+                                var editAlbum = "<button title='编辑楼层相册' class='btn btn-primary btn-circle edit' onclick=\"$house.fn.editAlbum(\'" + data + "\')\">" +
+                                        "<i class='fa fa-pencil-square-o'></i> 编辑楼层相册</button>";
+
+                                var editDynamic = "<button title='编辑楼盘动态' class='btn btn-primary btn-circle edit' onclick=\"$house.fn.editDynamic(\'" + data + "\')\">" +
                                         "<i class='fa fa-pencil-square-o'></i> 编辑楼盘动态</button>";
+
+                                var editRoom = "<button title='编辑房间状态' class='btn btn-primary btn-circle edit' onclick=\"$house.fn.editRoom(\'" + data + "\')\">" +
+                                        "<i class='fa fa-pencil-square-o'></i> 编辑房间状态</button>";
 
                                 var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$house.fn.del(\'" + data + "\')\">" +
                                         "<i class='fa fa-trash-o'></i> 删除</button>";
 
-                                return editBasic  + "&nbsp;" + editUnit  + "&nbsp;" + editDynamic  + "&nbsp;" + del;
+                                return editBasic + "&nbsp;" + editUnit + "&nbsp;" + editFloor + "&nbsp;" + editRidgepole+ "&nbsp;" + editAlbum+ "&nbsp;" + editDynamic+ "&nbsp;" + editRoom  + "&nbsp;" + del;
 
                             }
                         }
@@ -167,13 +179,32 @@
                 }
                 window.location.href = "${contextPath}/admin/house/add" + params;
             },
+            //编辑基本信息
             editBasic : function (id){
                 location.href = "${contextPath}/admin/house/editBasic/"+id;
             },
+            //编辑户型信息
             editUnit : function (id){
                 location.href = "${contextPath}/admin/house/editUnit/"+id;
             },
+            //编辑楼层信息
+            editFloor : function (id){
+                location.href = "${contextPath}/admin/house/editUnit/"+id;
+            },
+            //编辑楼栋
+            editRidgepole : function (id){
+                location.href = "${contextPath}/admin/house/editUnit/"+id;
+            },
+            //编辑楼层相册
+            editAlbum : function (id){
+                location.href = "${contextPath}/admin/house/editAlbum/"+id;
+            },
+            //编辑楼层动态
             editDynamic : function (id){
+                location.href = "${contextPath}/admin/house/editDynamic/"+id;
+            },
+            //编辑房间状态
+            editRoom : function (id){
                 location.href = "${contextPath}/admin/house/editDynamic/"+id;
             },
             del: function (id) {

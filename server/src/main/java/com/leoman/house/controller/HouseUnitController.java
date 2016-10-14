@@ -4,6 +4,7 @@ import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
+import com.leoman.entity.Configue;
 import com.leoman.house.entity.House;
 import com.leoman.house.entity.HouseUnit;
 import com.leoman.house.service.HouseDynamicService;
@@ -37,84 +38,26 @@ import java.util.Map;
 public class HouseUnitController extends GenericEntityController<House,House,HouseServiceImpl> {
 
     @Autowired
-    private HouseService houseService;
-
-    @Autowired
     private HouseUnitService houseUnitService;
 
     @Autowired
     private UploadImageService uploadImageService;
 
-    @RequestMapping(value = "/index")
-    public String index(){
-        return "house/house_list";
-    }
-
     /**
      * 列表
      * @return
      */
-//    @RequestMapping(value = "/list", method = RequestMethod.POST)
-//    @ResponseBody
-//    public Map<String, Object> list(Integer draw, Integer start, Integer length) {
-//        int pagenum = getPageNum(start, length);
-//        Query query = Query.forClass(HouseUnit.class, houseUnitService);
-//        query.setPagenum(pagenum);
-//        query.setPagesize(length);
-//        Page<HouseUnit> page = houseUnitService.queryPage(query);
-//        return DataTableFactory.fitting(draw, page);
-//    }
-
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
-    public Result list() {
-        List<HouseUnit> list = houseUnitService.findByHouseId(0l);
+    public Result list(Long houseId) {
+        List<HouseUnit> list = houseUnitService.findByHouseId(houseId);
+        for (HouseUnit hu:list) {
+            if(hu.getPlaneImage() != null){
+                hu.getPlaneImage().setPath(Configue.getUploadUrl()+hu.getPlaneImage().getPath());
+            }
+        }
+
         return new Result().success(createMap("list",list));
-    }
-
-    /**
-     * 跳转新增页面
-     * @param id
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/add")
-    public String add(Long id, Model model){
-        if(id != null){
-            House house = houseService.queryByPK(id);
-            model.addAttribute("house", house);
-        }
-        return "house/house_add";
-    }
-
-    /**
-     * 跳转编辑基本信息页面
-     * @param id
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/edit")
-    public String edit(Long id, Model model){
-        if(id != null){
-            House house = houseService.queryByPK(id);
-            model.addAttribute("house", house);
-        }
-        return "house/house_edit";
-    }
-
-    /**
-     * 跳转编辑楼盘户型页面
-     * @param id
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/editUnit")
-    public String editUnit(Long id, Model model){
-        if(id != null){
-            House house = houseService.queryByPK(id);
-            model.addAttribute("house", house);
-        }
-        return "house/house_edit_unit";
     }
 
     /**
@@ -155,46 +98,24 @@ public class HouseUnitController extends GenericEntityController<House,House,Hou
     }
 
     /**
-     * 跳转编辑基本页面页面
-     * @param id
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/editDynamic")
-    public String editDynamic(Long id, Model model){
-        if(id != null){
-            House house = houseService.queryByPK(id);
-            model.addAttribute("house", house);
-        }
-        return "house/house_edit_dynamic";
-    }
-
-    /**
      * 删除
-     * @param id
-     * @param ids
      * @return
      */
-    @RequestMapping(value = "/del", method = RequestMethod.POST)
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public Integer del(Long id,String ids) {
-        if (id==null && StringUtils.isBlank(ids)){
-            return 1;
-        }
-        try {
-            if(id!=null){
-                houseService.delete(houseService.queryByPK(id));
-            }else {
-                Long[] ss = JsonUtil.json2Obj(ids,Long[].class);
-                for (Long _id : ss) {
-                    houseService.delete(houseService.queryByPK(_id));
-                }
+    public Result delete(Long id) {
+
+        /*String[] idArr = JsonUtil.json2Obj(ids,String[].class);
+        for (String id : idArr) {
+            if(StringUtils.isNotEmpty(id)){
+                houseUnitService.deleteByPK(Long.valueOf(id));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 1;
+        }*/
+        HouseUnit hu = houseUnitService.queryByPK(id);
+        if(hu != null){
+            houseUnitService.delete(hu);
         }
-        return 0;
+        return new Result().success();
     }
 
 

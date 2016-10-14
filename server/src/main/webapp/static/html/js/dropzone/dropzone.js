@@ -426,6 +426,7 @@ require.register("dropzone/lib/dropzone.js", function(exports, require, module){
 
     Dropzone.prototype.defaultOptions = {
       url: null,
+      addRemoveLinks:true,
       parallelUploads: 2,
       maxFilesize: 256,
       paramName: "file",
@@ -703,6 +704,7 @@ require.register("dropzone/lib/dropzone.js", function(exports, require, module){
       for (_i = 0, _len = files.length; _i < _len; _i++) {
         file = files[_i];
         _results.push(this.addFile(file));
+        _results.push(this.removeFile(file));
       }
       return _results;
     };
