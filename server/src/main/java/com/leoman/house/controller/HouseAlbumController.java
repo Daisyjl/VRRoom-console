@@ -9,8 +9,11 @@ import com.leoman.house.entity.*;
 import com.leoman.house.service.HouseAlbumImageService;
 import com.leoman.house.service.HouseAlbumService;
 import com.leoman.house.service.HouseDynamicService;
+import com.leoman.house.service.HouseService;
 import com.leoman.house.service.impl.HouseAlbumServiceImpl;
 import com.leoman.house.service.impl.HouseServiceImpl;
+import com.leoman.image.entity.Image;
+import com.leoman.image.service.UploadImageService;
 import com.leoman.utils.DateUtils;
 import com.leoman.utils.JsonUtil;
 import org.apache.commons.lang.StringUtils;
@@ -22,6 +25,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -42,6 +47,41 @@ public class HouseAlbumController extends GenericEntityController<HouseAlbum,Hou
     @Autowired
     private HouseAlbumImageService houseAlbumImageService;
 
+    @Autowired
+    private UploadImageService uploadImageService;
+
+    @Autowired
+    private HouseService houseService;
+
+
+    /**
+     * 跳转编辑相册页面
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/edit/{id}")
+    public String editAlbum(@PathVariable("id") Long id, Model model){
+        model.addAttribute("houseId", id);
+        return "house/house_edit_album";
+    }
+
+    /**
+     * 跳转编辑相册页面
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/editImage/{houseId}_{albumId}")
+    public String editAlbumImage(@PathVariable("houseId") Long houseId,@PathVariable("albumId") Long albumId, Model model){
+
+        HouseAlbum album = houseAlbumService.queryByPK(albumId);
+        model.addAttribute("album",album);
+
+        House house = houseService.queryByPK(houseId);
+        model.addAttribute("house",house);
+        return "house/house_edit_album_image";
+    }
+
     /**
      * 列表
      * @return
@@ -53,6 +93,10 @@ public class HouseAlbumController extends GenericEntityController<HouseAlbum,Hou
         for (HouseAlbum ha:list) {
             List<HouseAlbumImage> imageList = houseAlbumImageService.findImageNum(houseId, ha.getId());
             ha.setImageNum(imageList==null?0l:imageList.size());
+            if(imageList != null && imageList.size() > 0){
+                Image image = imageList.get(0).getImage();
+                ha.setCoverUrl(Configue.getUploadUrl() + image.getPath());
+            }
         }
 
         return new Result().success(createMap("list",list));
@@ -86,6 +130,42 @@ public class HouseAlbumController extends GenericEntityController<HouseAlbum,Hou
         }
 
         return new Result().success();
+    }
+
+    /**
+     * 列表
+     * @return
+     */
+    @RequestMapping(value = "/imageList", method = RequestMethod.POST)
+    @ResponseBody
+    public Result imageList(Long houseId, Long albumId) {
+        List<HouseAlbumImage> list = houseAlbumImageService.findImageNum(houseId, albumId);
+        for (HouseAlbumImage hai:list) {
+            if(hai.getImage() != null){
+                hai.getImage().setPath(Configue.getUploadUrl() + hai.getImage().getPath());
+            }
+        }
+
+        return new Result().success(createMap("list",list));
+    }
+
+    @RequestMapping(value = "/saveImage", method = RequestMethod.POST)
+    @ResponseBody
+    public Result saveImage(HouseAlbumImage albumImage, MultipartRequest multipartRequest) {
+
+        List<MultipartFile> files = multipartRequest.getFiles("file");
+        if(files != null){
+            for (MultipartFile file:files) {
+                HouseAlbumImage hai = new HouseAlbumImage();
+                hai.setAlbum(albumImage.getAlbum());
+                hai.setHouseId(albumImage.getHouseId());
+                Image image = uploadImageService.uploadImage(file);
+                hai.setImage(image);
+                houseAlbumImageService.save(hai);
+            }
+        }
+
+        return Result.success();
     }
 
 

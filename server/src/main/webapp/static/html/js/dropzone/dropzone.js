@@ -704,7 +704,6 @@ require.register("dropzone/lib/dropzone.js", function(exports, require, module){
       for (_i = 0, _len = files.length; _i < _len; _i++) {
         file = files[_i];
         _results.push(this.addFile(file));
-        _results.push(this.removeFile(file));
       }
       return _results;
     };
@@ -713,7 +712,7 @@ require.register("dropzone/lib/dropzone.js", function(exports, require, module){
       if (file.size > this.options.maxFilesize * 1024 * 1024) {
         return done("File is too big (" + (Math.round(file.size / 1024 / 10.24) / 100) + "MB). Max filesize: " + this.options.maxFilesize + "MB");
       } else {
-        return this.options.accept.call(this, file, done);
+        return this.options.accept.call(this, file, done);;
       }
     };
 

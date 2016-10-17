@@ -189,7 +189,7 @@
             },
             //编辑楼层信息
             editFloor : function (id){
-                location.href = "${contextPath}/admin/house/editUnit/"+id;
+                location.href = "${contextPath}/admin/house/floor/editType/"+id;
             },
             //编辑楼栋
             editRidgepole : function (id){
@@ -197,7 +197,7 @@
             },
             //编辑楼层相册
             editAlbum : function (id){
-                location.href = "${contextPath}/admin/house/editAlbum/"+id;
+                location.href = "${contextPath}/admin/house/album/edit/"+id;
             },
             //编辑楼层动态
             editDynamic : function (id){

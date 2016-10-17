@@ -7,7 +7,9 @@ import com.leoman.common.service.Query;
 import com.leoman.enterprise.entity.Enterprise;
 import com.leoman.enterprise.service.EnterpriseService;
 import com.leoman.house.entity.House;
+import com.leoman.house.entity.HouseAlbum;
 import com.leoman.house.entity.HouseUnit;
+import com.leoman.house.service.HouseAlbumService;
 import com.leoman.house.service.HouseDynamicService;
 import com.leoman.house.service.HouseService;
 import com.leoman.house.service.HouseUnitService;
@@ -46,6 +48,9 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
 
     @Autowired
     private HouseDynamicService houseDynamicService;
+
+    @Autowired
+    private HouseAlbumService houseAlbumService;
 
     @Autowired
     private HouseUnitService houseUnitService;
@@ -152,29 +157,6 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
         return "house/house_edit_dynamic";
     }
 
-    /**
-     * 跳转编辑相册页面
-     * @param id
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/editAlbum/{id}")
-    public String editAlbum(@PathVariable("id") Long id, Model model){
-        model.addAttribute("houseId", id);
-        return "house/house_edit_album";
-    }
-
-    /**
-     * 跳转编辑相册页面
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/editAlbumImage/{houseId}_{albumId}")
-    public String editAlbumImage(@PathVariable("houseId") Long houseId,@PathVariable("albumId") Long albumId, Model model){
-        model.addAttribute("houseId", houseId);
-        model.addAttribute("albumId", albumId);
-        return "house/house_edit_album_image";
-    }
 
     /**
      * 保存新增

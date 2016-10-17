@@ -43,9 +43,6 @@
 
                                 <div class="form-group" id="albumDiv">
 
-                                <%--<div>
-
-                                </div>--%>
                                 </div>
 
 
@@ -61,7 +58,7 @@
 
     <!-- 模板 -->
     <div class="col-sm-2" style="display: none;margin-bottom: 10px;" id="albumTemplate">
-        <img src="" style="height: 200px; width: 200px; display: inline; margin-bottom: 5px;" border="1" onclick=""/>
+        <img src="" style="height: 200px; width: 200px; display: inline; margin-bottom: 5px;cursor: pointer;" border="1" onclick=""/>
         <label class="col-sm-6 control-label">样板间(2张)</label>
     </div>
 
@@ -77,22 +74,14 @@
         },
         fn: {
             init: function () {
-                /*$("#planeFile").uploadPreview({
-                    Img: "planeImg",
-                });
 
-                $("#d3File").uploadPreview({
-                    Img: "d3Img",
-                });
-*/
                 $("#albumDiv").empty();
                 $.post("${contextPath}/admin/house/album/list",{'houseId':"${houseId}"},function(result){
                     if(result.status == 0){
                         var list = result.data.object.list;
                         for(var i=0; i < list.length; i++){
-                            console.info(list[i].name);
                             var albumTemplate = $("#albumTemplate").clone().removeAttr("id");
-//                            albumTemplate.find("img").prop("src",list[i].image.path);
+                            albumTemplate.find("img").attr("src",list[i].coverUrl);
                             albumTemplate.find("img").attr("onclick","$houseAlbum.fn.editImage("+list[i].id+")");
                             albumTemplate.find("label").text(list[i].name+"("+list[i].imageNum+"张)");
                             albumTemplate.show();
@@ -103,7 +92,7 @@
                 });
             },
             editImage : function(id){
-                window.location.href = "${contextPath}/admin/house/editAlbumImage/${houseId}_"+id;
+                window.location.href = "${contextPath}/admin/house/album/editImage/${houseId}_"+id;
             },
             openModal : function (){
                 $("#myModal").modal("show");

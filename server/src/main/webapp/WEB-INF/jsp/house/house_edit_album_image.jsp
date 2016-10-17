@@ -31,21 +31,42 @@
                             楼盘相册图片
                         </header>
                         <div class="panel-body">
-                            <form class="cmxform form-horizontal adminex-form">
-                                <input name="id" type="hidden" value="${enterprise.id}">
+                            <form class="cmxform form-horizontal adminex-form" id="formId">
+                                <input name="houseId" type="hidden" value="${house.id}">
+                                <input name="album.id" type="hidden" value="${album.id}">
 
                                 <div class="form-group">
-                                    <label class="col-sm-1 control-label"></label>
+                                    <label class="col-sm-2 control-label">${house.name}--${album.name}</label>
+                                    <%--<div class="col-sm-6">
+                                        <button type="button" onclick="$houseAlbumImage.fn.back()" class="btn btn-primary"><i class="fa fa-reply"></i> 返回</button>
+                                    </div>--%>
+                                </div>
+
+                                <div class="form-group">
+
+                                    <div id="imageDiv">
+
+                                    </div>
+
+                                    <div class="col-sm-2">
+                                        <input type="file" style="display:none;"/>
+                                        <a href="javascript:void(0);" onclick="$houseAlbumImage.fn.addImg(this)">
+                                            <img id="albumImg" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
+                                        </a>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label"></label>
                                     <div class="col-sm-6">
-                                        <button type="button" onclick="$houseUnit.fn.openModal()" class="btn btn-primary"><i class="fa fa-plus"></i> 添加户型</button>
-                                        <button type="button" onclick="$houseUnit.fn.back()" class="btn btn-primary"><i class="fa fa-reply"></i> 返回</button>
+                                        <button type="button" onclick="$houseAlbumImage.fn.save()" class="btn btn-primary"><i class="fa fa-check"></i> 保存</button>
+                                        <button type="button" onclick="$houseAlbumImage.fn.back()" class="btn btn-primary"><i class="fa fa-reply"></i> 返回</button>
                                     </div>
                                 </div>
 
-
-
                             </form>
-                            <form action="${contextPath}/static/html/js/dropzone/upload.php" class="dropzone" id="my-awesome-dropzone"></form>
+                            <%--<form action="${contextPath}/static/html/js/dropzone/upload.php" class="dropzone" id="my-awesome-dropzone"></form>--%>
                         </div>
                     </section>
                 </div>
@@ -56,73 +77,78 @@
     <!-- main content end-->
 
 
+    <div class="col-sm-2" style="display: none;" id="imageTemplate">
+        <input type="file" name="file" style="display:none;"/>
+        <a href="javascript:void(0);">
+            <img id="" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
+        </a>
+        <a href="javascript:void(0);" style="z-index: 10; position: relative; bottom: 70px; left: -23px;" class="axx" onclick="$houseAlbumImage.fn.deleteImage(this)">
+            <img src="${contextPath}/static/images/xx.png" style="height: 16px; width: 16px; display: inline;" border="1"/>
+        </a>
+    </div>
+
+
 
 </section>
 <%@ include file="../inc/new2/foot.jsp" %>
 <script>
-    $houseUnit = {
+    $houseAlbumImage = {
         v: {
             list: [],
             chart: null,
             dTable: null,
             um : null,
+            tempImageId:null
         },
         fn: {
             init: function () {
-                $("#planeFile").uploadPreview({
-                    Img: "planeImg",
-                });
 
-                $("#d3File").uploadPreview({
-                    Img: "d3Img",
-                });
+                $houseAlbumImage.v.tempImageId = 0;
 
-                $("#unitDiv").empty();
-                $.post("${contextPath}/admin/house/unit/list",{'houseId':"${house.id}"},function(result){
+                $houseAlbumImage.fn.initList();
+            },
+            initList : function(){
+                $("#imageDiv").empty();
+                $.post("${contextPath}/admin/house/album/imageList",{'houseId':"${house.id}",'albumId':"${album.id}"},function(result){
                     if(result.status == 0){
                         var list = result.data.object.list;
                         for(var i=0; i < list.length; i++){
-                            var unitTemplate = $("#unitTemplate").clone().removeAttr("id");
-                            unitTemplate.find("label").text("户型"+(i+1)+"：");
-                            unitTemplate.find("img").prop("src",list[i].planeImage.path);
-                            unitTemplate.find(".form-group").eq(0).text("户型名称："+list[i].name);
-                            unitTemplate.find(".form-group").eq(1).text("建筑面积："+list[i].totalArea);
-                            unitTemplate.find(".form-group").eq(2).text("参考总价："+list[i].totalPrice);
-                            unitTemplate.find("button").attr("onclick","$houseUnit.fn.delete("+list[i].id+")");
-                            unitTemplate.show();
-                            $("#unitDiv").append(unitTemplate);
+                            console.info(i);
+                            $houseAlbumImage.fn.addImg(list[i].image.path);
+                        }
+                    }
+                });
+            },
+            addImg : function(path){
+                var template = $("#imageTemplate").clone().removeAttr("id");
+                template.find("input").attr("id","albumFile_"+$houseAlbumImage.v.tempImageId);
+                if(path != "" && path != undefined){
+                    template.find("img").eq(0).attr("src",path);
+                }
+                template.find("img").eq(0).attr("id","albumImg_"+$houseAlbumImage.v.tempImageId);
+                template.find("img").eq(0).parents("a").attr("onclick","$('#"+"albumFile_"+$houseAlbumImage.v.tempImageId+"').click();");
+                template.show();
+                $("#imageDiv").append(template);
 
-                        }
-                    }
+                $("#albumFile_"+$houseAlbumImage.v.tempImageId).uploadPreview({
+                    Img: "albumImg_"+$houseAlbumImage.v.tempImageId//楼盘封面图
                 });
+
+                $("#albumFile_"+$houseAlbumImage.v.tempImageId).click();
+
+                $houseAlbumImage.v.tempImageId++;
             },
-            openModal : function (){
-                $("#myModal").modal("show");
-            },
-            //保存弹出的新增户型
-            saveAddUnit : function (){
-                $("#unitForm").ajaxSubmit({
-                    url : "${contextPath}/admin/house/unit/saveAdd",
-                    type : "POST",
-                    success : function(result) {
-                        if(result.status == 0) {
-                            window.location.reload();
-                        }
-                        else {
-                            $leoman.alertMsg(result.msg);
-                        }
-                    }
-                });
+            deleteImage: function (self) {
+                $(self).parents(".col-sm-2").remove();
             },
             save : function() {
                 if(!$("#formId").valid()) return;
-                $("#intro").val($houseUnit.v.um.getContent());
                 $("#formId").ajaxSubmit({
-                    url : "${contextPath}/admin/house/unit/saveAdd",
+                    url : "${contextPath}/admin/house/album/saveImage",
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            $("#myModal").modal("hide");
+                            window.location.href = "${contextPath}/admin/house/album/edit/${house.id}";
                         }
                         else {
                             $leoman.alertMsg(result.msg);
@@ -130,24 +156,13 @@
                     }
                 });
             },
-            delete : function (id){
-                $leoman.alertConfirm("您确定要删除该户型吗？",function(){
-                    $.post("${contextPath}/admin/house/unit/delete",{'id':id},function(result){
-                        if(result.status != 0){
-                            window.location.reload();
-                        }else{
-                            $leoman.alertMsg(result.msg);
-                        }
-                    });
-                });
-            },
             back : function(){
-                window.location.href = "${contextPath}/admin/house/index";
+                window.location.href = "${contextPath}/admin/house/album/edit/${house.id}";
             }
         }
     }
     $(function () {
-        $houseUnit.fn.init();
+        $houseAlbumImage.fn.init();
     })
 </script>
 </body>

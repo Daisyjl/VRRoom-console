@@ -1,6 +1,7 @@
 package com.leoman.house.entity;
 
 import com.leoman.entity.BaseEntity;
+import com.leoman.image.entity.Image;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +20,9 @@ public class HouseAlbum extends BaseEntity{
     private String name;//相册名称
 
     @Transient
+    private String coverUrl;
+
+    @Transient
     private Long imageNum;
 
     public String getName() {
@@ -35,5 +39,13 @@ public class HouseAlbum extends BaseEntity{
 
     public void setImageNum(Long imageNum) {
         this.imageNum = imageNum;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
     }
 }
