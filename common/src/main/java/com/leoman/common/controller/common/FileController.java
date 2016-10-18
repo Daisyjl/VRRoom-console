@@ -80,4 +80,46 @@ public class FileController extends CommonController {
         }
     }
 
+    @RequestMapping("/addTempImage")
+    @ResponseBody
+    public Image addTempImage(ServletRequest request, MultipartRequest multipartRequest) {
+        Image image = new Image();
+
+        try {
+            MultipartFile multipartFile = multipartRequest.getFile("tempImage");
+
+            // 验证图片格式
+            String originalFileName = multipartFile.getOriginalFilename().toLowerCase();
+            String fileType = originalFileName.substring(originalFileName.lastIndexOf("."));
+
+            List<String> list = new ArrayList<String>();
+            list.add(".jpg");
+            list.add(".gif");
+            list.add(".jpeg");
+            list.add(".png");
+            list.add(".bmp");
+
+            if (!list.contains(fileType)) {
+                return image;
+            }
+
+            String url = uploadImageService.uploadFile(multipartFile);
+            image.setPath(url);
+
+            imageService.create(image);
+            image.setPath(Configue.getUploadUrl()+url);
+
+            // 使用线程更新图片的宽高信息
+            /*GetImageInfo getImageInfo = new GetImageInfo();
+            getImageInfo.setImage(image);
+            getImageInfo.setKey(url);
+            getImageInfo.run();*/
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return image;
+    }
+
+
 }

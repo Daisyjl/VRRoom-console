@@ -1,8 +1,12 @@
 package com.leoman.house.service;
 
+import com.leoman.common.core.Result;
 import com.leoman.common.service.GenericManager;
 import com.leoman.house.entity.HouseAlbum;
 import com.leoman.house.entity.HouseFloorType;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 楼盘楼层类型
@@ -10,6 +14,8 @@ import com.leoman.house.entity.HouseFloorType;
  */
 public interface HouseFloorTypeService extends GenericManager<HouseFloorType> {
 
-    public HouseFloorType findByHouseId(Long houseId);
+    public List<HouseFloorType> findByHouseId(Long houseId);
+
+    public Result saveFloor(List<Map> list);
 
 }

@@ -125,6 +125,12 @@ public class HouseUnit extends BaseEntity {
     public void setHouseId(Long houseId) {
         this.houseId = houseId;
     }
+
+    public HouseUnit(){}
+
+    public HouseUnit(Long id) {
+        super.setId(id);
+    }
 }
 
 

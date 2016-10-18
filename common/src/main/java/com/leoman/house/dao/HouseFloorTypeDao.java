@@ -5,6 +5,8 @@ import com.leoman.house.entity.HouseAlbum;
 import com.leoman.house.entity.HouseFloorType;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 /**
  * 楼盘楼层类型
  * Created by Daisy on 2016/10/17.
@@ -12,5 +14,5 @@ import org.springframework.data.jpa.repository.Query;
 public interface HouseFloorTypeDao extends IBaseJpaRepository<HouseFloorType> {
 
     @Query("select a from HouseFloorType a where a.houseId = ?1")
-    public HouseFloorType findByHouseId(Long houseId);
+    public List<HouseFloorType> findByHouseId(Long houseId);
 }

@@ -12,6 +12,7 @@ import com.leoman.house.service.impl.HouseAlbumServiceImpl;
 import com.leoman.house.service.impl.HouseFloorTypeServiceImpl;
 import com.leoman.image.entity.Image;
 import com.leoman.image.service.UploadImageService;
+import com.leoman.utils.HttpRequestUtil;
 import com.leoman.utils.JsonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 楼层楼层管理
@@ -35,14 +39,7 @@ import java.util.List;
 public class HouseFloorController extends GenericEntityController<HouseFloorType,HouseFloorType,HouseFloorTypeServiceImpl> {
 
     @Autowired
-    private UploadImageService uploadImageService;
-
-    @Autowired
     private HouseFloorTypeService floorTypeService;
-
-    @Autowired
-    private HouseFloorTypeUnitService floorTypeUnitService;
-
 
     /**
      * 跳转编辑楼层类型页面
@@ -63,22 +60,23 @@ public class HouseFloorController extends GenericEntityController<HouseFloorType
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
     public Result list(Long houseId) {
-        List<HouseFloorType> list = floorTypeService.queryAll();
+        List<HouseFloorType> list = floorTypeService.findByHouseId(houseId);
 
         return new Result().success(createMap("list",list));
     }
 
     /**
-     * 保存楼盘相册
+     * 保存楼层类型
      * @return
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public Result save(HouseAlbumImage albumImage) {
+    public Result save(String data) {
+
+        List<Map> list = JsonUtil.json2Obj(data, List.class);
+        floorTypeService.saveFloor(list);
 
         return Result.success();
     }
-
-
 
 }

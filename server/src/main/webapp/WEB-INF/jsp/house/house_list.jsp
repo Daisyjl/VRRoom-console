@@ -193,7 +193,7 @@
             },
             //编辑楼栋
             editRidgepole : function (id){
-                location.href = "${contextPath}/admin/house/editUnit/"+id;
+                location.href = "${contextPath}/admin/house/ridgepole/edit/"+id;
             },
             //编辑楼层相册
             editAlbum : function (id){

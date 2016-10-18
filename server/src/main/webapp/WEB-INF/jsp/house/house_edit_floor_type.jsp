@@ -59,7 +59,8 @@
 
                                 <div class="form-group">
                                     <div class="col-sm-6">
-                                        <button type="button" onclick="$houseFloor.fn.addFloorType()" class="btn btn-primary"><i class="fa fa-plus"></i> 保存</button>
+                                        <button type="button" onclick="$houseFloor.fn.save()" class="btn btn-primary">保存</button>
+                                        <button type="button" onclick="history.go(-1);" class="btn btn-primary">返回</button>
                                     </div>
                                 </div>
                             </form>
@@ -73,6 +74,7 @@
     </div>
     <!-- main content end-->
 
+    <!-- 楼层类型template -->
     <div class="row" style="display: none;" id="floorTypeTemplate">
         <div class="col-lg-12">
             <section class="panel">
@@ -86,7 +88,6 @@
                 </header>
                 <div class="panel-body">
                     <form class="cmxform form-horizontal adminex-form">
-                        <input name="id" type="hidden" value="${enterprise.id}">
 
                         <div class="form-group">
                             <label class="col-sm-1 control-label">楼层横切面图：</label>
@@ -105,15 +106,18 @@
         </div>
     </div>
 
-    <div class="form-group" style="display: none;" id="transverseTemplate">
+    <!-- 横切面template -->
+    <input type="hidden" id="currentTransverseId" value="">
+    <div class="form-group" style="display: none;" id="transverseTemplate" name="transverseGroup">
 
         <label class="col-sm-1 control-label">横切面1：</label>
 
         <label class="col-sm-1 control-label">上传横切面图：</label>
         <div class="col-sm-2">
-            <input type="file" name="d3File" id="transverseFile" style="display:none;"/>
-            <a href="javascript:void(0);" onclick="$('#transverseFile').click();">
-                <img id="transverseImg" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 200px; display: inline; margin-bottom: 5px;" border="1"/>
+            <%--<input type="file" name="d3File" id="transverseFile" style="display:none;"/>--%>
+            <input type="hidden" name="transverseImageId" value="">
+            <a href="javascript:void(0);" onclick="$houseFloor.fn.AddTempImg(this)">
+                <img src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 200px; display: inline; margin-bottom: 5px;" border="1"/>
             </a>
         </div>
 
@@ -142,9 +146,12 @@
 
     </div>
 
+    <form id="tempImageForm" method="post" action="${contextPath}/common/file/addTempImage" enctype="multipart/form-data" class="form-horizontal" role="form">
+        <input type="file" name="tempImage" id="tempImage" data-rule="required" style="display:none;" onchange="$houseFloor.fn.saveTempImage()"/>
+    </form>
 
 
-    <!-- modal -->
+    <!-- 选择户型弹出框 -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="pwdModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -172,7 +179,7 @@
         <!-- /.modal-dialog -->
     </div>
 
-    <!-- template -->
+    <!-- 户型 template -->
     <div class="form-group" style="display: none;" id="unitTemplate">
         <div class="col-sm-1">
             <input type="radio" name="unitRadio">
@@ -202,24 +209,63 @@
             list: [],
             chart: null,
             dTable: null,
-            tempImageId : null,
+            tempTransverseId : null,
             tempFloorId : null,
         },
         fn: {
             init: function () {
 
-                $houseFloor.v.tempImageId = 0;
+                $houseFloor.v.tempTransverseId = 0;
                 $houseFloor.v.tempFloorId = 0;
 
-                $("#transverseFile").uploadPreview({
-                    Img: "transverseImg",//楼盘横切面图
-                });
-
-                /*$("#unitFile").uploadPreview({
-                    Img: "unitImg",//楼盘横切面图
-                });*/
+                //初始化加载楼层类型列表
+                $houseFloor.fn.initFloorList();
 
                 //初始化加载弹出框的户型列表
+                $houseFloor.fn.initUnitList();
+            },
+            /* 楼层 */
+            initFloorList:function(){
+                $.post("${contextPath}/admin/house/floor/list",{'houseId':"${houseId}"},function(result){
+                    if(result.status == 0){
+                        var list = result.data.object.list;
+                        for(var i=0; i < list.length; i++){
+                            $houseFloor.fn.addFloorType();
+                        }
+                    }
+                });
+            },
+            //新增楼层类型
+            addFloorType:function(){
+                var template = $("#floorTypeTemplate").clone().removeAttr("id");
+                template.find("header label").text("楼层类型"+($houseFloor.v.tempFloorId+1));
+                template.find("[name=transverseDiv]").attr("id","transverseDiv_"+$houseFloor.v.tempFloorId);
+                template.find("button").attr("onclick","$houseFloor.fn.addTransverse("+$houseFloor.v.tempFloorId+")");
+
+                template.show();
+                $("#floorDiv").append(template);
+
+                //初始化楼层右上角的收缩和删除楼层块的事件
+                var obj = $("#transverseDiv_"+$houseFloor.v.tempFloorId).parents(".row");
+                obj.find('.panel .tools .fa-times').click(function () {
+                    $(this).parents(".panel").parent().remove();
+                });
+
+                obj.find('.panel .tools .fa').click(function () {
+                    var el = $(this).parents(".panel").children(".panel-body");
+                    if ($(this).hasClass("fa-chevron-down")) {
+                        $(this).removeClass("fa-chevron-down").addClass("fa-chevron-up");
+                        el.slideUp(200);
+                    } else {
+                        $(this).removeClass("fa-chevron-up").addClass("fa-chevron-down");
+                        el.slideDown(200); }
+                });
+
+                $houseFloor.v.tempFloorId++;
+
+            },
+            /* 横切面 */
+            initUnitList : function(){
                 $("#unitDiv").empty();
                 $.post("${contextPath}/admin/house/unit/list",{'houseId':"${houseId}"},function(result){
                     if(result.status == 0){
@@ -239,9 +285,7 @@
                     }
                 });
             },
-            editImage : function(id){
-                window.location.href = "${contextPath}/admin/house/album/editImage/${houseId}_"+id;
-            },
+            //打开选择户型对话框
             openModal : function (self){
                 $("#myModal").modal("show");
                 $("#currentUnitId").val($(self).parents(".form-group").find("[name=unitId]").attr("id"));
@@ -260,79 +304,83 @@
 
                 $("#myModal").modal("hide");
             },
-            //新增楼层类型
-            addFloorType:function(){
-                var template = $("#floorTypeTemplate").clone().removeAttr("id");
-                template.find("header label").text("楼层类型"+($houseFloor.v.tempFloorId+1));
-                template.find("[name=transverseDiv]").attr("id","transverseDiv_"+$houseFloor.v.tempFloorId);
-                template.find("button").attr("onclick","$houseFloor.fn.addTransverse("+$houseFloor.v.tempFloorId+")");
-
-                template.show();
-                $("#floorDiv").append(template);
-
-                $houseFloor.v.tempFloorId++;
-
-                /*$('.panel .tools .fa-times').click(function () {
-                    $(this).parents(".panel").parent().remove();
-                });
-
-                $('.panel .tools .fa').click(function () {
-                    var el = $(this).parents(".panel").children(".panel-body");
-                    if ($(this).hasClass("fa-chevron-down")) {
-                        $(this).removeClass("fa-chevron-down").addClass("fa-chevron-up");
-                        el.slideUp(200);
-                    } else {
-                        $(this).removeClass("fa-chevron-up").addClass("fa-chevron-down");
-                        el.slideDown(200); }
-                });*/
-            },
             //新增横切面
             addTransverse : function (tempFloorId){
                 var template = $("#transverseTemplate").clone().removeAttr("id");
-                template.find("label").eq(0).text("横切面"+($houseFloor.v.tempImageId+1));
-                template.find("[type=file]").attr("id","transverseFile_"+$houseFloor.v.tempImageId);
-                template.find("a").eq(0).attr("onclick","$('#"+"transverseFile_"+$houseFloor.v.tempImageId+"').click();");
-                template.find("img").eq(0).attr("id","transverseImg_"+$houseFloor.v.tempImageId);
-                template.find("[name=unitId]").attr("id","unitId_"+$houseFloor.v.tempImageId);
+                template.find("label").eq(0).text("横切面"+($houseFloor.v.tempTransverseId+1));
+                template.attr("val",$houseFloor.v.tempTransverseId);
+//                template.find("[type=file]").attr("id","transverseFile_"+$houseFloor.v.tempTransverseId);
+//                template.find("a").eq(0).attr("onclick","$('#"+"transverseFile_"+$houseFloor.v.tempTransverseId+"').click();");
+//                template.find("img").eq(0).attr("id","transverseImg_"+$houseFloor.v.tempTransverseId);
+                template.find("[name=unitId]").attr("id","unitId_"+$houseFloor.v.tempTransverseId);
                 template.show();
                 $("#transverseDiv_"+tempFloorId).append(template);
 
-                $("#transverseFile_"+$houseFloor.v.tempImageId).uploadPreview({
-                    Img: "transverseImg_"+$houseFloor.v.tempImageId//横切面图
-                });
+                /*$("#transverseFile_"+$houseFloor.v.tempTransverseId).uploadPreview({
+                    Img: "transverseImg_"+$houseFloor.v.tempTransverseId//横切面图
+                });*/
 
-                $houseFloor.v.tempImageId++;
+                $houseFloor.v.tempTransverseId++;
 
             },
             //删除横切面
             removeTransverse : function(self){
                 $(self).parents(".form-group").remove();
             },
-            save : function() {
-                if(!$("#formId").valid()) return;
-                $("#intro").val($houseFloor.v.um.getContent());
-                $("#formId").ajaxSubmit({
-                    url : "${contextPath}/admin/house/unit/saveAdd",
-                    type : "POST",
-                    success : function(result) {
-                        if(result.status == 0) {
-                            $("#myModal").modal("hide");
-                        }
-                        else {
-                            $leoman.alertMsg(result.msg);
+            /* 图片 */
+            AddTempImg: function (self) {
+                $('#tempImage').click();
+                $("#currentTransverseId").val($(self).parents(".form-group").attr("val"));
+            },
+            //上传图片
+            saveTempImage: function () {
+                $("#tempImageForm").ajaxSubmit({
+                    dataType: "json",
+                    success: function (data) {
+                        if (null != data.path && data.path != '') {
+                            var obj = $("div.form-group[val="+$("#currentTransverseId").val()+"]");
+                            obj.find("img").eq(0).attr("src",data.path);
+                            obj.find("[name=transverseImageId]").val(data.id);
+                        } else {
+                            $leoman.alertMsg("上传错误");
                         }
                     }
                 });
             },
-            delete : function (id){
-                $leoman.alertConfirm("您确定要删除该户型吗？",function(){
-                    $.post("${contextPath}/admin/house/unit/delete",{'id':id},function(result){
-                        if(result.status != 0){
-                            window.location.reload();
-                        }else{
-                            $leoman.alertMsg(result.msg);
-                        }
-                    });
+            //保存
+            save : function() {
+
+                var data = [];
+
+                var floorArr = $("#floorDiv .row");
+                for(var i=0; i<floorArr.length; i++){
+
+                    var floorJson = {
+                        houseId : "${houseId}",
+                        name : "楼层类型"+(i+1),
+                        tranArr : []
+                    };
+
+                    var transverseArr = $(floorArr[i]).find("[name=transverseGroup]");
+                    for(var j=0; j<transverseArr.length; j++){
+                        var imageId = $(transverseArr[j]).find("[name=transverseImageId]").val();
+                        var unitId = $(transverseArr[j]).find("[name=unitId]").val();
+                        var transverseJson = {
+                            imageId : imageId,
+                            unitId : unitId
+                        };
+                        floorJson.tranArr.push(transverseJson);
+                    }
+
+                    data.push(floorJson);
+                }
+
+                $.post("${contextPath}/admin/house/floor/save",{'data':JSON.stringify(data)},function(result){
+                    if(result.status == 0){
+                        <%--window.location.href = "${contextPath}/admin/house/index";--%>
+                    }else{
+                        $leoman.alertMsg(result.msg);
+                    }
                 });
             },
             back : function(){

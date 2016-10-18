@@ -84,4 +84,10 @@ public class Image implements Serializable {
     public void setUploadUrl(String uploadUrl) {
         this.uploadUrl = uploadUrl;
     }
+
+    public Image(){}
+
+    public Image(Integer id) {
+        this.id = id;
+    }
 }
