@@ -26,7 +26,7 @@ public class HouseFloorTypeUnit extends BaseEntity{
     private Image transverseImage;//横切面图
 
     @Column(name = "room_no")
-    private String roomNo;//房间编号：1,2,3或者A,B,C等，只是为了把选择的户型和横切面图对应起来
+    private Integer roomNo;//房间编号：1,2,3或者A,B,C等，只是为了把选择的户型和横切面图对应起来
 
     public HouseFloorType getFloorType() {
         return floorType;
@@ -52,11 +52,11 @@ public class HouseFloorTypeUnit extends BaseEntity{
         this.transverseImage = transverseImage;
     }
 
-    public String getRoomNo() {
+    public Integer getRoomNo() {
         return roomNo;
     }
 
-    public void setRoomNo(String roomNo) {
+    public void setRoomNo(Integer roomNo) {
         this.roomNo = roomNo;
     }
 }

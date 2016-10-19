@@ -92,7 +92,7 @@ public class LabelController extends GenericEntityController<HouseDynamic,HouseD
 
             label.setName(name);
             label.setObjectId(objectId);
-            label.setObjectType(objectType);
+//            label.setObjectType(objectType);
             label.setHeight(height);
             label.setWidth(width);
             label.setLabelId(labelId);

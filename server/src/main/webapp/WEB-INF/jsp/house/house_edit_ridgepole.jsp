@@ -41,7 +41,7 @@
             <!-- page start-->
 
             <input id="objectId" type="hidden" value="${house.image.id }">
-            <input id="objectType" type="hidden" value="1">
+            <%--<input id="ridgepoleId" type="hidden" value="1">--%>
             <input id="labelId" type="hidden" value="">
             <input id="height" type="hidden" value="">
             <input id="width" type="hidden" value="">
@@ -60,31 +60,30 @@
                         </header>
                         <div class="panel-body" id="panelBody">
 
-                            <table>
-                                <tr>
-                                    <td>
+                            <form class="cmxform form-horizontal adminex-form" id="formId" method="post" >
+
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" ></label>
+                                    <div>
                                         <img id="mainImg" style="position: relative;" src="${house.image.path }"/>
                                         <div id="baseImg"></div>
-                                    </td>
+                                    </div>
 
-                                    <td>
-                                        <!--模块拖拽-->
-                                        <div>
-
-                                        </div>
+                                    <div class="">
                                         <div id="tempLabels" style="border: 1px;"></div>
-                                    </td>
-                                </tr>
-                            </table>
+                                    </div>
+                                </div>
 
-                            <!-- 隐藏区域--标签 -->
-                            <div id="temp" style="display: none;" class="drag" onmousedown="Label.fn.dragMove(this,event)">
-                                <div></div>
-                                <a href="javascript:void(0);" style="float: none; z-index: 10; position: relative; bottom: 22px; left: 65px;display: none;" onclick="Label.fn.deleteLabel(this)">
-                                    <img id="pic1" src="${contextPath}/static/images/xx.png" style="height: 16px; width: 16px; display: inherit;" border="1"/>
-                                </a>
-                                <div style="display: none;"></div>
-                            </div>
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >编辑标签</label>
+                                    <div class="col-sm-3" id="labelEditDiv">
+                                        <%--<div class="form-group">
+                                            户型名称：<button type="button" onclick="$houseAlbum.fn.editFloor()" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> 编辑</button>
+                                        </div>--%>
+                                    </div>
+                                </div>
+
+                            </form>
 
                         </div>
                     </section>
@@ -95,6 +94,20 @@
 
     </div>
     <!-- main content end-->
+
+    <!-- 隐藏区域--标签 -->
+    <div id="temp" style="display: none;" class="drag" onmousedown="Label.fn.dragMove(this,event)">
+        <div></div>
+        <a href="javascript:void(0);" style="float: none; z-index: 10; position: relative; bottom: 22px; left: 65px;display: none;" onclick="Label.fn.deleteLabel(this)">
+            <img id="pic1" src="${contextPath}/static/images/xx.png" style="height: 16px; width: 16px; display: inherit;" border="1"/>
+        </a>
+        <div style="display: none;"></div>
+    </div>
+
+    <div class="form-group" style="display: none;" id="editTemplate">
+        <label class="col-sm-3 control-label" >标签名称</label>
+        <button type="button" onclick="Label.fn.editFloor()" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> 编辑</button>
+    </div>
 
 </section>
 <%@ include file="../inc/new2/foot.jsp" %>
@@ -138,6 +151,8 @@
                     Label.fn.mouseout($(this));
                 });
                 $("#baseImg").append(tempDiv);
+
+                Label.fn.addLabelEdit(name, id);
             },
             deleteLabel: function (self) {
                 var labelId = $(self).parent().attr("id");
@@ -164,7 +179,8 @@
                 var name = $("#labelInput").val();
                 var tempDiv = $("#temp").clone();
                 tempDiv.css("display", "block");
-                tempDiv.attr("id", "tempDiv" + (new Date()).valueOf());
+                var labelId = "tempDiv" + (new Date()).valueOf();
+                tempDiv.attr("id", labelId);
                 tempDiv.css("left", 755 + "px");
                 tempDiv.css("top", topValue + "px");
                 tempDiv.children(":first").html(name);
@@ -180,6 +196,17 @@
                 }, function () {
                     Label.fn.mouseout($(this));
                 });
+
+                Label.fn.addLabelEdit(name, labelId);
+
+            },
+            addLabelEdit : function(name, labelId){
+                //添加完标签后，添加对应的编辑块
+                var template = $("#editTemplate").clone().removeAttr("id");
+                template.find("label").text(name);
+                template.find("button").attr("onclick","Label.fn.editFloor('"+labelId+"')");
+                template.show();
+                $("#labelEditDiv").append(template);
             },
             dragMove: function (self, e) {
                 var _x, _y;//鼠标离控件左上角的相对位置
@@ -244,14 +271,14 @@
                     async: false,
                     url: '${contextPath}/admin/label/saveLabelInfo',
                     data: {
-                        //装视界id
+                        //来源对象id
                         objectId: $("#objectId").val(),
                         //标签id
                         labelId: $("#labelId").val(),
                         //标签名称
                         name: $("#name").val(),
                         //数据来源
-                        objectType: $('#objectType').val(),
+//                        ridgepoleId: $('#objectType').val(),
                         //偏移高度(相对于原图)
                         height: $("#height").val() * 2,
                         //偏移宽度(想对于原图)
@@ -266,6 +293,9 @@
                         }
                     }
                 });
+            },
+            editFloor : function(labelId){
+                window.location.href = "${contextPath}/admin/house/ridgepole/editFloor/${house.id}_"+labelId;
             },
             back : function(){
                 window.location.href = "${contextPath}/admin/house/index";

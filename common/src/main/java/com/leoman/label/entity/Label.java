@@ -17,8 +17,8 @@ public class Label extends BaseEntity{
     @Column(name = "object_id")
     private Integer objectId;
 
-    @Column(name = "object_type")
-    private Integer objectType;
+    @Column(name = "ridgepole_id")
+    private Long ridgepoleId;
 
     @Column(name = "height")
     private String height;
@@ -54,12 +54,12 @@ public class Label extends BaseEntity{
         this.objectId = objectId;
     }
 
-    public Integer getObjectType() {
-        return objectType;
+    public Long getRidgepoleId() {
+        return ridgepoleId;
     }
 
-    public void setObjectType(Integer objectType) {
-        this.objectType = objectType;
+    public void setRidgepoleId(Long ridgepoleId) {
+        this.ridgepoleId = ridgepoleId;
     }
 
     public String getHeight() {

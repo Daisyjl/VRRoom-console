@@ -56,12 +56,14 @@ public class HouseFloorTypeServiceImpl extends GenericManagerImpl<HouseFloorType
                 for (Map tranMap:tranList) {
                     String imageId = (String)tranMap.get("imageId");
                     String unitId = (String)tranMap.get("unitId");
+                    String roomNo = (String)tranMap.get("roomNo");
 
                     //保存楼层类型和户型的关系
                     HouseFloorTypeUnit houseFloorTypeUnit = new HouseFloorTypeUnit();
                     houseFloorTypeUnit.setFloorType(houseFloorType);
                     houseFloorTypeUnit.setTransverseImage(new Image(Integer.valueOf(imageId)));
                     houseFloorTypeUnit.setUnit(new HouseUnit(Long.valueOf(unitId)));
+                    houseFloorTypeUnit.setRoomNo(Integer.valueOf(roomNo));
                     houseFloorTypeUnitDao.save(houseFloorTypeUnit);
                 }
             }

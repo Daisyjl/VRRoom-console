@@ -1,8 +1,11 @@
 package com.leoman.house.service;
 
+import com.leoman.common.core.Result;
 import com.leoman.common.service.GenericManager;
 import com.leoman.house.entity.HouseDynamic;
 import com.leoman.house.entity.HouseRidgepole;
+
+import java.util.Map;
 
 /**
  * 楼盘的每一栋
@@ -10,5 +13,6 @@ import com.leoman.house.entity.HouseRidgepole;
  */
 public interface HouseRidgepoleService extends GenericManager<HouseRidgepole> {
 
+    public Result saveRidgepole(Map map);
 
 }

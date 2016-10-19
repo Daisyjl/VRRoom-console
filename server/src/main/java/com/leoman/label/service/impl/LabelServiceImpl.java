@@ -22,8 +22,8 @@ public class LabelServiceImpl  extends GenericManagerImpl<Label,LabelDao> implem
 
 
     @Override
-    public List<Label> findListByParams(Integer objectId, Integer objectType) {
-        List<Label> list = labelDao.findListByParams(objectId, objectType);
+    public List<Label> findListByParams(Integer objectId) {
+        List<Label> list = labelDao.findListByParams(objectId);
 
         /*for (Label label : list) {
             label.setProductId(label.getProduct().getId());

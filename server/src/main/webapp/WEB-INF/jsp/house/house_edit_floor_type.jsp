@@ -110,7 +110,7 @@
     <input type="hidden" id="currentTransverseId" value="">
     <div class="form-group" style="display: none;" id="transverseTemplate" name="transverseGroup">
 
-        <label class="col-sm-1 control-label">横切面1：</label>
+        <%--<label class="col-sm-1 control-label">横切面1：</label>--%>
 
         <label class="col-sm-1 control-label">上传横切面图：</label>
         <div class="col-sm-2">
@@ -138,6 +138,17 @@
             <div class="form-group" name="unitPrice">
                 参考总价：
             </div>
+        </div>
+
+        <label class="col-sm-1 control-label">选择房间号：</label>
+        <div class="col-sm-1">
+            <select class="form-control" name="roomNo">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
         </div>
 
         <div class="col-sm-2">
@@ -231,6 +242,12 @@
                         var list = result.data.object.list;
                         for(var i=0; i < list.length; i++){
                             $houseFloor.fn.addFloorType();
+
+                            var typeUnitList = list[i].typeUnitList;
+                            for(var j=0; j<typeUnitList.length; j++){
+                                $houseFloor.fn.addTransverse(i);
+                                $houseFloor.fn.setTransverse(i, typeUnitList[j]);
+                            }
                         }
                     }
                 });
@@ -264,7 +281,7 @@
                 $houseFloor.v.tempFloorId++;
 
             },
-            /* 横切面 */
+            //初始化弹出框的户型列表
             initUnitList : function(){
                 $("#unitDiv").empty();
                 $.post("${contextPath}/admin/house/unit/list",{'houseId':"${houseId}"},function(result){
@@ -307,21 +324,25 @@
             //新增横切面
             addTransverse : function (tempFloorId){
                 var template = $("#transverseTemplate").clone().removeAttr("id");
-                template.find("label").eq(0).text("横切面"+($houseFloor.v.tempTransverseId+1));
+//                template.find("label").eq(0).text("横切面"+($houseFloor.v.tempTransverseId+1));
                 template.attr("val",$houseFloor.v.tempTransverseId);
-//                template.find("[type=file]").attr("id","transverseFile_"+$houseFloor.v.tempTransverseId);
-//                template.find("a").eq(0).attr("onclick","$('#"+"transverseFile_"+$houseFloor.v.tempTransverseId+"').click();");
-//                template.find("img").eq(0).attr("id","transverseImg_"+$houseFloor.v.tempTransverseId);
                 template.find("[name=unitId]").attr("id","unitId_"+$houseFloor.v.tempTransverseId);
                 template.show();
                 $("#transverseDiv_"+tempFloorId).append(template);
 
-                /*$("#transverseFile_"+$houseFloor.v.tempTransverseId).uploadPreview({
-                    Img: "transverseImg_"+$houseFloor.v.tempTransverseId//横切面图
-                });*/
-
                 $houseFloor.v.tempTransverseId++;
 
+            },
+            //给当前横切面赋值
+            setTransverse : function (tempFloorId, typeUnit){
+                $("#transverseDiv_"+tempFloorId).find("[name=transverseImageId]").val(typeUnit.transverseImage.id);
+                $("#transverseDiv_"+tempFloorId).find("img").eq(0).attr("src",typeUnit.transverseImage.path);
+                $("#transverseDiv_"+tempFloorId).find("[name=unitId]").val(typeUnit.unit.id);
+                $("#transverseDiv_"+tempFloorId).find("[name=unitImg]").attr("src", typeUnit.unit.planeImage.path);
+                $("#transverseDiv_"+tempFloorId).find("[name=unitName]").text("户型名称："+typeUnit.unit.name);
+                $("#transverseDiv_"+tempFloorId).find("[name=unitArea]").text("建筑面积："+typeUnit.unit.totalArea);
+                $("#transverseDiv_"+tempFloorId).find("[name=unitPrice]").text("参考总价："+typeUnit.unit.totalPrice);
+                $("#transverseDiv_"+tempFloorId).find("select option[value="+typeUnit.roomNo+"]").attr("selected",true);
             },
             //删除横切面
             removeTransverse : function(self){
@@ -365,9 +386,11 @@
                     for(var j=0; j<transverseArr.length; j++){
                         var imageId = $(transverseArr[j]).find("[name=transverseImageId]").val();
                         var unitId = $(transverseArr[j]).find("[name=unitId]").val();
+                        var roomNo = $(transverseArr[j]).find("[name=roomNo]").val();
                         var transverseJson = {
                             imageId : imageId,
-                            unitId : unitId
+                            unitId : unitId,
+                            roomNo : roomNo
                         };
                         floorJson.tranArr.push(transverseJson);
                     }

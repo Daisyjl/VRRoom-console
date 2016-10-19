@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class HouseRidgepoleFloorRoom extends BaseEntity{
 
     @ManyToOne
-    @JoinColumn(name = "ridgepole_id")
+    @JoinColumn(name = "ridgepole_floor_id")
     private HouseRidgepoleFloor ridgepoleFloor;//所在层
 
     @Column(name = "room_no")

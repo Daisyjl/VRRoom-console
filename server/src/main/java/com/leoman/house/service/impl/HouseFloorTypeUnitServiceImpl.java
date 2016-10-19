@@ -10,6 +10,8 @@ import com.leoman.house.service.HouseFloorTypeUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 楼盘楼层类型和户型的关系
  * Created by Daisy on 2016/10/17.
@@ -20,4 +22,8 @@ public class HouseFloorTypeUnitServiceImpl extends GenericManagerImpl<HouseFloor
     @Autowired
     protected HouseFloorTypeUnitDao houseFloorTypeUnitDao;
 
+    @Override
+    public List<HouseFloorTypeUnit> findByFloorTypeId(Long floorTypeId) {
+        return houseFloorTypeUnitDao.findByFloorTypeId(floorTypeId);
+    }
 }

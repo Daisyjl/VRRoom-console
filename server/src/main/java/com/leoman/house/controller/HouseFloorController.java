@@ -3,10 +3,7 @@ package com.leoman.house.controller;
 import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.entity.Configue;
-import com.leoman.house.entity.House;
-import com.leoman.house.entity.HouseAlbum;
-import com.leoman.house.entity.HouseAlbumImage;
-import com.leoman.house.entity.HouseFloorType;
+import com.leoman.house.entity.*;
 import com.leoman.house.service.*;
 import com.leoman.house.service.impl.HouseAlbumServiceImpl;
 import com.leoman.house.service.impl.HouseFloorTypeServiceImpl;
@@ -41,6 +38,9 @@ public class HouseFloorController extends GenericEntityController<HouseFloorType
     @Autowired
     private HouseFloorTypeService floorTypeService;
 
+    @Autowired
+    private HouseFloorTypeUnitService houseFloorTypeUnitService;
+
     /**
      * 跳转编辑楼层类型页面
      * @param id
@@ -61,6 +61,19 @@ public class HouseFloorController extends GenericEntityController<HouseFloorType
     @ResponseBody
     public Result list(Long houseId) {
         List<HouseFloorType> list = floorTypeService.findByHouseId(houseId);
+        for (HouseFloorType hft:list) {
+            List<HouseFloorTypeUnit> typeUnitList = houseFloorTypeUnitService.findByFloorTypeId(hft.getId());
+            for (HouseFloorTypeUnit typeUnit:typeUnitList) {
+                if(typeUnit.getTransverseImage() != null){
+                    typeUnit.getTransverseImage().setPath(Configue.getUploadUrl() + typeUnit.getTransverseImage().getPath());
+                }
+
+                if(typeUnit.getUnit().getPlaneImage() != null){
+                    typeUnit.getUnit().getPlaneImage().setPath(Configue.getUploadUrl() + typeUnit.getUnit().getPlaneImage().getPath());
+                }
+            }
+            hft.setTypeUnitList(typeUnitList);
+        }
 
         return new Result().success(createMap("list",list));
     }

@@ -10,8 +10,8 @@ import java.util.List;
  */
 public interface LabelService extends GenericManager<Label> {
 
-    // 根据目标id和目标类型查询标签列表
-    public List<Label> findListByParams(Integer objectId, Integer objectType);
+    // 根据目标id查询标签列表
+    public List<Label> findListByParams(Integer objectId);
 
     // 根据目标id和标签id查询标签最后停留的位置
     public Label findLastPosition(Integer objectId, String labelId);

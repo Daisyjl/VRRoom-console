@@ -4,6 +4,7 @@ import com.leoman.entity.BaseEntity;
 import com.leoman.image.entity.Image;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * 楼盘类型
@@ -18,6 +19,9 @@ public class HouseFloorType extends BaseEntity{
 
     @Column(name = "name")
     private String name;//楼层类型名称
+
+    @Transient
+    private List<HouseFloorTypeUnit> typeUnitList;
 
     public Long getHouseId() {
         return houseId;
@@ -35,4 +39,17 @@ public class HouseFloorType extends BaseEntity{
         this.name = name;
     }
 
+    public HouseFloorType(){}
+
+    public HouseFloorType(Long id) {
+        super.setId(id);
+    }
+
+    public List<HouseFloorTypeUnit> getTypeUnitList() {
+        return typeUnitList;
+    }
+
+    public void setTypeUnitList(List<HouseFloorTypeUnit> typeUnitList) {
+        this.typeUnitList = typeUnitList;
+    }
 }
