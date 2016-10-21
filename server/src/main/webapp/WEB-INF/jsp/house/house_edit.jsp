@@ -10,6 +10,9 @@
     <link rel="shortcut icon" href="#" type="image/png">
     <title>新增企业</title>
     <%@ include file="../inc/new2/css.jsp" %>
+    <style type="text/css">
+        #allmap {width: 600px;height: 400px;overflow: hidden;margin:0;font-family:"微软雅黑";}
+    </style>
 </head>
 
 <body class="sticky-header">
@@ -27,82 +30,190 @@
                 <div class="col-lg-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            企业
+                            详细信息
                         </header>
                         <div class="panel-body">
-                            <form class="cmxform form-horizontal adminex-form" id="formId" method="post" >
-                                <input id="id" name="id" type="hidden" value="${enterprise.id}">
-                                <input type="hidden" id="provinceId" value="${enterprise.city.province.id}">
-                                <input type="hidden" id="cityId" value="${enterprise.city.id}">
+                            <form class="cmxform form-horizontal adminex-form" id="formId" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="id" value="${house.id}">
 
                                 <div class="form-group">
-                                    <label class="col-sm-1 control-label" >企业名称</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" name="name" value="${enterprise.name}" class="form-control" required/>
+                                    <label class="col-sm-1 control-label">楼盘封面：</label>
+                                    <div class="col-sm-5">
+                                        <input type="file" name="coverFile" id="coverFile" style="display:none;"/>
+                                        <a href="javascript:void(0);" onclick="$('#coverFile').click();">
+                                            <img id="coverImg" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
+                                        </a>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="col-sm-1 control-label" >企业账号</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" name="username" value="${enterprise.username}" class="form-control" required/>
+                                    <label class="col-sm-1 control-label" ><span style="color: red;">* </span>楼盘名称：</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" name="name" value="${house.name}" class="form-control" required/>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="col-sm-1 control-label" >企业密码</label>
-                                    <div class="col-sm-6">
-                                        <input type="password" id="password" name="password" value="" class="form-control" required/>
+                                    <label class="col-sm-1 control-label" ><span style="color: red;">* </span>所属企业：</label>
+                                    <div class="col-sm-2">
+                                        <select class="form-control input-sm" name="enterprise.id" required>
+                                            <option value="">---请选择---</option>
+                                            <c:forEach items="${enterpriseList}" var="enterprise">
+                                                <option value="${enterprise.id}">${enterprise.name}</option>
+                                            </c:forEach>
+                                        </select>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="col-sm-1 control-label" >确认密码</label>
-                                    <div class="col-sm-6">
-                                        <input type="password" id="repassword" name="" value="" class="form-control" equalTo="#password" required/>
+                                    <label class="col-sm-1 control-label">楼盘标签：</label>
+                                    <div class="col-sm-3">
+                                        <input id="tags_1" type="text" name="label" class="tags" value="${house.label}" />
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="col-sm-1 control-label">省:</label>
-
-                                    <div class="col-sm-1">
-                                        <select id="provinceSelect" style="width: 150px;" class="form-control"></select>
+                                    <label class="col-sm-1 control-label" >开盘时间：</label>
+                                    <div class="col-sm-2">
+                                        <input type="radio" name="isOpenWait" value="0" checked="checked">待定
+                                        &nbsp;
+                                        <input type="radio" name="isOpenWait" value="1">指定开盘时间
                                     </div>
-
-                                    <label class="col-sm-1 control-label">市:</label>
-                                    <div class="col-sm-1">
-                                        <select id="citySelect" style="width: 150px;" class="form-control" name="city.id"></select>
+                                    <div class="col-sm-2">
+                                        <input type="text" name="openTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="">
                                     </div>
                                 </div>
 
-                                <span style="display: none;" id="intro">${enterprise.intro}</span>
                                 <div class="form-group">
-                                    <label class="col-sm-1 control-label" >企业简介</label>
-                                    <div class="col-sm-6">
-                                        <script type="text/plain" id="myEditor" name="intro" style="width:1000px;height:240px;"></script>
+                                    <label class="col-sm-1 control-label" >开发商：</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" name="developers" value="${house.developers}" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >交房时间：</label>
+                                    <div class="col-sm-2">
+                                        <input type="radio" name="isDealWait" value="0" checked="checked">待定
+                                        &nbsp;
+                                        <input type="radio" name="isDealWait" value="1">交房时间
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input type="text" name="dealTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >产权年限：</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" name="propertyLimit" value="${house.propertyLimit}" class="form-control" number-0="true"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >装修类型：</label>
+                                    <div class="col-sm-2">
+                                        <select class="form-control input-sm" name="decorateType">
+                                            <option value="">---请选择---</option>
+                                            <option value="1">毛胚</option>
+                                            <option value="2">简装</option>
+                                            <option value="3">精装</option>
+                                            <option value="4">豪华装修</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >容积率：</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" name="plotTatio" value="${house.plotTatio}" class="form-control" number-2="true"/>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        %
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >绿化比例：</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" name="greening" value="${house.greening}" class="form-control" number-2="true"/>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        %
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >总户数：</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" name="householdNum" value="${house.householdNum}" class="form-control" number-0="true"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >物业公司：</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" name="propertyCompany" value="${house.propertyCompany}" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >购房优惠：</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" name="privilege" value="${house.privilege}" class="form-control"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >预估单价：</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" name="unitPrice" value="${house.unitPrice}" class="form-control" number-2="true"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >楼盘地址：</label>
+                                    <div class="col-sm-3">
+                                        <div id="allmap"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" ></label>
+                                    <div class="col-sm-3">
+                                        <input type="text" id="suggestId" placeholder="请输入关键字搜索地址" class="form-control"/>
+                                        <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+                                    </div>
+
+                                    <label class="col-sm-1 control-label" >楼盘地址：</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" name="address" value="${house.address}" class="form-control" required/>
+                                        <input type="hidden" id="longitude" name="lng" value="${house.lng}">
+                                        <input type="hidden" id="latitude" name="lat" value="${house.lat}">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label"></label>
                                     <div class="col-sm-6">
-                                        <button type="button" onclick="$enterprise.fn.save()" class="btn btn-primary">保存</button>
+                                        <button type="button" onclick="$house.fn.save()" class="btn btn-primary">保存</button>
                                         <button type="button" class="btn btn-primary" onclick="history.go(-1);">返回</button>
                                     </div>
                                 </div>
+
                             </form>
                         </div>
                     </section>
                 </div>
             </div>
+
         </section>
     </div>
     <!-- main content end-->
 </section>
 <%@ include file="../inc/new2/foot.jsp" %>
+<script src="http://api.map.baidu.com/api?v=2.0&ak=pcExWaLfoopv7vZ5hO1B8ej8"></script>
 <script>
-    $enterprise = {
+    $house = {
         v: {
             list: [],
             chart: null,
@@ -111,84 +222,57 @@
         },
         fn: {
             init: function () {
-                $enterprise.fn.initEdior();//初始化编辑器
 
-                $enterprise.fn.getProviceList();//初始化省份列表
-
-                //初始化省份改变事件
-                $('#provinceSelect').change(function () {
-                    $('#cityId').val('');
-
-                    var provinceId = $(this).val();
-                    $enterprise.fn.getCityList(provinceId);
+                $("#coverFile").uploadPreview({
+                    Img: "coverImg",//楼盘封面图
                 });
 
-                UM.getEditor('myEditor').setContent($("#intro").html());
-            },
-            initEdior : function() {
-                $enterprise.v.um = UM.getEditor('myEditor');
-            },
-            getProviceList: function () {
-                var provinceId = $('#provinceId').val();
+                $('.form_datetime').datetimepicker({
+                    language: 'zh-CN',
+                    weekStart: 1,
+                    todayBtn: 1,
+                    autoclose: 1,
+                    todayHighlight: 1,
+                    startView: 'hour',
+                    forceParse: 0,
+                    showMeridian: false,
+                    format: 'yyyy-mm-dd hh:ii'
+                });
 
-                $.post("${contextPath}/common/area/provinceList", null, function (result) {
-                    var list = result.data.object.provinceList;
-                    if (result.status == 0) {
-                        // 获取返回的省份列表信息，并循环绑定到select中
-                        var content = "<option value=''>请选择所在省份</option>";
-                        jQuery.each(list, function (i, item) {
-                            content += "<option value='" + item.id + "'>" + item.name + "</option>";
-                        });
-                        $('#provinceSelect').append(content);
-                    } else {
-                        $leoman.alertMsg(result.msg);
-                    }
-
-                    if (null != provinceId && provinceId != '') {
-                        $('#provinceSelect').val(provinceId);
+                //初始化radio
+                $("input[type=radio]").click(function(){
+                    if($(this).val() == 0){
+                        $(this).parent().next().find("input").hide();
+                    }else {
+                        $(this).parent().next().find("input").show();
                     }
                 });
 
-                var sourceId = 0;
-                if (null == provinceId || provinceId == '') {
-                    sourceId = $('#provinceSelect option:selected').val();
-                } else {
-                    sourceId = provinceId;
-                }
+                //初始化值
+                $("#coverImg").attr("src","${house.image.path}");
+                $("select").find("option[value=${house.enterprise.id}]").attr("selected",true);
+                $("[name=isOpenWait][value=${house.isOpenWait}]").click();
+                $("[name=isDealWait][value=${house.isDealWait}]").click();
 
-                $enterprise.fn.getCityList(sourceId);
             },
-            getCityList: function (sourceId) {
-                $('#citySelect').html('');
 
-                $.post("${contextPath}/common/area/cityList", {provinceId: sourceId}, function (result) {
-                    var list = result.data.object.cityList;
-                    if (result.status == 0) {
-                        // 获取返回的城市列表信息，并循环绑定到select中
-                        var content = "<option value=''>请选择所在城市</option>";
-                        jQuery.each(list, function (i, item) {
-                            content += "<option value='" + item.id + "'>" + item.name + "</option>";
-                        });
-                        $('#citySelect').append(content);
-                    } else {
-                        $leoman.alertMsg(result.msg);
-                    }
-
-                    var cityId = $('#cityId').val();
-                    if (null != cityId && cityId != '') {
-                        $('#citySelect').val(cityId);
-                    }
-                });
-            },
+            //保存
             save : function() {
                 if(!$("#formId").valid()) return;
-                $("#intro").val($enterprise.v.um.getContent());
+
+                var lableArr = [];
+                $("#tags_1_tagsinput .tag span").each(function(){
+                    lableArr.push($(this).text());
+                });
+
+                $("#tags_1").val(lableArr.join(","));
+
                 $("#formId").ajaxSubmit({
-                    url : "${contextPath}/admin/enterprise/save",
+                    url : "${contextPath}/admin/house/save",
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            window.location.href = "${contextPath}/admin/enterprise/index";
+                            window.location.href = "${contextPath}/admin/house/index";
                         }
                         else {
                             $leoman.alertMsg(result.msg);
@@ -198,9 +282,99 @@
             }
         }
     }
+
+    var map = new BMap.Map("allmap");
+
     $(function () {
-        $enterprise.fn.init();
+        $house.fn.init();
+
+        // 初始化地图,设置城市和地图级别。
+        var addrArea = "${house.lng}";
+        if(addrArea != null && addrArea != ''){
+            var point = new BMap.Point("${house.lng}", "${house.lat}")
+            map.centerAndZoom(point, 15);
+            var mk = new BMap.Marker(point);
+            map.addOverlay(mk);
+        }else{
+            var myCity = new BMap.LocalCity();
+            myCity.get(myFun);
+        }
+
     })
+
+    // 百度地图API功能
+    function myFun(result){
+        cityName = result.name;
+        map.centerAndZoom(cityName,15);
+    }
+
+    function G(id) {
+        return document.getElementById(id);
+    }
+
+    var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
+            {"input" : "suggestId"
+                ,"location" : map
+            });
+
+    ac.addEventListener("onhighlight", function(e) {  //鼠标放在下拉列表上的事件
+        var str = "";
+        var _value = e.fromitem.value;
+        var value = "";
+        if (e.fromitem.index > -1) {
+            value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+        }
+        str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+
+        value = "";
+        if (e.toitem.index > -1) {
+            _value = e.toitem.value;
+            value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+        }
+        str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+        G("searchResultPanel").innerHTML = str;
+    });
+
+    var myValue;
+    ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+        var _value = e.item.value;
+        myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+        G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+
+        setPlace();
+    });
+
+    function setPlace(){
+        map.clearOverlays();    //清除地图上所有覆盖物
+        function myFun(){
+            var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+            map.centerAndZoom(pp, 18);
+            map.addOverlay(new BMap.Marker(pp));    //添加标注
+        }
+        var local = new BMap.LocalSearch(map, { //智能搜索
+            onSearchComplete: myFun
+        });
+        local.search(myValue);
+    }
+
+    // 创建地址解析器实例
+    var geoc = new BMap.Geocoder();
+
+    //点击地图获取详细信息
+    var address ;
+    map.addEventListener("click", function(e){
+        var pt = e.point;
+        geoc.getLocation(pt, function(rs){
+            var addComp = rs.addressComponents;
+            address =addComp.province  + addComp.city  + addComp.district  + addComp.street  + addComp.streetNumber
+                    + (rs.surroundingPois.length > 0 ? rs.surroundingPois[0].title : '');
+            $("#district").val(addComp.province + addComp.city + addComp.district);
+            $("[name=address]").val(addComp.street + addComp.streetNumber+ (rs.surroundingPois.length > 0 ? rs.surroundingPois[0].title : ''));
+            $("#longitude").val(rs.point.lng);
+            $("#latitude").val(rs.point.lat);
+
+        });
+    });
 </script>
 </body>
 </html>

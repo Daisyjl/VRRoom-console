@@ -34,7 +34,7 @@
                             详细信息
                         </header>
                         <div class="panel-body">
-                            <form class="cmxform form-horizontal adminex-form" id="formId" method="post" >
+                            <form class="cmxform form-horizontal adminex-form" id="formId" method="post" enctype="multipart/form-data">
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label">楼盘封面：</label>
@@ -54,9 +54,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="col-sm-1 control-label" >所属企业：</label>
+                                    <label class="col-sm-1 control-label" ><span style="color: red;">* </span>所属企业：</label>
                                     <div class="col-sm-2">
-                                        <select class="form-control input-sm" name="decorateType">
+                                        <select class="form-control input-sm" name="enterprise.id" required>
                                             <option value="">---请选择---</option>
                                             <c:forEach items="${enterpriseList}" var="enterprise">
                                                 <option value="${enterprise.id}">${enterprise.name}</option>
@@ -153,13 +153,13 @@
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >物业公司：</label>
                                     <div class="col-sm-2">
-                                        <input type="text" name="propertyCompany" value="${enterprise.username}" class="form-control" required/>
+                                        <input type="text" name="propertyCompany" value="${enterprise.username}" class="form-control"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >购房优惠：</label>
                                     <div class="col-sm-2">
-                                        <input type="text" name="privilege" value="${enterprise.username}" class="form-control" required/>
+                                        <input type="text" name="privilege" value="${enterprise.username}" class="form-control"/>
                                     </div>
                                 </div>
 
@@ -182,13 +182,13 @@
                                     <div class="col-sm-3">
                                         <input type="text" id="suggestId" placeholder="请输入关键字搜索地址" class="form-control"/>
                                         <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
-                                        <input type="hidden" id="longitude" name="lng" value="${store.lng }">
-                                        <input type="hidden" id="latitude" name="lat" value="${store.lat }">
                                     </div>
 
                                     <label class="col-sm-1 control-label" >楼盘地址：</label>
                                     <div class="col-sm-3">
-                                        <input type="text" name="address" value="${enterprise.username}" class="form-control" required/>
+                                        <input type="text" name="address" value="" class="form-control" required/>
+                                        <input type="hidden" id="longitude" name="lng" value="">
+                                        <input type="hidden" id="latitude" name="lat" value="">
                                     </div>
                                 </div>
 
@@ -209,7 +209,7 @@
                             <form class="cmxform form-horizontal adminex-form">
                                 <input id="id" name="id" type="hidden" value="${enterprise.id}">
 
-                                <div class="form-group">
+                                <%--<div class="form-group">
                                     <label class="col-sm-1 control-label" >楼盘名称：</label>
                                     <div class="col-sm-6">
                                         <input type="text" name="name" value="${enterprise.name}" class="form-control" required/>
@@ -221,7 +221,7 @@
                                     <div class="col-sm-6">
                                         <button type="button" onclick="$house.fn.addUnit()" class="btn btn-primary"><i class="fa fa-plus"></i> 新增户型</button>
                                     </div>
-                                </div>
+                                </div>--%>
                             </form>
                         </div>
                     </section>
@@ -239,12 +239,12 @@
                             <form class="cmxform form-horizontal adminex-form">
                                 <input id="dynamicId" name="dynamicId" type="hidden" value="${enterprise.id}">
 
-                                <div class="form-group">
+                                <%--<div class="form-group">
                                     <label class="col-sm-1 control-label" >楼盘名称：</label>
                                     <div class="col-sm-6">
                                         <input type="text" name="name" value="${enterprise.name}" class="form-control" required/>
                                     </div>
-                                </div>
+                                </div>--%>
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label"></label>
@@ -296,11 +296,28 @@
                     format: 'yyyy-mm-dd hh:ii'
                 });
 
+                //初始化radio
+                $("input[type=radio]").click(function(){
+                    if($(this).val() == 0){
+                        $(this).parent().next().find("input").hide();
+                    }else {
+                        $(this).parent().next().find("input").show();
+                    }
+                });
+
             },
 
             //保存
             save : function() {
                 if(!$("#formId").valid()) return;
+
+                var lableArr = [];
+                $("#tags_1_tagsinput .tag span").each(function(){
+                    lableArr.push($(this).text());
+                });
+
+                $("#tags_1").val(lableArr.join(","));
+
                 $("#formId").ajaxSubmit({
                     url : "${contextPath}/admin/house/save",
                     type : "POST",

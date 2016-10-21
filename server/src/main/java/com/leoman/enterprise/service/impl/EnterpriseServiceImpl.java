@@ -35,6 +35,8 @@ public class EnterpriseServiceImpl extends GenericManagerImpl<Enterprise,Enterpr
     public Result save(Enterprise enterprise, String password) {
         Long id = enterprise.getId();
 
+        EnterpriseLogin enterpriseLogin;
+
         //新增
         if(id == null){
             Enterprise en1 = enterpriseDao.findByName(enterprise.getName());
@@ -46,6 +48,8 @@ public class EnterpriseServiceImpl extends GenericManagerImpl<Enterprise,Enterpr
             if(en2 != null){
                 return new Result().failure(ErrorType.ERROR_CODE_0009);//企业账号已存在
             }
+
+            enterpriseLogin = new EnterpriseLogin();
         }else{
             Enterprise en1 = enterpriseDao.findByNameAndId(enterprise.getName(), id);
             if(en1 != null){
@@ -56,20 +60,22 @@ public class EnterpriseServiceImpl extends GenericManagerImpl<Enterprise,Enterpr
             if(en2 != null){
                 return new Result().failure(ErrorType.ERROR_CODE_0009);//企业账号已存在
             }
+            enterpriseLogin = enterpriseLoginDao.findByEnterpriseId(enterprise.getId());
         }
 
-        //新增企业
+        //保存企业
         if(enterprise.getCity().getId() == null){
             enterprise.setCity(null);
         }
         enterpriseDao.save(enterprise);
 
-        //新增企业登录
-        EnterpriseLogin enterpriseLogin = new EnterpriseLogin();
-        enterpriseLogin.setEnterprise(enterprise);
-        enterpriseLogin.setUsername(enterprise.getUsername());
-        enterpriseLogin.setPassword(password);
-        enterpriseLoginDao.save(enterpriseLogin);
+        //保存企业登录
+        if(enterpriseLogin != null){
+            enterpriseLogin.setEnterprise(enterprise);
+            enterpriseLogin.setUsername(enterprise.getUsername());
+            enterpriseLogin.setPassword(password);
+            enterpriseLoginDao.save(enterpriseLogin);
+        }
 
         return new Result().success();
     }

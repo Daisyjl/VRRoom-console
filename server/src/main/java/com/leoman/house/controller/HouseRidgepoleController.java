@@ -5,6 +5,7 @@ import com.leoman.common.core.Result;
 import com.leoman.entity.Configue;
 import com.leoman.house.entity.House;
 import com.leoman.house.entity.HouseDynamic;
+import com.leoman.house.entity.HouseRidgepole;
 import com.leoman.house.service.HouseRidgepoleService;
 import com.leoman.house.service.HouseService;
 import com.leoman.house.service.impl.HouseDynamicServiceImpl;
@@ -69,11 +70,32 @@ public class HouseRidgepoleController extends GenericEntityController<HouseDynam
     public String editFloor(@PathVariable("houseId") Long houseId,@PathVariable("labelId") String labelId, Model model){
         Label label = labelService.searchByLabelId(labelId);
 
+        HouseRidgepole ridgepole = houseRidgepoleService.queryByPK(label.getRidgepoleId());
+
         model.addAttribute("label", label);
         model.addAttribute("houseId", houseId);
+        model.addAttribute("ridgepole", ridgepole);
         return "house/house_edit_ridgepole_floor";
     }
 
+    /**
+     * 根据楼层类型分组，获取楼层列表
+     * @param ridgepoleId
+     * @return
+     */
+    @RequestMapping(value = "/floorList", method = RequestMethod.POST)
+    @ResponseBody
+    public Result floorList(Long ridgepoleId) {
+
+        Result result = houseRidgepoleService.findByGroupFloorType(ridgepoleId);
+        return result;
+    }
+
+    /**
+     * 保存
+     * @param data
+     * @return
+     */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
     public Result save(String data) {

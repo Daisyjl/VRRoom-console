@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.util.List;
 
 /**
  * 楼盘相册
@@ -24,6 +25,9 @@ public class HouseAlbum extends BaseEntity{
 
     @Transient
     private Long imageNum;
+
+    @Transient
+    private List<HouseAlbumImage> imageList;
 
     public String getName() {
         return name;
@@ -48,4 +52,6 @@ public class HouseAlbum extends BaseEntity{
     public void setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
     }
+
+
 }

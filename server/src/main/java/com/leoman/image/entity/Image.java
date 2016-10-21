@@ -1,5 +1,6 @@
 package com.leoman.image.entity;
 
+import com.leoman.entity.Configue;
 import com.leoman.utils.ConfigUtil;
 import org.apache.commons.lang.StringUtils;
 
@@ -75,7 +76,7 @@ public class Image implements Serializable {
 
     public String getUploadUrl() {
         if(StringUtils.isNotBlank(path)){
-            return ConfigUtil.getString("upload.url") + path;
+            return Configue.getUploadUrl() + path;
         }else {
             return "";
         }

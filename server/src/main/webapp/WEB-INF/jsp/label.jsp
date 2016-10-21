@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ include file="../inc/taglibs.jsp" %>
+<%@ include file="inc/taglibs.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,14 +8,14 @@
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
-    <title>编辑楼信息</title>
-    <%@ include file="../inc/new2/css.jsp" %>
+    <title>编辑标签</title>
+    <%@ include file="inc/new2/css.jsp" %>
 
     <style type="text/css">
         /*模块拖拽*/
         .drag {
             position: absolute;
-            width: 150px;
+            width: 50px;
             height: 30px;
             border: 1px solid #ddd;
             background: #FBF2BD;
@@ -31,16 +31,16 @@
 <body class="sticky-header">
 
 <section>
-    <%@ include file="../inc/new2/menu.jsp" %>
+    <%@ include file="inc/new2/menu.jsp" %>
     <!-- main content start-->
     <div class="main-content">
-        <%@ include file="../inc/new2/header.jsp" %>
+        <%@ include file="inc/new2/header.jsp" %>
         <!--body wrapper start-->
 
         <section class="wrapper">
             <!-- page start-->
 
-            <input id="objectId" type="hidden" value="${house.image.id }">
+            <input id="objectId" type="hidden" value="${image.id }">
             <%--<input id="ridgepoleId" type="hidden" value="1">--%>
             <input id="labelId" type="hidden" value="">
             <input id="height" type="hidden" value="">
@@ -53,7 +53,7 @@
                 <div class="col-lg-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            编辑楼信息
+                            编辑标签
                             <button type="button" onclick="Label.fn.back()" class="btn btn-primary"><i class="fa fa-reply"></i> 返回</button>
                             <button type="button" style="float: right;" onclick="Label.fn.addLabel()" class="btn btn-primary btn-sl">添加标签</button>
                             <input type="text" id="labelInput" class="form-control" style="width:150px;margin-right: 15px; float: right;">
@@ -65,21 +65,12 @@
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" ></label>
                                     <div>
-                                        <img id="mainImg" style="position: relative;" src="${house.image.path }"/>
+                                        <img id="mainImg" style="position: relative;" src="${image.uploadUrl }"/>
                                         <div id="baseImg"></div>
                                     </div>
 
                                     <div class="">
                                         <div id="tempLabels" style="border: 1px;"></div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >编辑标签</label>
-                                    <div class="col-sm-3" id="labelEditDiv">
-                                        <%--<div class="form-group">
-                                            户型名称：<button type="button" onclick="$houseAlbum.fn.editFloor()" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> 编辑</button>
-                                        </div>--%>
                                     </div>
                                 </div>
 
@@ -110,7 +101,7 @@
     </div>
 
 </section>
-<%@ include file="../inc/new2/foot.jsp" %>
+<%@ include file="inc/new2/foot.jsp" %>
 <script type="text/javascript">
     var x = 0;
     var y = 0;
@@ -152,23 +143,19 @@
                 });
                 $("#baseImg").append(tempDiv);
 
-                Label.fn.addLabelEdit(name, id);
             },
             deleteLabel: function (self) {
-                $leoman.alertConfirm("确定要删除这个标签吗？若删除，其对应的楼信息将一起删除",function(){
-                    var labelId = $(self).parent().attr("id");
-                    // 调用ajax函数实现删除标签操作
-                    $.post("${contextPath}/admin/label/deleteLabel", {
-                        labelId: labelId
-                    }, function (result) {
-                        if (result == 1) {
-                            $(self).parent().remove();
-                            $(".form-group[val="+labelId+"]").remove();
-                        } else {
-                            $leoman.alertMsg("请先拖到图片中再删除");
+                var labelId = $(self).parent().attr("id");
+                // 调用ajax函数实现删除标签操作
+                $.post("${contextPath}/admin/label/deleteLabel", {
+                    labelId: labelId
+                }, function (result) {
+                    if (result == 1) {
+                        $(self).parent().remove();
+                    } else {
+                        $leoman.alertMsg("请先拖到图片中再删除");
 
-                        }
-                    });
+                    }
                 });
             },
             mouseover: function (mouse) {
@@ -202,15 +189,6 @@
 
                 Label.fn.addLabelEdit(name, labelId);
 
-            },
-            addLabelEdit : function(name, labelId){
-                //添加完标签后，添加对应的编辑块
-                var template = $("#editTemplate").clone().removeAttr("id");
-                template.find("label").text(name);
-                template.attr("val", labelId);
-                template.find("button").attr("onclick","Label.fn.editFloor('"+labelId+"')");
-                template.show();
-                $("#labelEditDiv").append(template);
             },
             dragMove: function (self, e) {
                 var _x, _y;//鼠标离控件左上角的相对位置
@@ -298,11 +276,8 @@
                     }
                 });
             },
-            editFloor : function(labelId){
-                window.location.href = "${contextPath}/admin/house/ridgepole/editFloor/${house.id}_"+labelId;
-            },
             back : function(){
-                window.location.href = "${contextPath}/admin/house/index";
+                window.location.href = "${contextPath}/admin/house/floor/editType/${houseId}";
             }
         }
     }

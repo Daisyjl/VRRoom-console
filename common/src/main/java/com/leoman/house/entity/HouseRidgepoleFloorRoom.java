@@ -23,6 +23,10 @@ public class HouseRidgepoleFloorRoom extends BaseEntity{
     @Column(name = "is_sale")
     private Integer isSale;//是否已卖（1-是，0-否）
 
+    @ManyToOne
+    @JoinColumn(name = "type_unit_id")
+    private HouseFloorTypeUnit typeUnit;//此房间对应的户型关系
+
     public HouseRidgepoleFloor getRidgepoleFloor() {
         return ridgepoleFloor;
     }
@@ -45,5 +49,13 @@ public class HouseRidgepoleFloorRoom extends BaseEntity{
 
     public void setIsSale(Integer isSale) {
         this.isSale = isSale;
+    }
+
+    public HouseFloorTypeUnit getTypeUnit() {
+        return typeUnit;
+    }
+
+    public void setTypeUnit(HouseFloorTypeUnit typeUnit) {
+        this.typeUnit = typeUnit;
     }
 }

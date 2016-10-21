@@ -47,15 +47,6 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
     private HouseService houseService;
 
     @Autowired
-    private HouseDynamicService houseDynamicService;
-
-    @Autowired
-    private HouseAlbumService houseAlbumService;
-
-    @Autowired
-    private HouseUnitService houseUnitService;
-
-    @Autowired
     private UploadImageService uploadImageService;
 
     @Autowired
@@ -107,43 +98,31 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
      * @param model
      * @return
      */
-    @RequestMapping(value = "/editBasic/{id}")
-    public String editBasic(@PathVariable("id") Integer id, Model model){
+    @RequestMapping(value = "/edit/{id}")
+    public String editBasic(@PathVariable("id") Long id, Model model){
         if(id != null){
             House house = houseService.queryByPK(id);
             model.addAttribute("house", house);
         }
+        List<Enterprise> enterpriseList = enterpriseService.queryAll();
+        model.addAttribute("enterpriseList", enterpriseList);
         return "house/house_edit";
     }
 
-    /**
-     * 跳转编辑楼盘户型页面
-     * @param id
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/editUnit/{id}")
-    public String editUnit(@PathVariable("id") Long id, Model model){
-        if(id != null){
-            House house = houseService.queryByPK(id);
-            model.addAttribute("house", house);
-        }
-        model.addAttribute("houseId", id);
-        return "house/house_edit_unit";
-    }
 
-    /**
+
+   /* *//**
      * 保存楼盘户型
      * @param houseUnit
      * @return
-     */
+     *//*
     @RequestMapping(value = "/saveUnit", method = RequestMethod.POST)
 
     @ResponseBody
     public Result saveUnit(HouseUnit houseUnit) {
         houseUnitService.save(houseUnit);
         return Result.success();
-    }
+    }*/
 
     /**
      * 跳转编辑基本页面页面
@@ -157,20 +136,6 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
         return "house/house_edit_dynamic";
     }
 
-
-    /**
-     * 保存新增
-     * @param house
-     * @return
-     */
-    @RequestMapping(value = "/saveAdd", method = RequestMethod.POST)
-    @ResponseBody
-    public Result saveAdd(House house) {
-//        Result result = houseService.save(house);
-//        return result;
-        return null;
-    }
-
     /**
      * 保存楼盘的基本信息
      * @param house
@@ -181,15 +146,8 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
     @ResponseBody
     public Result save(House house, MultipartRequest multipartRequest) {
 
-        MultipartFile coverFile = multipartRequest.getFile("coverFile");
-        if (null != coverFile) {
-            Image image = uploadImageService.uploadImage(coverFile);
-            house.setImage(image);
-        }
-
-        houseService.save(house);
-
-        return new Result().success();
+        Result result = houseService.saveHouse(house, multipartRequest);
+        return result;
     }
 
     /**

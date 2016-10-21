@@ -15,4 +15,6 @@ public interface HouseRidgepoleService extends GenericManager<HouseRidgepole> {
 
     public Result saveRidgepole(Map map);
 
+    public Result findByGroupFloorType(Long ridgepoleId);
+
 }

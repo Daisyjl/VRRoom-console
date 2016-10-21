@@ -9,6 +9,7 @@ import javax.persistence.criteria.Predicate;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public interface GenericManager<T> {
 
@@ -262,6 +263,8 @@ public interface GenericManager<T> {
      * @return
      */
     public List<T> queryBySql(String sql,Class<T> clazz);
+
+    public List<Map> queryBySql(String sql);
 
     /**
      * 根据原生态sql更新

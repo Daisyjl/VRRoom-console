@@ -5,7 +5,6 @@ import com.leoman.common.service.GenericManager;
 import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.transform.Transformers;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -16,7 +15,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.*;
@@ -25,6 +23,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 
 @SuppressWarnings("unchecked")
@@ -428,7 +427,14 @@ public class GenericManagerImpl<E, D extends IBaseJpaRepository<E>> implements G
 
     @Override
     public List<E> queryBySql(String sql, Class<E> clazz) {
-        return getEntityManager().createNativeQuery(sql, clazz).getResultList();
+        return getEntityManager().createNativeQuery(sql).getResultList();
+    }
+
+    @Override
+    public List<Map> queryBySql(String sql) {
+        Query query = getEntityManager().createNativeQuery(sql);
+        query.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);//返回map对象
+        return query.getResultList();
     }
 
     @Override

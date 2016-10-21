@@ -181,11 +181,11 @@
             },
             //编辑基本信息
             editBasic : function (id){
-                location.href = "${contextPath}/admin/house/editBasic/"+id;
+                location.href = "${contextPath}/admin/house/edit/"+id;
             },
             //编辑户型信息
             editUnit : function (id){
-                location.href = "${contextPath}/admin/house/editUnit/"+id;
+                location.href = "${contextPath}/admin/house/unit/edit/"+id;
             },
             //编辑楼层信息
             editFloor : function (id){
@@ -201,7 +201,7 @@
             },
             //编辑楼层动态
             editDynamic : function (id){
-                location.href = "${contextPath}/admin/house/editDynamic/"+id;
+                location.href = "${contextPath}/admin/house/dynamic/edit/"+id;
             },
             //编辑房间状态
             editRoom : function (id){

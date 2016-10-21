@@ -71,6 +71,12 @@ public class House extends BaseEntity{
     @JoinColumn(name = "enterprise_id")
     private Enterprise enterprise;//企业
 
+    @Column(name = "lng")
+    private Double lng;//经度
+
+    @Column(name = "lat")
+    private Double lat;//纬度
+
     public String getName() {
         return name;
     }
@@ -213,5 +219,21 @@ public class House extends BaseEntity{
 
     public void setEnterprise(Enterprise enterprise) {
         this.enterprise = enterprise;
+    }
+
+    public Double getLng() {
+        return lng;
+    }
+
+    public void setLng(Double lng) {
+        this.lng = lng;
+    }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
     }
 }

@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="server:war exploded">
-    <output-path>$PROJECT_DIR$/server/target/VRRoom-console-server</output-path>
+    <output-path>$PROJECT_DIR$/server/target/server</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
@@ -96,7 +96,7 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/server/target/VRRoom-console-server/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/server/target/server/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="server/web/Web" />
       <element id="artifact" artifact-name="api:war exploded" />

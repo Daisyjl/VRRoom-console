@@ -33,29 +33,29 @@
                         </header>
                         <div class="panel-body">
                             <form class="cmxform form-horizontal adminex-form">
-                                <input name="id" type="hidden" value="${enterprise.id}">
+                                <%--<input name="id" type="hidden" value="${enterprise.id}">--%>
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >楼栋编号：</label>
                                     <div class="col-sm-2">
-                                        <input type="text" id="name" name="name" value="${enterprise.name}" class="form-control" required/>
+                                        <input type="text" id="name" name="name" value="${ridgepole.name}" class="form-control" required/>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >合计楼层：</label>
                                     <div class="col-sm-2">
-                                        <input type="text" id="floorNum" name="floorNum" value="${enterprise.name}" class="form-control" required/>
+                                        <input type="text" id="floorNum" name="floorNum" value="${ridgepole.floorNum}" class="form-control" required readonly/>
                                     </div>
                                     <div class="col-sm-2">
-                                        <button type="button" class="btn btn-primary" onclick="$ridgepoleFloor.fn.saveFloorNum(this)">确定</button>
+                                        <button type="button" class="btn btn-primary" onclick="$ridgepoleFloor.fn.saveFloorNum(this)">编辑</button>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >最小楼间距：</label>
                                     <div class="col-sm-2">
-                                        <input type="text" id="minSpace" name="minSpace" value="${enterprise.name}" class="form-control" required/>
+                                        <input type="text" id="minSpace" name="minSpace" value="${ridgepole.minSpace}" class="form-control" required/>
                                     </div>
                                 </div>
 
@@ -76,8 +76,7 @@
                             <form class="cmxform form-horizontal adminex-form">
 
                                 <div class="form-group">
-                                    <label class="col-sm-1 control-label" ></label>
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-6">
                                         <button type="button" class="btn btn-primary" onclick="$ridgepoleFloor.fn.addRow(this)"><i class="fa fa-plus"></i> 新增</button>
                                     </div>
                                 </div>
@@ -235,21 +234,43 @@
                 $ridgepoleFloor.v.tempFloorId = 0;
 
                 //初始化加载楼层类型列表
-//                $ridgepoleFloor.fn.initFloorList();
+                $ridgepoleFloor.fn.initFloorList();
 
                 //初始化加载弹出框的户型列表
                 $ridgepoleFloor.fn.initFloorTypeList();
             },
+            initFloorList : function(){
+                $.post("${contextPath}/admin/house/ridgepole/floorList",{'ridgepoleId':"${ridgepole.id}"},function(result){
+                    if(result.status == 0){
+                        var list = result.data.list;
+                        for(var i=0; i < list.length; i++){
+                            console.info(list[i]);
+                            console.info(list[i].floorTypeId);
+                            console.info(list[i].directionImageId);
+                        }
+                    }
+                });
+            },
             saveFloorNum:function(self){
-                var floorNum = $(self).parents(".form-group").find("input").val();
-                $ridgepoleFloor.fn.initFloorList(floorNum);
+                var btnTxt = $(self).text();
+                if(btnTxt == '编辑'){
+                    $leoman.alertConfirm("确定要编辑吗？若编辑，则需重新编辑楼层信息",function(){
+                        $(self).parents(".form-group").find("input").attr("readonly",false);
+                        $(self).text("确定");
+                    })
+                }else if(btnTxt == '确定'){
+                    var floorNum = $(self).parents(".form-group").find("input").val();
+                    $(self).parents(".form-group").find("input").attr("readonly",true);
+                    $(self).text("编辑");
+                    $ridgepoleFloor.fn.initFloorNumList(floorNum);
+                }
             },
             openFloorModal : function(self){
                 $("#floorModal").modal("show");
                 $("#currentRowId").val($(self).parents(".floor").attr("val"));
             },
             //根据输入的楼层数量，初始化弹出框的楼层复选框
-            initFloorList :function (floorNum){
+            initFloorNumList :function (floorNum){
                 if(floorNum != '' && floorNum != undefined && floorNum >= 0){
                     for(var i=0; i<floorNum; i++){
                         $("#floorDiv").append('<div class="checkbox" val="'+(i+1)+'"><input type="checkbox"><label>'+(i+1)+'楼</label></div>');

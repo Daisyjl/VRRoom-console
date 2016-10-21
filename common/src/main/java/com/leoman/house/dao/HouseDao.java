@@ -13,4 +13,7 @@ public interface HouseDao extends IBaseJpaRepository<House> {
     @Query("select a from House a where a.name = ?1")
     public House findByName(String name);
 
+    @Query("select a from House a where a.name = ?1 and a.id != ?2")
+    public House findByNameAndId(String name, Long id);
+
 }

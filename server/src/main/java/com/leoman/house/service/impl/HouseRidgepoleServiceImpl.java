@@ -4,8 +4,10 @@ import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
 import com.leoman.house.dao.*;
 import com.leoman.house.entity.*;
+import com.leoman.house.entity.vo.RidgepoleFloorVo;
 import com.leoman.house.service.HouseDynamicService;
 import com.leoman.house.service.HouseRidgepoleService;
+import com.leoman.image.dao.ImageDao;
 import com.leoman.image.entity.Image;
 import com.leoman.label.dao.LabelDao;
 import com.leoman.label.entity.Label;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +45,44 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
     @Autowired
     protected LabelDao labelDao;
 
+    @Autowired
+    protected ImageDao imageDao;
+
+    /**
+     * 根据楼层类型分组，获取楼层列表
+     * @return
+     */
+    @Override
+    public Result findByGroupFloorType(Long ridgepoleId){
+
+        String sql = "SELECT \n" +
+                "  t.`floor_type_id` AS floorTypeId,\n" +
+                "  t.`direction_image_id` AS directionImageId,\n" +
+                "  GROUP_CONCAT(t.`floor_no`) AS floorNos \n" +
+                "FROM\n" +
+                "  t_house_ridgepole_floor t \n" +
+                "WHERE t.`ridgepole_id` = "+ridgepoleId+" \n" +
+                "GROUP BY t.`floor_type_id`";
+        /*List<RidgepoleFloorVo> list = super.queryBySql(sql);
+        for (RidgepoleFloorVo vo:list) {
+            BigInteger floorTypeId = vo.getFloorTypeId();
+            BigInteger directionImageId = vo.getDirectionImageId();
+
+            Image directionImage = imageDao.findOne(directionImageId.intValue());
+            vo.setDirectionImage(directionImage);
+
+            List<HouseFloorTypeUnit> typeUnitList = houseFloorTypeUnitDao.findByFloorTypeId(floorTypeId.longValue());
+            vo.setFloorType((typeUnitList==null || typeUnitList.size()==0)?null:typeUnitList.get(0).getFloorType());
+        }
+        return new Result().success(list);*/
+        return null;
+    }
+
+    /**
+     * 保存
+     * @param map
+     * @return
+     */
     @Override
     @Transactional
     public Result saveRidgepole(Map map){
@@ -94,6 +135,7 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
                             houseRidgepoleFloorRoom.setRoomNo(floorNo + String.format("%02d", roomNo));
                             houseRidgepoleFloorRoom.setRidgepoleFloor(houseRidgepoleFloor);
                             houseRidgepoleFloorRoom.setIsSale(0);
+                            houseRidgepoleFloorRoom.setTypeUnit(hftu);
                             houseRidgepoleFloorRoomDao.save(houseRidgepoleFloorRoom);
                         }
                     }

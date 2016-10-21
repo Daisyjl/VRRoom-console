@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,10 +39,29 @@ import java.util.Map;
 public class HouseUnitController extends GenericEntityController<House,House,HouseServiceImpl> {
 
     @Autowired
+    private HouseService houseService;
+
+    @Autowired
     private HouseUnitService houseUnitService;
 
     @Autowired
     private UploadImageService uploadImageService;
+
+    /**
+     * 跳转编辑楼盘户型页面
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/edit/{id}")
+    public String editUnit(@PathVariable("id") Long id, Model model){
+        if(id != null){
+            House house = houseService.queryByPK(id);
+            model.addAttribute("house", house);
+        }
+        model.addAttribute("houseId", id);
+        return "house/house_edit_unit";
+    }
 
     /**
      * 列表

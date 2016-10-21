@@ -82,7 +82,7 @@
             </div>
         </div>
         <div class="col-sm-2">
-            <button type="button" onclick="" class="btn btn-primary"><i class="fa fa-minus"></i> 移除</button>
+            <button type="button" onclick="" class="btn btn-primary"><i class="fa fa-minus"></i> 删除</button>
         </div>
     </div>
 

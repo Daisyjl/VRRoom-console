@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
-    <title>Login</title>
+    <title>登录</title>
     <%@ include file="../inc/new2/css.jsp"%>
     <![endif]-->
 </head>

@@ -7,24 +7,30 @@ import com.leoman.common.service.Query;
 import com.leoman.house.entity.HouseDynamic;
 import com.leoman.house.service.HouseDynamicService;
 import com.leoman.house.service.impl.HouseDynamicServiceImpl;
+import com.leoman.image.entity.Image;
+import com.leoman.image.service.ImageService;
 import com.leoman.label.entity.Label;
 import com.leoman.label.service.LabelService;
 import com.leoman.utils.DateUtils;
 import com.leoman.utils.JsonUtil;
+import net.sf.json.JSONArray;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
- * 楼层动态管理
+ * 标签
  * Created by Daisy on 2016/10/14.
  */
 @Controller
@@ -33,6 +39,23 @@ public class LabelController extends GenericEntityController<HouseDynamic,HouseD
 
     @Autowired
     private LabelService labelService;
+
+    @Autowired
+    private ImageService imageService;
+
+    @RequestMapping(value = "/edit/{houseId}_{imageId}")
+    public String edit(@PathVariable("houseId") Long houseId,
+                       @PathVariable("imageId") Integer imageId,
+                       Model model){
+
+        Image image = imageService.getById(imageId);
+        List<Label> labelList = labelService.findListByParams(imageId);
+
+        model.addAttribute("labelList", JSONArray.fromObject(labelList));
+        model.addAttribute("image", image);
+        model.addAttribute("houseId", houseId);
+        return "label";
+    }
 
     /**
      * 根据标签id查询标签最后停留的位置

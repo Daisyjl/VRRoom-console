@@ -114,11 +114,11 @@
 
         <label class="col-sm-1 control-label">上传横切面图：</label>
         <div class="col-sm-2">
-            <%--<input type="file" name="d3File" id="transverseFile" style="display:none;"/>--%>
             <input type="hidden" name="transverseImageId" value="">
             <a href="javascript:void(0);" onclick="$houseFloor.fn.AddTempImg(this)">
                 <img src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 200px; display: inline; margin-bottom: 5px;" border="1"/>
             </a>
+            <a href="javascript:void(0)" target="_blank" class="btn btn-primary btn-sm" role="button" style="color: white; display: none;margin-bottom: 5px;">添加锚点</a>
         </div>
 
         <label class="col-sm-1 control-label">选择户型：</label>
@@ -245,8 +245,8 @@
 
                             var typeUnitList = list[i].typeUnitList;
                             for(var j=0; j<typeUnitList.length; j++){
-                                $houseFloor.fn.addTransverse(i);
-                                $houseFloor.fn.setTransverse(i, typeUnitList[j]);
+                                var curTempTransverseId = $houseFloor.fn.addTransverse(i);//新增一个横切面和户型关系
+                                $houseFloor.fn.setTransverse(curTempTransverseId, typeUnitList[j]);//给该行数据赋值
                             }
                         }
                     }
@@ -323,26 +323,35 @@
             },
             //新增横切面
             addTransverse : function (tempFloorId){
+                var curTempTransverseId = $houseFloor.v.tempTransverseId;
                 var template = $("#transverseTemplate").clone().removeAttr("id");
-//                template.find("label").eq(0).text("横切面"+($houseFloor.v.tempTransverseId+1));
-                template.attr("val",$houseFloor.v.tempTransverseId);
-                template.find("[name=unitId]").attr("id","unitId_"+$houseFloor.v.tempTransverseId);
+                template.attr("val",curTempTransverseId);
+                template.find("[name=unitId]").attr("id","unitId_"+curTempTransverseId);
                 template.show();
                 $("#transverseDiv_"+tempFloorId).append(template);
 
+                //给第一张图片加锚点
+                if($("#transverseDiv_"+tempFloorId).find("[name=transverseGroup]").length == 1){
+                    template.find(".btn-sm").attr("onclick","$houseFloor.fn.editLabel(this)");
+                    template.find(".btn-sm").show();
+                }
+
                 $houseFloor.v.tempTransverseId++;
 
+                return curTempTransverseId;
             },
             //给当前横切面赋值
-            setTransverse : function (tempFloorId, typeUnit){
-                $("#transverseDiv_"+tempFloorId).find("[name=transverseImageId]").val(typeUnit.transverseImage.id);
-                $("#transverseDiv_"+tempFloorId).find("img").eq(0).attr("src",typeUnit.transverseImage.path);
-                $("#transverseDiv_"+tempFloorId).find("[name=unitId]").val(typeUnit.unit.id);
-                $("#transverseDiv_"+tempFloorId).find("[name=unitImg]").attr("src", typeUnit.unit.planeImage.path);
-                $("#transverseDiv_"+tempFloorId).find("[name=unitName]").text("户型名称："+typeUnit.unit.name);
-                $("#transverseDiv_"+tempFloorId).find("[name=unitArea]").text("建筑面积："+typeUnit.unit.totalArea);
-                $("#transverseDiv_"+tempFloorId).find("[name=unitPrice]").text("参考总价："+typeUnit.unit.totalPrice);
-                $("#transverseDiv_"+tempFloorId).find("select option[value="+typeUnit.roomNo+"]").attr("selected",true);
+            setTransverse : function (curTempTransverseId, typeUnit){
+                var obj = $("[name=transverseGroup][val="+curTempTransverseId+"]");
+
+                obj.find("[name=transverseImageId]").val(typeUnit.transverseImage.id);
+                obj.find("img").eq(0).attr("src",typeUnit.transverseImage.path);
+                obj.find("[name=unitId]").val(typeUnit.unit.id);
+                obj.find("[name=unitImg]").attr("src", typeUnit.unit.planeImage.path);
+                obj.find("[name=unitName]").text("户型名称："+typeUnit.unit.name);
+                obj.find("[name=unitArea]").text("建筑面积："+typeUnit.unit.totalArea);
+                obj.find("[name=unitPrice]").text("参考总价："+typeUnit.unit.totalPrice);
+                obj.find("select option[value="+typeUnit.roomNo+"]").attr("selected",true);
             },
             //删除横切面
             removeTransverse : function(self){
@@ -405,6 +414,11 @@
                         $leoman.alertMsg(result.msg);
                     }
                 });
+            },
+            //添加锚点
+            editLabel : function(self){
+                var imageId = $(self).parent().find("[name=transverseImageId]").val();
+                window.location.href = "${contextPath}/admin/label/edit/${houseId}_"+imageId;
             },
             back : function(){
                 window.location.href = "${contextPath}/admin/house/index";
