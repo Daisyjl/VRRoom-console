@@ -1,16 +1,16 @@
 package com.leoman.house.service.impl;
 
+import com.leoman.common.core.ErrorType;
 import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
 import com.leoman.house.dao.*;
 import com.leoman.house.entity.*;
-import com.leoman.house.entity.vo.RidgepoleFloorVo;
-import com.leoman.house.service.HouseDynamicService;
 import com.leoman.house.service.HouseRidgepoleService;
 import com.leoman.image.dao.ImageDao;
 import com.leoman.image.entity.Image;
 import com.leoman.label.dao.LabelDao;
 import com.leoman.label.entity.Label;
+import com.leoman.utils.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,29 +53,32 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
      * @return
      */
     @Override
-    public Result findByGroupFloorType(Long ridgepoleId){
+    public List<Map> findByGroupFloorType(Long ridgepoleId) throws Exception{
 
         String sql = "SELECT \n" +
                 "  t.`floor_type_id` AS floorTypeId,\n" +
                 "  t.`direction_image_id` AS directionImageId,\n" +
-                "  GROUP_CONCAT(t.`floor_no`) AS floorNos \n" +
+                "  GROUP_CONCAT(t.`floor_no` ORDER BY t.`floor_no` ASC) AS floorNos \n" +
                 "FROM\n" +
                 "  t_house_ridgepole_floor t \n" +
                 "WHERE t.`ridgepole_id` = "+ridgepoleId+" \n" +
                 "GROUP BY t.`floor_type_id`";
-        /*List<RidgepoleFloorVo> list = super.queryBySql(sql);
-        for (RidgepoleFloorVo vo:list) {
-            BigInteger floorTypeId = vo.getFloorTypeId();
-            BigInteger directionImageId = vo.getDirectionImageId();
+        List<Map> list = super.queryBySql(sql);
+        for (Map map:list) {
+//            String floorNos = new String((byte[]) map.get("floorNos"),"UTF-8");
+            String floorNos = (String) map.get("floorNos");
+            map.put("floorNos", floorNos);
+            BigInteger floorTypeId = (BigInteger) map.get("floorTypeId");
+            BigInteger directionImageId = (BigInteger) map.get("directionImageId");
 
             Image directionImage = imageDao.findOne(directionImageId.intValue());
-            vo.setDirectionImage(directionImage);
+            map.put("directionImage",directionImage);
 
             List<HouseFloorTypeUnit> typeUnitList = houseFloorTypeUnitDao.findByFloorTypeId(floorTypeId.longValue());
-            vo.setFloorType((typeUnitList==null || typeUnitList.size()==0)?null:typeUnitList.get(0).getFloorType());
+            HouseFloorTypeUnit typeUnit = (typeUnitList==null || typeUnitList.size()==0)?null:typeUnitList.get(0);
+            map.put("typeUnit", typeUnit);
         }
-        return new Result().success(list);*/
-        return null;
+        return list;
     }
 
     /**
@@ -87,13 +90,45 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
     @Transactional
     public Result saveRidgepole(Map map){
 
+        String ridgepoleId = (String)map.get("ridgepoleId");
         String houseId = (String)map.get("houseId");
         String name = (String)map.get("name");
         String floorNum = (String)map.get("floorNum");
         String minSpace = (String)map.get("minSpace");
 
+        HouseRidgepole houseRidgepole;
+
+        //新增
+        if(StringUtils.isEmpty(ridgepoleId)){
+            houseRidgepole = new HouseRidgepole();
+        }
+        //编辑
+        else{
+            houseRidgepole = houseRidgepoleDao.findOne(Long.valueOf(ridgepoleId));
+
+            if(houseRidgepole == null){
+                return new Result().failure(ErrorType.ERROR_CODE_00011);//楼信息不存在
+            }
+
+            //删除楼层信息
+            List<HouseRidgepoleFloor> floorList = houseRidgepoleFloorDao.findByRidgepoleId(Long.valueOf(ridgepoleId));
+            for (HouseRidgepoleFloor hrf:floorList) {
+                if(hrf != null){
+                    houseRidgepoleFloorDao.delete(hrf);
+                }
+            }
+
+            //楼层的房间信息
+            List<HouseRidgepoleFloorRoom> roomList = houseRidgepoleFloorRoomDao.findByRidgepoleId(Long.valueOf(ridgepoleId));
+            for (HouseRidgepoleFloorRoom room:roomList) {
+                if(room != null){
+                    houseRidgepoleFloorRoomDao.delete(room);
+                }
+            }
+        }
+
+
         //保存楼盘的栋信息
-        HouseRidgepole houseRidgepole = new HouseRidgepole();
         houseRidgepole.setHouseId(Long.valueOf(houseId));
         houseRidgepole.setFloorNum(Long.valueOf(floorNum));
         houseRidgepole.setMinSpace(minSpace);
@@ -106,6 +141,7 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
         label.setRidgepoleId(houseRidgepole.getId());
         labelDao.save(label);
 
+        //楼层信息
         List<Map> list = (List)map.get("floorArr");
         for (Map floor:list) {
             String imageId = (String)floor.get("imageId");

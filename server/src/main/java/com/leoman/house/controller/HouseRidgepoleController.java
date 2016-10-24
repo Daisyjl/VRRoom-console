@@ -85,9 +85,9 @@ public class HouseRidgepoleController extends GenericEntityController<HouseDynam
      */
     @RequestMapping(value = "/floorList", method = RequestMethod.POST)
     @ResponseBody
-    public Result floorList(Long ridgepoleId) {
+    public List<Map> floorList(Long ridgepoleId) throws Exception{
 
-        Result result = houseRidgepoleService.findByGroupFloorType(ridgepoleId);
+        List<Map> result = houseRidgepoleService.findByGroupFloorType(ridgepoleId);
         return result;
     }
 

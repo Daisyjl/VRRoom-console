@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
-    <title>新增企业</title>
+    <title>编辑企业</title>
     <%@ include file="../inc/new2/css.jsp" %>
     <style type="text/css">
         #allmap {width: 600px;height: 400px;overflow: hidden;margin:0;font-family:"微软雅黑";}
@@ -249,7 +249,7 @@
                 });
 
                 //初始化值
-                $("#coverImg").attr("src","${house.image.path}");
+                $("#coverImg").attr("src","${house.image.uploadUrl}");
                 $("select").find("option[value=${house.enterprise.id}]").attr("selected",true);
                 $("[name=isOpenWait][value=${house.isOpenWait}]").click();
                 $("[name=isDealWait][value=${house.isDealWait}]").click();

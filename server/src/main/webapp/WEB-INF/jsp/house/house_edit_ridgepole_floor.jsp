@@ -238,23 +238,56 @@
 
                 //初始化加载弹出框的户型列表
                 $ridgepoleFloor.fn.initFloorTypeList();
+
+                if("${ridgepole.floorNum}" != ''){
+                    $ridgepoleFloor.fn.initFloorNumList("${ridgepole.floorNum}");
+                }
             },
             initFloorList : function(){
                 $.post("${contextPath}/admin/house/ridgepole/floorList",{'ridgepoleId':"${ridgepole.id}"},function(result){
-                    if(result.status == 0){
-                        var list = result.data.list;
+                    if(result != null){
+                        var list = result;
                         for(var i=0; i < list.length; i++){
-                            console.info(list[i]);
-                            console.info(list[i].floorTypeId);
-                            console.info(list[i].directionImageId);
+                            var tempFloorTypeId = $ridgepoleFloor.fn.addRow();
+                            $ridgepoleFloor.fn.setRowValue(tempFloorTypeId, list[i]);
                         }
                     }
                 });
             },
+            //新增楼层类型行
+            addRow : function(){
+                var template = $("#ridgepoleTemplate").clone().removeAttr("id");
+                var tempFloorTypeId = $ridgepoleFloor.v.tempFloorTypeId;
+                template.find("label").eq(0).text("楼层类型"+(tempFloorTypeId+1));
+                template.attr("val",tempFloorTypeId);
+
+                template.find("[name=floorTypeId]").attr("id","floorTypeId_"+tempFloorTypeId);
+                template.show();
+                $("#ridgepoleDiv").append(template);
+
+                $ridgepoleFloor.v.tempFloorTypeId++;
+
+                return tempFloorTypeId;
+            },
+            //删除横切面
+            removeRow : function(self){
+                $(self).parents(".form-group").remove();
+            },
+            //设置当前行的值
+            setRowValue : function(tempFloorTypeId, value){
+                var obj = $(".floor[val="+tempFloorTypeId+"]");
+                obj.find("[name=floorTypeId]").val(value.floorTypeId);
+                obj.find("[name=tranImg]").attr("src",value.typeUnit.transverseImage.uploadUrl);
+                obj.find("[name=directionImageId]").val(value.directionImageId);
+                obj.find("img").eq(1).attr("src",value.directionImage.uploadUrl);
+                obj.find("[name=selectedFloorValue]").val(value.floorNos);
+                obj.find("[name=selectedFloor]").text(value.floorNos.split(",").join("楼，")+"楼");
+            },
+            //保存输入的楼层值
             saveFloorNum:function(self){
                 var btnTxt = $(self).text();
                 if(btnTxt == '编辑'){
-                    $leoman.alertConfirm("确定要编辑吗？若编辑，则需重新编辑楼层信息",function(){
+                    $leoman.alertConfirm("确定要编辑吗？若编辑，则之前的楼层信息将清空，需重新编辑楼层信息",function(){
                         $(self).parents(".form-group").find("input").attr("readonly",false);
                         $(self).text("确定");
                     })
@@ -263,11 +296,8 @@
                     $(self).parents(".form-group").find("input").attr("readonly",true);
                     $(self).text("编辑");
                     $ridgepoleFloor.fn.initFloorNumList(floorNum);
+                    $("#ridgepoleDiv").empty();//清空楼层信息
                 }
-            },
-            openFloorModal : function(self){
-                $("#floorModal").modal("show");
-                $("#currentRowId").val($(self).parents(".floor").attr("val"));
             },
             //根据输入的楼层数量，初始化弹出框的楼层复选框
             initFloorNumList :function (floorNum){
@@ -283,19 +313,31 @@
                     });
                 }
             },
+            //打开选择楼层弹出框
+            openFloorModal : function(self){
+                $("#floorModal").modal("show");
+                $("#currentRowId").val($(self).parents(".floor").attr("val"));
+                var value = $(self).parent().prev().prev("[name=selectedFloorValue]").val();//已选中的楼层值
+                $ridgepoleFloor.fn.setFloorChecked(value);
+            },
+            //根据当前楼层的选中值，设置复选框的选中
+            setFloorChecked : function(value){
+                var arr = value.split(",");
+                $(".checkbox").find(".icheckbox_minimal").removeClass("checked");
+                for(var i=0; i<arr.length; i++){
+                    $(".checkbox[val="+arr[i]+"]").find(".icheckbox_minimal").addClass("checked");
+                }
+            },
             //确定选择的楼层
             selectFloor:function(){
                 var arr = [];
-                var arrValue = [];
                 $("#floorDiv").find("div.checked").each(function(){
-                    arr.push($(this).parents(".checkbox").attr("val")+"楼");
-                    arrValue.push($(this).parents(".checkbox").attr("val"));
+                    arr.push($(this).parents(".checkbox").attr("val"));
                 });
 
-                var selectedFloorTxt = arr.join("，");
                 var obj = $("#ridgepoleDiv").find("div.form-group[val="+$("#currentRowId").val()+"]");
-                obj.find("[name=selectedFloor]").text(selectedFloorTxt);
-                obj.find("[name=selectedFloorValue]").val(arrValue.join(","));
+                obj.find("[name=selectedFloor]").text(arr.join("楼，")+"楼");
+                obj.find("[name=selectedFloorValue]").val(arr.join(","));
 
                 $("#floorModal").modal("hide");
 
@@ -335,22 +377,7 @@
 
                 $("#myModal").modal("hide");
             },
-            //新增楼层类型行
-            addRow : function(){
-                var template = $("#ridgepoleTemplate").clone().removeAttr("id");
-                template.find("label").eq(0).text("楼层类型"+($ridgepoleFloor.v.tempFloorTypeId+1));
-                template.attr("val",$ridgepoleFloor.v.tempFloorTypeId);
 
-                template.find("[name=floorTypeId]").attr("id","floorTypeId_"+$ridgepoleFloor.v.tempFloorTypeId);
-                template.show();
-                $("#ridgepoleDiv").append(template);
-
-                $ridgepoleFloor.v.tempFloorTypeId++;
-            },
-            //删除横切面
-            removeRow : function(self){
-                $(self).parents(".form-group").remove();
-            },
             /* 图片 */
             AddTempImg: function (self) {
                 $('#tempImage').click();
@@ -376,6 +403,7 @@
             save : function() {
 
                 var data = {
+                    ridgepoleId : "${ridgepole.id}",
                     houseId : "${houseId}",
                     labelId : "${labelId}",
                     name : $("#name").val(),
@@ -401,14 +429,14 @@
 
                 $.post("${contextPath}/admin/house/ridgepole/save",{'data':JSON.stringify(data)},function(result){
                     if(result.status == 0){
-                        <%--window.location.href = "${contextPath}/admin/house/index";--%>
+                        window.location.href = "${contextPath}/admin/house/ridgepole/edit/${houseId}";
                     }else{
                         $leoman.alertMsg(result.msg);
                     }
                 });
             },
             back : function(){
-                window.location.href = "${contextPath}/admin/house/index";
+                window.location.href = "${contextPath}/admin/house/ridgepole/edit/${houseId}";
             }
         }
     }

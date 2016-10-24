@@ -5,6 +5,7 @@ import com.leoman.common.service.GenericManager;
 import com.leoman.house.entity.HouseDynamic;
 import com.leoman.house.entity.HouseRidgepole;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,6 +16,6 @@ public interface HouseRidgepoleService extends GenericManager<HouseRidgepole> {
 
     public Result saveRidgepole(Map map);
 
-    public Result findByGroupFloorType(Long ridgepoleId);
+    public List<Map> findByGroupFloorType(Long ridgepoleId) throws Exception;
 
 }
