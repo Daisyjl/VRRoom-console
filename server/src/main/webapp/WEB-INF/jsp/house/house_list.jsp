@@ -24,8 +24,7 @@
                     <section class="panel">
                         <div class="panel-body">
                             <div class="form-group col-sm-2">
-                                <input type="text" id="username" name="username" class="form-control"
-                                       id="exampleInputEmail2" placeholder="姓名">
+                                <input type="text" id="username" name="username" class="form-control" placeholder="楼盘名称">
                             </div>
                             <button id="c_search" class="btn btn-info">搜索</button>
                         </div>

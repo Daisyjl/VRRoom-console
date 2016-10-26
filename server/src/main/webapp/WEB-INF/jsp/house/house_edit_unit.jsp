@@ -43,14 +43,7 @@
                                 </div>
 
                                 <div id="unitDiv">
-                                <%--<div class="form-group">
-                                    <label class="col-sm-1 control-label">户型：</label>
-                                    <div class="col-sm-5">
-                                        <a href="javascript:void(0);" onclick="$houseUnit.fn.openModal()">
-                                            <img src="${contextPath}/static/images/add.jpg" style="height: 200px; width: 200px; display: inline; margin-bottom: 5px;" border="1"/>
-                                        </a>
-                                    </div>
-                                </div>--%>
+
                                 </div>
 
 
@@ -82,6 +75,7 @@
             </div>
         </div>
         <div class="col-sm-2">
+            <button type="button" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> 编辑</button>
             <button type="button" onclick="" class="btn btn-primary"><i class="fa fa-minus"></i> 删除</button>
         </div>
     </div>
@@ -96,7 +90,7 @@
                 </div>
                 <div class="modal-body">
                     <form class="cmxform form-horizontal adminex-form" id="unitForm" enctype="multipart/form-data">
-                        <input type="hidden" name="houseId" value="${house.id}">
+                        <input type="hidden" name="id" value="">
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label" ><span style="color: red;">* </span>户型名称：</label>
@@ -158,12 +152,18 @@
                             <div class="col-sm-6">
                                 <input type="file" name="d3ModelRecogFile" class="default" />
                             </div>
+                            <div class="col-sm-3">
+                                <a id="d3ModelRecogFileUrl" style="display: none;">下载地址</a>
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label" >3D模型：</label>
                             <div class="col-sm-6">
-                                <input type="file" name="d3ModelFile" class="default" />
+                                <input type="file" name="d3ModelFile" class="default"/>
+                            </div>
+                            <div class="col-sm-3">
+                                <a id="d3ModelFileUrl" style="display: none;">下载地址</a>
                             </div>
                         </div>
 
@@ -171,7 +171,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" onclick="$houseUnit.fn.saveAddUnit()" class="btn btn-primary">保存</button>
+                    <button type="button" onclick="$houseUnit.fn.save()" class="btn btn-primary">保存</button>
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -200,31 +200,59 @@
                 });
 
                 $("#unitDiv").empty();
-                $.post("${contextPath}/admin/house/unit/list",{'houseId':"${house.id}"},function(result){
+                $.post("${contextPath}/admin/house/unit/list",{'houseId':"${houseId}"},function(result){
                     if(result.status == 0){
-                        var list = result.data.object.list;
+                        var list = result.data.list;
                         for(var i=0; i < list.length; i++){
                             var unitTemplate = $("#unitTemplate").clone().removeAttr("id");
                             unitTemplate.find("label").text("户型"+(i+1)+"：");
-                            unitTemplate.find("img").prop("src",list[i].planeImage.path);
+                            if(list[i].planeImage != null){
+                                unitTemplate.find("img").prop("src",list[i].planeImage.uploadUrl);
+                            }
                             unitTemplate.find(".form-group").eq(0).text("户型名称："+list[i].name);
                             unitTemplate.find(".form-group").eq(1).text("建筑面积："+list[i].totalArea);
                             unitTemplate.find(".form-group").eq(2).text("参考总价："+list[i].totalPrice);
-                            unitTemplate.find("button").attr("onclick","$houseUnit.fn.delete("+list[i].id+")");
+                            unitTemplate.find("button").eq(0).attr("onclick","$houseUnit.fn.openModal("+list[i].id+")");
+                            unitTemplate.find("button").eq(1).attr("onclick","$houseUnit.fn.delete("+list[i].id+")");
                             unitTemplate.show();
                             $("#unitDiv").append(unitTemplate);
-
                         }
                     }
                 });
             },
-            openModal : function (){
-                $("#myModal").modal("show");
+            openModal : function (id){
+                if(id != '' && id != undefined){
+                    $.post("${contextPath}/admin/house/unit/detail/"+id, function(result){
+                        if(result.status == 0){
+                            var obj = result.data.houseUnit;
+                            $("#unitForm").find("[name=id]").val(obj.id);
+                            $("#unitForm").find("[name=name]").val(obj.name);
+                            $("#unitForm").find("[name=typeName]").val(obj.typeName);
+                            $("#unitForm").find("[name=totalArea]").val(obj.totalArea);
+                            $("#unitForm").find("[name=totalPrice]").val(obj.totalPrice);
+                            $("#unitForm").find("#planeImg").attr("src", obj.planeImage.uploadUrl);
+                            $("#unitForm").find("#d3Img").attr("src", obj.d3Image.uploadUrl);
+                            $("#unitForm").find("[name=fullView]").val(obj.fullView);
+                            if(obj.d3ModelRecogUrl != ''){
+                                $("#unitForm").find("#d3ModelRecogFileUrl").show();
+                                $("#unitForm").find("#d3ModelRecogFileUrl").attr("href", obj.d3ModelRecogUrl);
+                            }
+                            if(obj.d3ModelUrl != ''){
+                                $("#unitForm").find("#d3ModelUrl").show();
+                                $("#unitForm").find("#d3ModelUrl").attr("href", obj.d3ModelUrl);
+                            }
+                            $("#myModal").modal("show");
+                        }else{
+                            $leoman.alertMsg(result.msg);
+                        }
+                    });
+                }
             },
             //保存弹出的新增户型
-            saveAddUnit : function (){
+            save : function (){
+                if(!$("#unitForm").valid()) return;
                 $("#unitForm").ajaxSubmit({
-                    url : "${contextPath}/admin/house/unit/saveAdd",
+                    url : "${contextPath}/admin/house/unit/save",
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
@@ -236,22 +264,7 @@
                     }
                 });
             },
-            save : function() {
-                if(!$("#formId").valid()) return;
-                $("#intro").val($houseUnit.v.um.getContent());
-                $("#formId").ajaxSubmit({
-                    url : "${contextPath}/admin/house/unit/saveAdd",
-                    type : "POST",
-                    success : function(result) {
-                        if(result.status == 0) {
-                            $("#myModal").modal("hide");
-                        }
-                        else {
-                            $leoman.alertMsg(result.msg);
-                        }
-                    }
-                });
-            },
+            //删除
             delete : function (id){
                 $leoman.alertConfirm("您确定要删除该户型吗？",function(){
                     $.post("${contextPath}/admin/house/unit/delete",{'id':id},function(result){
@@ -263,14 +276,16 @@
                     });
                 });
             },
+            //返回
             back : function(){
                 window.location.href = "${contextPath}/admin/house/index";
             }
         }
-    }
+    };
+
     $(function () {
         $houseUnit.fn.init();
-    })
+    });
 </script>
 </body>
 </html>

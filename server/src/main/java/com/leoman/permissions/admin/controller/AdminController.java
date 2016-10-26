@@ -14,7 +14,6 @@ import com.leoman.permissions.adminrole.service.AdminRoleService;
 import com.leoman.permissions.role.entity.Role;
 import com.leoman.permissions.role.service.RoleService;
 import com.leoman.enterprise.service.EnterpriseService;
-import com.leoman.user.service.UserService;
 import com.leoman.utils.JsonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,11 +48,6 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
 
     @Autowired
     private EnterpriseService enterpriseService;
-
-    @Autowired
-    private UserService userService;
-
-
 
     /**
      * 列表页面

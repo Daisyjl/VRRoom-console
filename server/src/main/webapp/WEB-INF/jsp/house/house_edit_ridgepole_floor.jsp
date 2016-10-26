@@ -277,7 +277,9 @@
             setRowValue : function(tempFloorTypeId, value){
                 var obj = $(".floor[val="+tempFloorTypeId+"]");
                 obj.find("[name=floorTypeId]").val(value.floorTypeId);
-                obj.find("[name=tranImg]").attr("src",value.typeUnit.transverseImage.uploadUrl);
+                if(value.typeUnit != null){
+                    obj.find("[name=tranImg]").attr("src",value.typeUnit.transverseImage.uploadUrl);
+                }
                 obj.find("[name=directionImageId]").val(value.directionImageId);
                 obj.find("img").eq(1).attr("src",value.directionImage.uploadUrl);
                 obj.find("[name=selectedFloorValue]").val(value.floorNos);
@@ -347,7 +349,7 @@
                 $("#floorTypeDiv").empty();
                 $.post("${contextPath}/admin/house/floor/list",{'houseId':"${houseId}"},function(result){
                     if(result.status == 0){
-                        var list = result.data.object.list;
+                        var list = result.data.list;
                         for(var i=0; i < list.length; i++){
                             var floorTypeTemplate = $("#floorTypeTemplate").clone().removeAttr("id");
                             floorTypeTemplate.find("label").text("楼层类型"+(i+1)+"：");

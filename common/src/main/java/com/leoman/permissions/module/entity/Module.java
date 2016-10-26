@@ -1,10 +1,7 @@
 package com.leoman.permissions.module.entity;
 
 import com.leoman.entity.BaseEntity;
-import com.sun.org.apache.xpath.internal.operations.Mod;
-
 import javax.persistence.*;
-import java.util.List;
 
 /**
  *

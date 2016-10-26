@@ -90,7 +90,7 @@
 
 <!--icheck -->
 <script src="${contextPath}/static/html/js/iCheck/jquery.icheck.js"></script>
-<script src="${contextPath}/static/html/js/icheck-init.js"></script>
+<%--<script src="${contextPath}/static/html/js/icheck-init.js"></script>--%>
 
 <!-- tags input -->
 <script src="${contextPath}/static/html/js/jquery-tags-input/jquery.tagsinput.js"></script>

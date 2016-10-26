@@ -75,7 +75,7 @@ public class HouseFloorController extends GenericEntityController<HouseFloorType
             hft.setTypeUnitList(typeUnitList);
         }
 
-        return new Result().success(createMap("list",list));
+        return new Result().success(list);
     }
 
     /**

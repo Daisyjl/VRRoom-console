@@ -59,8 +59,8 @@
 
                                 <div class="form-group">
                                     <div class="col-sm-6">
-                                        <button type="button" onclick="$houseFloor.fn.save()" class="btn btn-primary">保存</button>
-                                        <button type="button" onclick="history.go(-1);" class="btn btn-primary">返回</button>
+                                        <button type="button" onclick="$houseFloor.fn.save();" class="btn btn-primary">保存</button>
+                                        <button type="button" onclick="$houseFloor.fn.back();" class="btn btn-primary">返回</button>
                                     </div>
                                 </div>
                             </form>
@@ -100,6 +100,8 @@
 
                         </div>
 
+
+
                     </form>
                 </div>
             </section>
@@ -109,8 +111,6 @@
     <!-- 横切面template -->
     <input type="hidden" id="currentTransverseId" value="">
     <div class="form-group" style="display: none;" id="transverseTemplate" name="transverseGroup">
-
-        <%--<label class="col-sm-1 control-label">横切面1：</label>--%>
 
         <label class="col-sm-1 control-label">上传横切面图：</label>
         <div class="col-sm-2">
@@ -192,9 +192,10 @@
 
     <!-- 户型 template -->
     <div class="form-group" style="display: none;" id="unitTemplate">
-        <div class="col-sm-1">
-            <input type="radio" name="unitRadio">
+        <div class="col-sm-1 icheck minimal" name="checkDiv">
+
         </div>
+
         <label class="col-sm-2 control-label">户型：</label>
         <div class="col-sm-5">
             <img src="" style="height: 200px; width: 200px; display: inline; margin-bottom: 5px;" border="1"/>
@@ -227,6 +228,7 @@
             init: function () {
 
                 $houseFloor.v.tempTransverseId = 0;
+
                 $houseFloor.v.tempFloorId = 0;
 
                 //初始化加载楼层类型列表
@@ -239,7 +241,7 @@
             initFloorList:function(){
                 $.post("${contextPath}/admin/house/floor/list",{'houseId':"${houseId}"},function(result){
                     if(result.status == 0){
-                        var list = result.data.object.list;
+                        var list = result.data.list;
                         for(var i=0; i < list.length; i++){
                             $houseFloor.fn.addFloorType();
 
@@ -253,19 +255,23 @@
                 });
             },
             //新增楼层类型
-            addFloorType:function(){
+            addFloorType:function(floorTypeId){
                 var template = $("#floorTypeTemplate").clone().removeAttr("id");
                 template.find("header label").text("楼层类型"+($houseFloor.v.tempFloorId+1));
                 template.find("[name=transverseDiv]").attr("id","transverseDiv_"+$houseFloor.v.tempFloorId);
                 template.find("button").attr("onclick","$houseFloor.fn.addTransverse("+$houseFloor.v.tempFloorId+")");
-
+                if(floorTypeId != '' && floorTypeId != undefined){
+                    template.attr("val", floorTypeId);
+                }
                 template.show();
                 $("#floorDiv").append(template);
 
                 //初始化楼层右上角的收缩和删除楼层块的事件
                 var obj = $("#transverseDiv_"+$houseFloor.v.tempFloorId).parents(".row");
                 obj.find('.panel .tools .fa-times').click(function () {
-                    $(this).parents(".panel").parent().remove();
+                    $leoman.alertConfirm("确定要删除该楼层类型吗？若删除，则其相关数据都删除",function(){
+                        $(this).parents(".panel").parent().remove();
+                    });
                 });
 
                 obj.find('.panel .tools .fa').click(function () {
@@ -286,38 +292,57 @@
                 $("#unitDiv").empty();
                 $.post("${contextPath}/admin/house/unit/list",{'houseId':"${houseId}"},function(result){
                     if(result.status == 0){
-                        var list = result.data.object.list;
+                        var list = result.data.list;
                         for(var i=0; i < list.length; i++){
                             var unitTemplate = $("#unitTemplate").clone().removeAttr("id");
                             unitTemplate.find("label").text("户型"+(i+1)+"：");
-                            unitTemplate.find("img").prop("src",list[i].planeImage.path);
+                            if(list[i].planeImage != null){
+                                unitTemplate.find("img").prop("src",list[i].planeImage.uploadUrl);
+                            }
                             unitTemplate.find(".form-group").eq(0).text("户型名称："+list[i].name);
                             unitTemplate.find(".form-group").eq(1).text("建筑面积："+list[i].totalArea);
                             unitTemplate.find(".form-group").eq(2).text("参考总价："+list[i].totalPrice);
-                            unitTemplate.find("input[type=radio]").val(list[i].id);
+                            unitTemplate.find("[name=checkDiv]").append('<div class="radio" val="'+list[i].id+'"><input type="radio" name="unitRadio"></div>');
                             unitTemplate.show();
                             $("#unitDiv").append(unitTemplate);
-
                         }
+
+                        $('.minimal input').iCheck({
+                            checkboxClass: 'icheckbox_minimal',
+                            radioClass: 'iradio_minimal',
+                            increaseArea: '20%' // optional
+                        });
+
+                        $(".radio .iradio_minimal").first().addClass("checked");
+
                     }
                 });
             },
             //打开选择户型对话框
             openModal : function (self){
                 $("#myModal").modal("show");
-                $("#currentUnitId").val($(self).parents(".form-group").find("[name=unitId]").attr("id"));
+                var unitObj = $(self).parents(".form-group").find("[name=unitId]");
+                $("#currentUnitId").val(unitObj.attr("id"));
+
+                if(unitObj.val() == ''){
+                    $(".radio .iradio_minimal").first().addClass("checked");
+                }else{
+                    $(".radio .iradio_minimal").removeClass("checked");
+                    $(".radio[val="+unitObj.val()+"]").find(".iradio_minimal").addClass("checked");
+                }
             },
             //选择户型
             selectUnit : function (){
-                var unitObj = $("[name=unitRadio]:checked");
+                var unitId = $(".iradio_minimal.checked").parent().attr("val");
+                var unitObj = $(".iradio_minimal.checked").parents(".form-group");
 
                 var divObj = $("#"+$("#currentUnitId").val()).parents(".form-group");
 
-                divObj.find("[name=unitId]").val(unitObj.val());
-                divObj.find("[name=unitImg]").attr("src",unitObj.parents(".form-group").find("img").attr("src"));
-                divObj.find("[name=unitName]").text(unitObj.parents(".form-group").find(".col-sm-3 .form-group").eq(0).text());
-                divObj.find("[name=unitArea]").text(unitObj.parents(".form-group").find(".col-sm-3 .form-group").eq(1).text());
-                divObj.find("[name=unitPrice]").text(unitObj.parents(".form-group").find(".col-sm-3 .form-group").eq(2).text());
+                divObj.find("[name=unitId]").val(unitId);
+                divObj.find("[name=unitImg]").attr("src",unitObj.find("img").attr("src"));
+                divObj.find("[name=unitName]").text(unitObj.find(".col-sm-3 .form-group").eq(0).text());
+                divObj.find("[name=unitArea]").text(unitObj.find(".col-sm-3 .form-group").eq(1).text());
+                divObj.find("[name=unitPrice]").text(unitObj.find(".col-sm-3 .form-group").eq(2).text());
 
                 $("#myModal").modal("hide");
             },
@@ -409,7 +434,7 @@
 
                 $.post("${contextPath}/admin/house/floor/save",{'data':JSON.stringify(data)},function(result){
                     if(result.status == 0){
-                        <%--window.location.href = "${contextPath}/admin/house/index";--%>
+                        window.location.href = "${contextPath}/admin/house/index";
                     }else{
                         $leoman.alertMsg(result.msg);
                     }

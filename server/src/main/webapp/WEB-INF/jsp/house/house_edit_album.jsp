@@ -35,7 +35,6 @@
                                 <input name="id" type="hidden" value="${enterprise.id}">
 
                                 <div class="form-group">
-                                    <label class="col-sm-1 control-label"></label>
                                     <div class="col-sm-6">
                                         <button type="button" onclick="$houseAlbum.fn.back()" class="btn btn-primary"><i class="fa fa-reply"></i> 返回</button>
                                     </div>

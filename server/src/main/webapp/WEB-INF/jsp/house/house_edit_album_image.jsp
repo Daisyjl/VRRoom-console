@@ -31,7 +31,7 @@
                             楼盘相册图片
                         </header>
                         <div class="panel-body">
-                            <form class="cmxform form-horizontal adminex-form" id="formId">
+                            <form class="cmxform form-horizontal adminex-form" id="formId" enctype="multipart/form-data">
                                 <input name="houseId" type="hidden" value="${house.id}">
                                 <input name="album.id" type="hidden" value="${album.id}">
 
@@ -50,8 +50,8 @@
 
                                     <div class="col-sm-2">
                                         <input type="file" style="display:none;"/>
-                                        <a href="javascript:void(0);" onclick="$houseAlbumImage.fn.addImg(this)">
-                                            <img id="albumImg" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
+                                        <a href="javascript:void(0);" onclick="$houseAlbumImage.fn.AddTempImg(this)">
+                                            <img id="addImg" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
                                         </a>
                                     </div>
 
@@ -76,11 +76,16 @@
     </div>
     <!-- main content end-->
 
+    <form id="tempImageForm" method="post" action="${contextPath}/common/file/addTempImage" enctype="multipart/form-data" class="form-horizontal" role="form">
+        <input type="file" name="tempImage" id="tempImage" data-rule="required" style="display:none;" onchange="$houseAlbumImage.fn.saveTempImage()"/>
+    </form>
 
+    <input type="hidden" id="curImageId" value="">
     <div class="col-sm-2" style="display: none;" id="imageTemplate">
-        <input type="file" name="file" style="display:none;"/>
-        <a href="javascript:void(0);">
-            <img id="" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
+        <%--<input type="file" name="file" style="display:none;"/>--%>
+        <input type="hidden" name="imageId" value="">
+        <a href="javascript:void(0);" onclick="$houseAlbumImage.fn.AddTempImg(this)">
+            <img id="" name="path" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 10px;" border="1"/>
         </a>
         <a href="javascript:void(0);" style="z-index: 10; position: relative; bottom: 70px; left: -23px;" class="axx" onclick="$houseAlbumImage.fn.deleteImage(this)">
             <img src="${contextPath}/static/images/xx.png" style="height: 16px; width: 16px; display: inline;" border="1"/>
@@ -107,39 +112,61 @@
 
                 $houseAlbumImage.fn.initList();
             },
+            //初始化图片列表
             initList : function(){
                 $("#imageDiv").empty();
                 $.post("${contextPath}/admin/house/album/imageList",{'houseId':"${house.id}",'albumId':"${album.id}"},function(result){
                     if(result.status == 0){
                         var list = result.data.object.list;
                         for(var i=0; i < list.length; i++){
-                            console.info(i);
-                            $houseAlbumImage.fn.addImg(list[i].image.path);
+                            $houseAlbumImage.fn.addImgTemplate(list[i].image.uploadUrl, list[i].image.id);
                         }
                     }
                 });
             },
-            addImg : function(path){
+            //新增一个图片模板
+            addImgTemplate : function(path, id){
                 var template = $("#imageTemplate").clone().removeAttr("id");
-                template.find("input").attr("id","albumFile_"+$houseAlbumImage.v.tempImageId);
                 if(path != "" && path != undefined){
                     template.find("img").eq(0).attr("src",path);
                 }
                 template.find("img").eq(0).attr("id","albumImg_"+$houseAlbumImage.v.tempImageId);
-                template.find("img").eq(0).parents("a").attr("onclick","$('#"+"albumFile_"+$houseAlbumImage.v.tempImageId+"').click();");
+                template.find("input[name=imageId]").val(id);
                 template.show();
                 $("#imageDiv").append(template);
 
-                $("#albumFile_"+$houseAlbumImage.v.tempImageId).uploadPreview({
-                    Img: "albumImg_"+$houseAlbumImage.v.tempImageId//楼盘封面图
-                });
-
-                $("#albumFile_"+$houseAlbumImage.v.tempImageId).click();
-
                 $houseAlbumImage.v.tempImageId++;
             },
+            //删除图片
             deleteImage: function (self) {
                 $(self).parents(".col-sm-2").remove();
+            },
+            /* 图片 */
+            AddTempImg: function (self) {
+                $('#tempImage').click();
+                $("#curImageId").val($(self).find("img").attr("id"));
+            },
+            //上传图片
+            saveTempImage: function () {
+                $("#tempImageForm").ajaxSubmit({
+                    dataType: "json",
+                    success: function (data) {
+                        if (null != data.path && data.path != '') {
+                            //新增一个图片模板
+                            if($("#curImageId").val() == 'addImg'){
+                                $houseAlbumImage.fn.addImgTemplate(data.path, data.id);
+                            }
+                            //修改当前图片
+                            else{
+                                var obj = $("#"+$("#curImageId").val());
+                                obj.attr("src",data.path);
+                                obj.parent().prev("input").val(data.id);
+                            }
+                        } else {
+                            $leoman.alertMsg("上传错误");
+                        }
+                    }
+                });
             },
             save : function() {
                 if(!$("#formId").valid()) return;

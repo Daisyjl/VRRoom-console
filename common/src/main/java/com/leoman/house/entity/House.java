@@ -77,6 +77,8 @@ public class House extends BaseEntity{
     @Column(name = "lat")
     private Double lat;//纬度
 
+    private Integer status;//0-新增，1-删除
+
     public String getName() {
         return name;
     }
@@ -235,5 +237,13 @@ public class House extends BaseEntity{
 
     public void setLat(Double lat) {
         this.lat = lat;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

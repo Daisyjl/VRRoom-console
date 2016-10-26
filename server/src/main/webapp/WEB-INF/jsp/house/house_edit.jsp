@@ -35,6 +35,8 @@
                         <div class="panel-body">
                             <form class="cmxform form-horizontal adminex-form" id="formId" method="post" enctype="multipart/form-data">
                                 <input type="hidden" name="id" value="${house.id}">
+                                <input type="hidden" name="openTime" value="">
+                                <input type="hidden" name="dealTime" value="">
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label">楼盘封面：</label>
@@ -80,7 +82,7 @@
                                         <input type="radio" name="isOpenWait" value="1">指定开盘时间
                                     </div>
                                     <div class="col-sm-2">
-                                        <input type="text" name="openTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="">
+                                        <input type="text" id="openTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="">
                                     </div>
                                 </div>
 
@@ -99,7 +101,7 @@
                                         <input type="radio" name="isDealWait" value="1">交房时间
                                     </div>
                                     <div class="col-sm-2">
-                                        <input type="text" name="dealTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="">
+                                        <input type="text" id="dealTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="">
                                     </div>
                                 </div>
 
@@ -107,6 +109,9 @@
                                     <label class="col-sm-1 control-label" >产权年限：</label>
                                     <div class="col-sm-2">
                                         <input type="text" name="propertyLimit" value="${house.propertyLimit}" class="form-control" number-0="true"/>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        年
                                     </div>
                                 </div>
 
@@ -242,6 +247,7 @@
                 //初始化radio
                 $("input[type=radio]").click(function(){
                     if($(this).val() == 0){
+                        $(this).parent().next().find("input").val("");
                         $(this).parent().next().find("input").hide();
                     }else {
                         $(this).parent().next().find("input").show();
@@ -250,9 +256,20 @@
 
                 //初始化值
                 $("#coverImg").attr("src","${house.image.uploadUrl}");
-                $("select").find("option[value=${house.enterprise.id}]").attr("selected",true);
+                $("select").eq(0).find("option[value=${house.enterprise.id}]").attr("selected",true);
+                $("select").eq(1).find("option[value=${house.decorateType}]").attr("selected",true);
                 $("[name=isOpenWait][value=${house.isOpenWait}]").click();
                 $("[name=isDealWait][value=${house.isDealWait}]").click();
+
+                if("${house.openTime}" != ''){
+                    var date = new Date(parseInt("${house.openTime}"));
+                    $("#openTime").val(date.format("yyyy-MM-dd hh:mm"));
+                }
+
+                if("${house.dealTime}" != ''){
+                    var date = new Date(parseInt("${house.dealTime}"));
+                    $("#dealTime").val(date.format("yyyy-MM-dd hh:mm"));
+                }
 
             },
 
@@ -266,6 +283,19 @@
                 });
 
                 $("#tags_1").val(lableArr.join(","));
+
+                var openTime = $("#openTime").val();
+                var dealTime = $("#dealTime").val();
+
+                if(openTime != ''){
+                    var openDate = Date.parse(new Date(openTime));
+                    $("[name=openTime]").val(openDate);
+                }
+
+                if(dealTime != ''){
+                    var dealDate = Date.parse(new Date(dealTime));
+                    $("[name=dealTime]").val(dealDate);
+                }
 
                 $("#formId").ajaxSubmit({
                     url : "${contextPath}/admin/house/save",

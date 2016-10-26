@@ -65,8 +65,12 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
                 "GROUP BY t.`floor_type_id`";
         List<Map> list = super.queryBySql(sql);
         for (Map map:list) {
-//            String floorNos = new String((byte[]) map.get("floorNos"),"UTF-8");
-            String floorNos = (String) map.get("floorNos");
+            String floorNos = "";
+            if(map.get("floorNos").getClass().equals(String.class)){
+                floorNos = (String) map.get("floorNos");
+            }else if(map.get("floorNos").getClass().equals(byte[].class)){
+                floorNos = new String((byte[]) map.get("floorNos"),"UTF-8");
+            }
             map.put("floorNos", floorNos);
             BigInteger floorTypeId = (BigInteger) map.get("floorTypeId");
             BigInteger directionImageId = (BigInteger) map.get("directionImageId");

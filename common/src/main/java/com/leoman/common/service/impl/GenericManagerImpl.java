@@ -62,7 +62,6 @@ public class GenericManagerImpl<E, D extends IBaseJpaRepository<E>> implements G
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-            ;
         }
         return this.entityDAO;
     }

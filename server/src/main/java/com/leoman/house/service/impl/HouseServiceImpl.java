@@ -43,6 +43,8 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
 
         Long houseId = house.getId();
 
+        System.out.println("-----------当前时间戳为："+System.currentTimeMillis());
+
         //新增
         if(houseId == null){
             House h = houseDao.findByName(house.getName());

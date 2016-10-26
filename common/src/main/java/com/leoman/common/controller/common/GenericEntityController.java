@@ -3,7 +3,6 @@ package com.leoman.common.controller.common;
 import com.leoman.common.controller.editor.*;
 import com.leoman.entity.Constant;
 import com.leoman.permissions.admin.entity.Admin;
-import com.leoman.user.entity.UserInfo;
 import com.leoman.utils.ServiceLocator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;

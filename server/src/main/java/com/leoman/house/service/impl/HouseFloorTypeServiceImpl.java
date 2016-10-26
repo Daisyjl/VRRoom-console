@@ -37,15 +37,39 @@ public class HouseFloorTypeServiceImpl extends GenericManagerImpl<HouseFloorType
         return houseFloorTypeDao.findByHouseId(houseId);
     }
 
+    /**
+     * 保存楼层信息
+     * @param list
+     * @return
+     */
     @Override
     @Transactional
     public Result saveFloor(List<Map> list){
         if(list != null){
+
             for (Map floorMap: list) {
 
                 String houseId = (String)floorMap.get("houseId");
                 String name = (String)floorMap.get("name");
                 List<Map> tranList = (List)floorMap.get("tranArr");
+
+                //删除楼层类型
+                List<HouseFloorType> typeList = houseFloorTypeDao.findByHouseId(Long.valueOf(houseId));
+                for (HouseFloorType type:typeList) {
+                    if(type != null){
+
+                        //删除楼层类型和户型的关系
+                        List<HouseFloorTypeUnit> typeUnitList = houseFloorTypeUnitDao.findByFloorTypeId(type.getId());
+                        for (HouseFloorTypeUnit typeUnit:typeUnitList) {
+                            if(typeUnit != null){
+                                houseFloorTypeUnitDao.delete(typeUnit);
+                            }
+                        }
+
+                        //删除楼层类型
+                        houseFloorTypeDao.delete(type);
+                    }
+                }
 
                 //保存楼层类型
                 HouseFloorType houseFloorType = new HouseFloorType();

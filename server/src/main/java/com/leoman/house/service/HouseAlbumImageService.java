@@ -1,8 +1,11 @@
 package com.leoman.house.service;
 
+import com.leoman.common.core.Result;
 import com.leoman.common.service.GenericManager;
 import com.leoman.house.entity.HouseAlbum;
 import com.leoman.house.entity.HouseAlbumImage;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
 import java.util.List;
 
@@ -13,5 +16,7 @@ import java.util.List;
 public interface HouseAlbumImageService extends GenericManager<HouseAlbumImage> {
 
     public List<HouseAlbumImage> findImageNum(Long houseId, Long albumId);
+
+    public Result saveImage(HouseAlbumImage albumImage, String imageId);
 
 }

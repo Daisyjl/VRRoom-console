@@ -71,6 +71,7 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
         Query query = Query.forClass(House.class, houseService);
         query.setPagenum(pagenum);
         query.setPagesize(length);
+//        query.like("name");
         Page<House> page = houseService.queryPage(query);
         return DataTableFactory.fitting(draw, page);
     }
@@ -109,20 +110,6 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
         return "house/house_edit";
     }
 
-
-
-   /* *//**
-     * 保存楼盘户型
-     * @param houseUnit
-     * @return
-     *//*
-    @RequestMapping(value = "/saveUnit", method = RequestMethod.POST)
-
-    @ResponseBody
-    public Result saveUnit(HouseUnit houseUnit) {
-        houseUnitService.save(houseUnit);
-        return Result.success();
-    }*/
 
     /**
      * 跳转编辑基本页面页面

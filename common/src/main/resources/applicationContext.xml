@@ -56,6 +56,7 @@
 
 		<!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->
 		<property name="filters" value="stat" />
+
 	</bean>
 
 

@@ -14,6 +14,6 @@ import java.util.List;
 public interface HouseAlbumImageDao extends IBaseJpaRepository<HouseAlbumImage> {
 
     @Query("select a from HouseAlbumImage a where a.houseId = ?1 and a.album.id = ?2")
-    public List<HouseAlbumImage> findImageNum(Long houseId, Long albumId);
+    public List<HouseAlbumImage> findImage(Long houseId, Long albumId);
 
 }

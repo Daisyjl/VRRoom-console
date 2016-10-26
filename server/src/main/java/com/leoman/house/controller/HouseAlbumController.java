@@ -21,10 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
@@ -140,20 +137,25 @@ public class HouseAlbumController extends GenericEntityController<HouseAlbum,Hou
     @ResponseBody
     public Result imageList(Long houseId, Long albumId) {
         List<HouseAlbumImage> list = houseAlbumImageService.findImageNum(houseId, albumId);
-        for (HouseAlbumImage hai:list) {
+        /*for (HouseAlbumImage hai:list) {
             if(hai.getImage() != null){
                 hai.getImage().setPath(Configue.getUploadUrl() + hai.getImage().getPath());
             }
         }
-
+*/
         return new Result().success(createMap("list",list));
     }
 
+    /**
+     * 保存图片
+     * @param albumImage
+     * @return
+     */
     @RequestMapping(value = "/saveImage", method = RequestMethod.POST)
     @ResponseBody
-    public Result saveImage(HouseAlbumImage albumImage, MultipartRequest multipartRequest) {
+    public Result saveImage(HouseAlbumImage albumImage, String imageId) {
 
-        List<MultipartFile> files = multipartRequest.getFiles("file");
+        /*List<MultipartFile> files = multipartRequest.getFiles("file");
         if(files != null){
             for (MultipartFile file:files) {
                 HouseAlbumImage hai = new HouseAlbumImage();
@@ -163,9 +165,10 @@ public class HouseAlbumController extends GenericEntityController<HouseAlbum,Hou
                 hai.setImage(image);
                 houseAlbumImageService.save(hai);
             }
-        }
+        }*/
 
-        return Result.success();
+        Result result = houseAlbumImageService.saveImage(albumImage, imageId);
+        return result;
     }
 
 
