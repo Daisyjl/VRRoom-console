@@ -47,6 +47,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-12">
+
                     <section class="panel">
                         <header class="panel-heading">
                             楼盘动态列表
@@ -83,12 +84,12 @@
             <div class="modal-content" style="width: 850px;">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">新增动态</h4>
+                    <h4 class="modal-title">新增/编辑动态</h4>
                 </div>
                 <div class="modal-body">
                     <form class="cmxform form-horizontal adminex-form" id="formId" enctype="multipart/form-data">
                         <input type="hidden" name="houseId" value="${houseId}">
-                        <input type="hidden" name="dynamicId" value="">
+                        <input type="hidden" id="dynamicId" name="id" value="">
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label" style="width: 100px;"><span style="color: red;">* </span>标题：</label>
@@ -97,12 +98,12 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <%--<div class="form-group">
                             <label class="col-sm-2 control-label" style="width: 100px;"><span style="color: red;">* </span>内容：</label>
                             <div class="col-sm-6">
                                 <script type="text/plain" id="myEditor" name="content" style="width:700px;height:240px;"></script>
                             </div>
-                        </div>
+                        </div>--%>
 
                     </form>
                 </div>
@@ -130,7 +131,7 @@
             init: function () {
                 $houseDynamic.fn.dataTableInit();
 
-                $houseDynamic.fn.initEdior();//初始化编辑器
+//                $houseDynamic.fn.initEdior();//初始化编辑器
 
                 $('.form_datetime').datetimepicker({
                     language: 'zh-CN',
@@ -202,13 +203,23 @@
                 $houseDynamic.v.um = UM.getEditor('myEditor');
             },
             add: function (id) {
-                id = id!=null?id:"";
-                $("#dynamicId").val(id);
-                $("#myModal").modal("show");
+                window.location.href = "${contextPath}/admin/house/dynamic/editDetail?id="+id;
+                /*if(id != undefined && id != ''){
+                    $.post("${contextPath}/admin/house/dynamic/detail", {id:id}, function(result){
+                        if(result.status == 0){
+                            var data = result.data.houseDynamic;
+                            $("#dynamicId").val(data.id);
+                            $("[name=title]").val(data.title);
+                            UM.getEditor('myEditor').setContent(data.content);
+                            $("#myModal").modal("show");
+                        }
+                    });
+                }else{
+                    $("#myModal").modal("show");
+                }*/
             },
             save:function(){
                 if(!$("#formId").valid()) return;
-//                $("#intro").val($houseUnit.v.um.getContent());
                 $("#formId").ajaxSubmit({
                     url : "${contextPath}/admin/house/dynamic/save",
                     type : "POST",
@@ -247,33 +258,6 @@
                         }
                     });
                 });
-
-
-                /*var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');
-                var ids = checkBox.getInputId();
-                $("#confirm").modal("show");
-                $('#showText').html('您确定要彻底删除所选的企业吗？');
-                $("#determine").off("click");
-                $("#determine").on("click",function(){
-                    $.ajax({
-                        "url": "${contextPath}/admin/enterprise/del",
-                        "data": {
-                            id:id,
-                            ids:JSON.stringify(ids)
-                        },
-                        "dataType": "json",
-                        "type": "POST",
-                        success: function (result) {
-                            if (result==1) {
-                                $('#showText').html('删除错误');
-                            }else {
-                                $("#deleteBatch").css('display','none');
-                                $houseDynamic.v.dTable.ajax.reload(null,false);
-                            }
-                            $("#confirm").modal("hide");
-                        }
-                    });
-                })*/
             },
             responseComplete: function (result, action) {
                 if (result.status == "0") {

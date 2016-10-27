@@ -18,4 +18,8 @@ public interface HouseFloorTypeService extends GenericManager<HouseFloorType> {
 
     public Result saveFloor(List<Map> list);
 
+    public Result deleteFloorType(Long floorTypeId);
+
+    public Result deleteTypeUnit(Long typeUnitId);
+
 }

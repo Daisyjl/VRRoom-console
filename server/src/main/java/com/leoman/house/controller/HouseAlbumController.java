@@ -45,9 +45,6 @@ public class HouseAlbumController extends GenericEntityController<HouseAlbum,Hou
     private HouseAlbumImageService houseAlbumImageService;
 
     @Autowired
-    private UploadImageService uploadImageService;
-
-    @Autowired
     private HouseService houseService;
 
 
@@ -137,12 +134,6 @@ public class HouseAlbumController extends GenericEntityController<HouseAlbum,Hou
     @ResponseBody
     public Result imageList(Long houseId, Long albumId) {
         List<HouseAlbumImage> list = houseAlbumImageService.findImageNum(houseId, albumId);
-        /*for (HouseAlbumImage hai:list) {
-            if(hai.getImage() != null){
-                hai.getImage().setPath(Configue.getUploadUrl() + hai.getImage().getPath());
-            }
-        }
-*/
         return new Result().success(createMap("list",list));
     }
 
@@ -154,19 +145,6 @@ public class HouseAlbumController extends GenericEntityController<HouseAlbum,Hou
     @RequestMapping(value = "/saveImage", method = RequestMethod.POST)
     @ResponseBody
     public Result saveImage(HouseAlbumImage albumImage, String imageId) {
-
-        /*List<MultipartFile> files = multipartRequest.getFiles("file");
-        if(files != null){
-            for (MultipartFile file:files) {
-                HouseAlbumImage hai = new HouseAlbumImage();
-                hai.setAlbum(albumImage.getAlbum());
-                hai.setHouseId(albumImage.getHouseId());
-                Image image = uploadImageService.uploadImage(file);
-                hai.setImage(image);
-                houseAlbumImageService.save(hai);
-            }
-        }*/
-
         Result result = houseAlbumImageService.saveImage(albumImage, imageId);
         return result;
     }

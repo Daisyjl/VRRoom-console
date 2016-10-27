@@ -47,9 +47,6 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
     private HouseService houseService;
 
     @Autowired
-    private UploadImageService uploadImageService;
-
-    @Autowired
     private EnterpriseService enterpriseService;
 
     @RequestMapping(value = "/index")
@@ -110,18 +107,6 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
         return "house/house_edit";
     }
 
-
-    /**
-     * 跳转编辑基本页面页面
-     * @param id
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/editDynamic/{id}")
-    public String editDynamic(@PathVariable("id") Long id, Model model){
-        model.addAttribute("houseId", id);
-        return "house/house_edit_dynamic";
-    }
 
     /**
      * 保存楼盘的基本信息

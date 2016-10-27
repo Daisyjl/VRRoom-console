@@ -63,15 +63,6 @@ public class HouseFloorController extends GenericEntityController<HouseFloorType
         List<HouseFloorType> list = floorTypeService.findByHouseId(houseId);
         for (HouseFloorType hft:list) {
             List<HouseFloorTypeUnit> typeUnitList = houseFloorTypeUnitService.findByFloorTypeId(hft.getId());
-            for (HouseFloorTypeUnit typeUnit:typeUnitList) {
-                if(typeUnit.getTransverseImage() != null){
-                    typeUnit.getTransverseImage().setPath(Configue.getUploadUrl() + typeUnit.getTransverseImage().getPath());
-                }
-
-                if(typeUnit.getUnit().getPlaneImage() != null){
-                    typeUnit.getUnit().getPlaneImage().setPath(Configue.getUploadUrl() + typeUnit.getUnit().getPlaneImage().getPath());
-                }
-            }
             hft.setTypeUnitList(typeUnitList);
         }
 
@@ -88,6 +79,40 @@ public class HouseFloorController extends GenericEntityController<HouseFloorType
 
         List<Map> list = JsonUtil.json2Obj(data, List.class);
         floorTypeService.saveFloor(list);
+
+        return Result.success();
+    }
+
+    /**
+     * 删除楼层类型和户型关系
+     * @param floorTypeId
+     * @return
+     */
+    @RequestMapping(value = "/delFloorType", method = RequestMethod.POST)
+    @ResponseBody
+    public Result delFloorType(Long floorTypeId) {
+
+        HouseFloorType floorType = floorTypeService.queryByPK(floorTypeId);
+        if(floorType != null){
+            floorTypeService.delete(floorType);
+        }
+
+        return Result.success();
+    }
+
+    /**
+     * 删除楼层类型和户型关系
+     * @param typeUnitId
+     * @return
+     */
+    @RequestMapping(value = "/delTypeUnit", method = RequestMethod.POST)
+    @ResponseBody
+    public Result delTypeUnit(Long typeUnitId) {
+
+        HouseFloorTypeUnit typeUnit = houseFloorTypeUnitService.queryByPK(typeUnitId);
+        if(typeUnit != null){
+            houseFloorTypeUnitService.delete(typeUnit);
+        }
 
         return Result.success();
     }

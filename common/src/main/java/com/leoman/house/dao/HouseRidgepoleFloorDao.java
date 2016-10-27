@@ -15,4 +15,7 @@ public interface HouseRidgepoleFloorDao extends IBaseJpaRepository<HouseRidgepol
 
     @Query("select a from HouseRidgepoleFloor a where a.ridgepole.id = ?1")
     public List<HouseRidgepoleFloor> findByRidgepoleId(Long ridgepoleId);
+
+    @Query("select a from HouseRidgepoleFloor a where a.floorType.id = ?1")
+    public List<HouseRidgepoleFloor> findByFloorTypeId(Long floorTypeId);
 }

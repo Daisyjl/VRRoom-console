@@ -16,6 +16,7 @@ public enum ErrorType {
     ERROR_CODE_0009("企业账号已存在", 9),
     ERROR_CODE_00010("楼盘名称已存在", 10),
     ERROR_CODE_00011("楼信息不存在", 11),
+    ERROR_CODE_00012("楼盘封面图不能为空", 12),
 
     ErrorType;
 

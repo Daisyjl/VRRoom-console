@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
-    <title>编辑企业</title>
+    <title>编辑楼盘</title>
     <%@ include file="../inc/new2/css.jsp" %>
     <style type="text/css">
         #allmap {width: 600px;height: 400px;overflow: hidden;margin:0;font-family:"微软雅黑";}

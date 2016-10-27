@@ -243,11 +243,11 @@
                     if(result.status == 0){
                         var list = result.data.list;
                         for(var i=0; i < list.length; i++){
-                            $houseFloor.fn.addFloorType();
+                            $houseFloor.fn.addFloorType(list[i].id);
 
                             var typeUnitList = list[i].typeUnitList;
                             for(var j=0; j<typeUnitList.length; j++){
-                                var curTempTransverseId = $houseFloor.fn.addTransverse(i);//新增一个横切面和户型关系
+                                var curTempTransverseId = $houseFloor.fn.addTransverse(i, typeUnitList[j].id);//新增一个横切面和户型关系
                                 $houseFloor.fn.setTransverse(curTempTransverseId, typeUnitList[j]);//给该行数据赋值
                             }
                         }
@@ -260,20 +260,34 @@
                 template.find("header label").text("楼层类型"+($houseFloor.v.tempFloorId+1));
                 template.find("[name=transverseDiv]").attr("id","transverseDiv_"+$houseFloor.v.tempFloorId);
                 template.find("button").attr("onclick","$houseFloor.fn.addTransverse("+$houseFloor.v.tempFloorId+")");
-                if(floorTypeId != '' && floorTypeId != undefined){
-                    template.attr("val", floorTypeId);
-                }
                 template.show();
                 $("#floorDiv").append(template);
 
-                //初始化楼层右上角的收缩和删除楼层块的事件
+                if(floorTypeId != '' && floorTypeId != undefined){
+                    template.attr("val", floorTypeId);
+                }
+
                 var obj = $("#transverseDiv_"+$houseFloor.v.tempFloorId).parents(".row");
+
+                //初始化楼层右上角的收缩和删除楼层块的事件
                 obj.find('.panel .tools .fa-times').click(function () {
-                    $leoman.alertConfirm("确定要删除该楼层类型吗？若删除，则其相关数据都删除",function(){
+                    if(floorTypeId != '' && floorTypeId != undefined){
+                        $leoman.alertConfirm("确定要删除该楼层类型吗？若删除，则其相关数据都删除",function(){
+                            $.post("${contextPath}/admin/house/floor/delFloorType", {floorTypeId:floorTypeId}, function(result){
+                                if(result.status == 0){
+                                    $(this).parents(".panel").parent().remove();
+                                }else{
+                                    $leoman.alertMsg(result.msg);
+                                }
+                            });
+                        });
+                    }else{
                         $(this).parents(".panel").parent().remove();
-                    });
+                    }
                 });
 
+
+                //按钮展开收缩事件
                 obj.find('.panel .tools .fa').click(function () {
                     var el = $(this).parents(".panel").children(".panel-body");
                     if ($(this).hasClass("fa-chevron-down")) {
@@ -347,11 +361,14 @@
                 $("#myModal").modal("hide");
             },
             //新增横切面
-            addTransverse : function (tempFloorId){
+            addTransverse : function (tempFloorId, typeUnitId){
                 var curTempTransverseId = $houseFloor.v.tempTransverseId;
                 var template = $("#transverseTemplate").clone().removeAttr("id");
                 template.attr("val",curTempTransverseId);
                 template.find("[name=unitId]").attr("id","unitId_"+curTempTransverseId);
+                if(typeUnitId != undefined && typeUnitId != ''){
+                    template.attr("typeUnitId", typeUnitId);
+                }
                 template.show();
                 $("#transverseDiv_"+tempFloorId).append(template);
 
@@ -370,9 +387,13 @@
                 var obj = $("[name=transverseGroup][val="+curTempTransverseId+"]");
 
                 obj.find("[name=transverseImageId]").val(typeUnit.transverseImage.id);
-                obj.find("img").eq(0).attr("src",typeUnit.transverseImage.path);
+                if(typeUnit.transverseImage != null){
+                    obj.find("img").eq(0).attr("src",typeUnit.transverseImage.uploadUrl);
+                }
                 obj.find("[name=unitId]").val(typeUnit.unit.id);
-                obj.find("[name=unitImg]").attr("src", typeUnit.unit.planeImage.path);
+                if(typeUnit.unit.planeImage != null){
+                    obj.find("[name=unitImg]").attr("src", typeUnit.unit.planeImage.uploadUrl);
+                }
                 obj.find("[name=unitName]").text("户型名称："+typeUnit.unit.name);
                 obj.find("[name=unitArea]").text("建筑面积："+typeUnit.unit.totalArea);
                 obj.find("[name=unitPrice]").text("参考总价："+typeUnit.unit.totalPrice);
@@ -380,7 +401,18 @@
             },
             //删除横切面
             removeTransverse : function(self){
-                $(self).parents(".form-group").remove();
+                var typeUnitId = $(self).parents(".form-group").attr("typeunitid");
+                if(typeUnitId != undefined && typeUnitId != ''){
+                    $leoman.alertConfirm("确定要删除该户型吗？若删除，则相关数据都删除",function(){
+                        $.post("${contextPath}/admin/house/floor/delTypeUnit", {typeUnitId:typeUnitId}, function(result){
+                            if(result.status == 0){
+                                $(self).parents(".form-group").remove();
+                            }
+                        });
+                    });
+                }else{
+                    $(self).parents(".form-group").remove();
+                }
             },
             /* 图片 */
             AddTempImg: function (self) {
@@ -413,6 +445,7 @@
                     var floorJson = {
                         houseId : "${houseId}",
                         name : "楼层类型"+(i+1),
+                        floorTypeId : $(floorArr[i]).attr("val"),
                         tranArr : []
                     };
 
@@ -421,10 +454,12 @@
                         var imageId = $(transverseArr[j]).find("[name=transverseImageId]").val();
                         var unitId = $(transverseArr[j]).find("[name=unitId]").val();
                         var roomNo = $(transverseArr[j]).find("[name=roomNo]").val();
+                        var typeUnitId = $(transverseArr[j]).attr("typeUnitId");
                         var transverseJson = {
                             imageId : imageId,
                             unitId : unitId,
-                            roomNo : roomNo
+                            roomNo : roomNo,
+                            typeUnitId : typeUnitId
                         };
                         floorJson.tranArr.push(transverseJson);
                     }

@@ -10,6 +10,7 @@ import com.leoman.house.entity.House;
 import com.leoman.house.service.HouseService;
 import com.leoman.image.entity.Image;
 import com.leoman.image.service.UploadImageService;
+import com.leoman.utils.ClassUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,8 +44,6 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
 
         Long houseId = house.getId();
 
-        System.out.println("-----------当前时间戳为："+System.currentTimeMillis());
-
         //新增
         if(houseId == null){
             House h = houseDao.findByName(house.getName());
@@ -58,6 +57,13 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
             if(h != null){
                 return new Result().failure(ErrorType.ERROR_CODE_00010);//楼盘名称已存在
             }
+
+            House orgHouse = houseDao.findOne(houseId);
+            ClassUtil.copyProperties(house, orgHouse);
+        }
+
+        if(house.getImage() == null){
+            return new Result().failure(ErrorType.ERROR_CODE_00012);//楼盘封面图不能为空
         }
 
         //基本信息
