@@ -1,10 +1,13 @@
 package com.leoman.house.entity;
 
 import com.leoman.entity.BaseEntity;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.List;
 
 /**
  * 楼盘的每一栋
@@ -25,6 +28,9 @@ public class HouseRidgepole extends BaseEntity{
 
     @Column(name = "min_space")
     private String minSpace;//最小楼间距
+
+    @Transient
+    private List<HouseRidgepoleFloor> floorList;
 
     public Long getHouseId() {
         return houseId;
@@ -56,5 +62,13 @@ public class HouseRidgepole extends BaseEntity{
 
     public void setMinSpace(String minSpace) {
         this.minSpace = minSpace;
+    }
+
+    public List<HouseRidgepoleFloor> getFloorList() {
+        return floorList;
+    }
+
+    public void setFloorList(List<HouseRidgepoleFloor> floorList) {
+        this.floorList = floorList;
     }
 }

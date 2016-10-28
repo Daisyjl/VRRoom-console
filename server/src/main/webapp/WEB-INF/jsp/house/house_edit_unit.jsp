@@ -35,7 +35,6 @@
                                 <input name="id" type="hidden" value="${enterprise.id}">
 
                                 <div class="form-group">
-                                    <label class="col-sm-1 control-label"></label>
                                     <div class="col-sm-6">
                                         <button type="button" onclick="$houseUnit.fn.openModal()" class="btn btn-primary"><i class="fa fa-plus"></i> 添加户型</button>
                                         <button type="button" onclick="$houseUnit.fn.back()" class="btn btn-primary"><i class="fa fa-reply"></i> 返回</button>
@@ -91,6 +90,7 @@
                 <div class="modal-body">
                     <form class="cmxform form-horizontal adminex-form" id="unitForm" enctype="multipart/form-data">
                         <input type="hidden" name="id" value="">
+                        <input type="hidden" name="houseId" value="${houseId}">
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label" ><span style="color: red;">* </span>户型名称：</label>
@@ -110,6 +110,13 @@
                             <label class="col-sm-3 control-label" ><span style="color: red;">* </span>面积：</label>
                             <div class="col-sm-6">
                                 <input type="text" name="totalArea" value="" class="form-control" number-2="true" required/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" >朝向：</label>
+                            <div class="col-sm-6">
+                                <input type="text" name="towards" value="" class="form-control"/>
                             </div>
                         </div>
 
@@ -211,7 +218,7 @@
                             }
                             unitTemplate.find(".form-group").eq(0).text("户型名称："+list[i].name);
                             unitTemplate.find(".form-group").eq(1).text("建筑面积："+list[i].totalArea);
-                            unitTemplate.find(".form-group").eq(2).text("参考总价："+list[i].totalPrice);
+                            unitTemplate.find(".form-group").eq(2).text("参考总价："+(list[i].totalPrice==null?"":list[i].totalPrice));
                             unitTemplate.find("button").eq(0).attr("onclick","$houseUnit.fn.openModal("+list[i].id+")");
                             unitTemplate.find("button").eq(1).attr("onclick","$houseUnit.fn.delete("+list[i].id+")");
                             unitTemplate.show();
@@ -230,22 +237,25 @@
                             $("#unitForm").find("[name=typeName]").val(obj.typeName);
                             $("#unitForm").find("[name=totalArea]").val(obj.totalArea);
                             $("#unitForm").find("[name=totalPrice]").val(obj.totalPrice);
+                            $("#unitForm").find("[name=towards]").val(obj.towards);
                             $("#unitForm").find("#planeImg").attr("src", obj.planeImage.uploadUrl);
                             $("#unitForm").find("#d3Img").attr("src", obj.d3Image.uploadUrl);
                             $("#unitForm").find("[name=fullView]").val(obj.fullView);
-                            if(obj.d3ModelRecogUrl != ''){
+                            if(obj.d3ModelRecogUrl != null && obj.d3ModelRecogUrl != ''){
                                 $("#unitForm").find("#d3ModelRecogFileUrl").show();
                                 $("#unitForm").find("#d3ModelRecogFileUrl").attr("href", obj.d3ModelRecogUrl);
                             }
-                            if(obj.d3ModelUrl != ''){
-                                $("#unitForm").find("#d3ModelUrl").show();
-                                $("#unitForm").find("#d3ModelUrl").attr("href", obj.d3ModelUrl);
+                            if(obj.d3ModelUrl != null && obj.d3ModelUrl != ''){
+                                $("#unitForm").find("#d3ModelFileUrl").show();
+                                $("#unitForm").find("#d3ModelFileUrl").attr("href", obj.d3ModelUrl);
                             }
                             $("#myModal").modal("show");
                         }else{
                             $leoman.alertMsg(result.msg);
                         }
                     });
+                }else{
+                    $("#myModal").modal("show");
                 }
             },
             //保存弹出的新增户型

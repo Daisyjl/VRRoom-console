@@ -1,5 +1,6 @@
 package com.leoman.house.service;
 
+import com.leoman.common.core.Result;
 import com.leoman.common.service.GenericManager;
 import com.leoman.house.entity.House;
 import com.leoman.house.entity.HouseDynamic;
@@ -10,5 +11,5 @@ import com.leoman.house.entity.HouseDynamic;
  */
 public interface HouseDynamicService extends GenericManager<HouseDynamic> {
 
-
+    public Result saveDynamic(HouseDynamic houseDynamic);
 }

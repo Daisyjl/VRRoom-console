@@ -6,6 +6,7 @@ import com.leoman.entity.Configue;
 import com.leoman.house.entity.House;
 import com.leoman.house.entity.HouseDynamic;
 import com.leoman.house.entity.HouseRidgepole;
+import com.leoman.house.entity.HouseRidgepoleFloorRoom;
 import com.leoman.house.service.HouseRidgepoleService;
 import com.leoman.house.service.HouseService;
 import com.leoman.house.service.impl.HouseDynamicServiceImpl;
@@ -70,11 +71,13 @@ public class HouseRidgepoleController extends GenericEntityController<HouseDynam
     public String editFloor(@PathVariable("houseId") Long houseId,@PathVariable("labelId") String labelId, Model model){
         Label label = labelService.searchByLabelId(labelId);
 
-        HouseRidgepole ridgepole = houseRidgepoleService.queryByPK(label.getRidgepoleId());
+        if(label.getRidgepoleId() != null){
+            HouseRidgepole ridgepole = houseRidgepoleService.queryByPK(label.getRidgepoleId());
+            model.addAttribute("ridgepole", ridgepole);
+        }
 
         model.addAttribute("label", label);
         model.addAttribute("houseId", houseId);
-        model.addAttribute("ridgepole", ridgepole);
         return "house/house_edit_ridgepole_floor";
     }
 
@@ -101,9 +104,39 @@ public class HouseRidgepoleController extends GenericEntityController<HouseDynam
     public Result save(String data) {
 
         Map map = JsonUtil.json2Obj(data, Map.class);
-        houseRidgepoleService.saveRidgepole(map);
+        Result result = houseRidgepoleService.saveRidgepole(map);
 
-        return Result.success();
+        return result;
+    }
+
+    /**
+     * 跳转至编辑房间状态页面
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/editRoom/{id}")
+    public String editRoom(@PathVariable("id") Long id, Model model){
+
+        List<HouseRidgepole> list = houseRidgepoleService.findRoomList(id);
+        model.addAttribute("list", list);
+
+        return "house/house_edit_room";
+    }
+
+    /**
+     * 保存房间状态
+     * @param data
+     * @return
+     */
+    @RequestMapping(value = "/saveRoom", method = RequestMethod.POST)
+    @ResponseBody
+    public Result saveRoom(String data) {
+
+        List<Map> list = JsonUtil.json2Obj(data, List.class);
+        Result result = houseRidgepoleService.saveRoom(list);
+
+        return result;
     }
 
 

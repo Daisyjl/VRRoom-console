@@ -102,14 +102,8 @@ public class HouseDynamicController extends GenericEntityController<HouseDynamic
     @ResponseBody
     public Result save(HouseDynamic houseDynamic) {
 
-        String content = houseDynamic.getContent();
-        if(StringUtils.isNotBlank(content)){
-            content = content.replace("&lt", "<").replace("&gt", ">");
-            houseDynamic.setContent(content);
-        }
-
-        houseDynamicService.save(houseDynamic);
-        return Result.success();
+        Result result = houseDynamicService.saveDynamic(houseDynamic);
+        return result;
     }
 
     /**

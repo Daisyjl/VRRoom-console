@@ -33,7 +33,6 @@
                         </header>
                         <div class="panel-body">
                             <form class="cmxform form-horizontal adminex-form">
-                                <%--<input name="id" type="hidden" value="${enterprise.id}">--%>
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >楼栋编号：</label>
@@ -45,10 +44,10 @@
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >合计楼层：</label>
                                     <div class="col-sm-2">
-                                        <input type="text" id="floorNum" name="floorNum" value="${ridgepole.floorNum}" class="form-control" required readonly/>
+                                        <input type="text" id="floorNum" name="floorNum" value="${ridgepole.floorNum}" class="form-control" required/>
                                     </div>
                                     <div class="col-sm-2">
-                                        <button type="button" class="btn btn-primary" onclick="$ridgepoleFloor.fn.saveFloorNum(this)">编辑</button>
+                                        <button type="button" class="btn btn-primary" onclick="$ridgepoleFloor.fn.saveFloorNum(this)">确定</button>
                                     </div>
                                 </div>
 
@@ -90,7 +89,7 @@
                                 <div class="form-group">
                                     <div class="col-sm-6">
                                         <button type="button" onclick="$ridgepoleFloor.fn.save()" class="btn btn-primary">保存</button>
-                                        <button type="button" onclick="history.go(-1);" class="btn btn-primary">返回</button>
+                                        <button type="button" onclick="$ridgepoleFloor.fn.back()" class="btn btn-primary">返回</button>
                                     </div>
                                 </div>
                             </form>
@@ -241,6 +240,10 @@
 
                 if("${ridgepole.floorNum}" != ''){
                     $ridgepoleFloor.fn.initFloorNumList("${ridgepole.floorNum}");
+
+                    $("#floorNum").attr("readonly",true);
+                    $("#floorNum").parent().next().find("button").text("编辑");
+
                 }
             },
             initFloorList : function(){
@@ -256,18 +259,22 @@
             },
             //新增楼层类型行
             addRow : function(){
-                var template = $("#ridgepoleTemplate").clone().removeAttr("id");
-                var tempFloorTypeId = $ridgepoleFloor.v.tempFloorTypeId;
-                template.find("label").eq(0).text("楼层类型"+(tempFloorTypeId+1));
-                template.attr("val",tempFloorTypeId);
+                if($("#floorNum").attr("readonly") == "readonly"){
+                    var template = $("#ridgepoleTemplate").clone().removeAttr("id");
+                    var tempFloorTypeId = $ridgepoleFloor.v.tempFloorTypeId;
+                    template.find("label").eq(0).text("楼层类型"+(tempFloorTypeId+1));
+                    template.attr("val",tempFloorTypeId);
 
-                template.find("[name=floorTypeId]").attr("id","floorTypeId_"+tempFloorTypeId);
-                template.show();
-                $("#ridgepoleDiv").append(template);
+                    template.find("[name=floorTypeId]").attr("id","floorTypeId_"+tempFloorTypeId);
+                    template.show();
+                    $("#ridgepoleDiv").append(template);
 
-                $ridgepoleFloor.v.tempFloorTypeId++;
+                    $ridgepoleFloor.v.tempFloorTypeId++;
 
-                return tempFloorTypeId;
+                    return tempFloorTypeId;
+                }else{
+                    $leoman.alertMsg("请先确定楼层数量")
+                }
             },
             //删除横切面
             removeRow : function(self){
@@ -431,7 +438,7 @@
 
                 $.post("${contextPath}/admin/house/ridgepole/save",{'data':JSON.stringify(data)},function(result){
                     if(result.status == 0){
-                        window.location.href = "${contextPath}/admin/house/ridgepole/edit/${houseId}";
+                        $ridgepoleFloor.fn.back();
                     }else{
                         $leoman.alertMsg(result.msg);
                     }

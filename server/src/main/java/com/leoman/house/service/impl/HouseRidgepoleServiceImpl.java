@@ -11,6 +11,7 @@ import com.leoman.image.entity.Image;
 import com.leoman.label.dao.LabelDao;
 import com.leoman.label.entity.Label;
 import com.leoman.utils.ImageUtil;
+import org.apache.poi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +48,20 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
 
     @Autowired
     protected ImageDao imageDao;
+
+    @Override
+    public List<HouseRidgepole> findRoomList(Long houseId){
+        List<HouseRidgepole> list = houseRidgepoleDao.findByHouseId(houseId);
+        for (HouseRidgepole ridgepole:list) {
+            List<HouseRidgepoleFloor> floorList = houseRidgepoleFloorDao.findByRidgepoleId(ridgepole.getId());
+            ridgepole.setFloorList(floorList);
+            for (HouseRidgepoleFloor floor:floorList) {
+                List<HouseRidgepoleFloorRoom> roomList = houseRidgepoleFloorRoomDao.findByRidgepoleFloorId(floor.getId());
+                floor.setRoomList(roomList);
+            }
+        }
+        return list;
+    }
 
     /**
      * 根据楼层类型分组，获取楼层列表
@@ -173,9 +188,9 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
                             Integer roomNo = hftu.getRoomNo();
                             HouseRidgepoleFloorRoom houseRidgepoleFloorRoom = new HouseRidgepoleFloorRoom();
                             houseRidgepoleFloorRoom.setRoomNo(floorNo + String.format("%02d", roomNo));
-                            houseRidgepoleFloorRoom.setRidgepoleFloor(houseRidgepoleFloor);
+                            houseRidgepoleFloorRoom.setRidgepoleFloorId(houseRidgepoleFloor.getId());
                             houseRidgepoleFloorRoom.setIsSale(0);
-                            houseRidgepoleFloorRoom.setTypeUnit(hftu);
+                            houseRidgepoleFloorRoom.setTypeUnitId(hftu.getId());
                             houseRidgepoleFloorRoomDao.save(houseRidgepoleFloorRoom);
                         }
                     }
@@ -184,6 +199,26 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
         }
 
         return Result.success();
+    }
+
+    @Override
+    @Transactional
+    public Result saveRoom(List<Map> list){
+        if(list != null){
+            for (Map map:list) {
+                String roomId = (String) map.get("roomId");
+                double isSale = (double) map.get("isSale");
+                if(!StringUtils.isEmpty(roomId)){
+                    HouseRidgepoleFloorRoom room = houseRidgepoleFloorRoomDao.findOne(Long.valueOf(roomId));
+                    if(room != null){
+                        room.setIsSale((int)isSale);
+                        houseRidgepoleFloorRoomDao.save(room);
+                    }
+                }
+            }
+        }
+
+        return new Result().success();
     }
 
 }

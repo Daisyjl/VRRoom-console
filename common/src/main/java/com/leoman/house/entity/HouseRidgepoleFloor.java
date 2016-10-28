@@ -4,6 +4,7 @@ import com.leoman.entity.BaseEntity;
 import com.leoman.image.entity.Image;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * 楼盘的每一栋的每一层
@@ -27,6 +28,9 @@ public class HouseRidgepoleFloor extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "direction_image_id")
     private Image directionImage;//方位图
+
+    @Transient
+    private List<HouseRidgepoleFloorRoom> roomList;
 
     public HouseRidgepole getRidgepole() {
         return ridgepole;
@@ -58,5 +62,13 @@ public class HouseRidgepoleFloor extends BaseEntity{
 
     public void setDirectionImage(Image directionImage) {
         this.directionImage = directionImage;
+    }
+
+    public List<HouseRidgepoleFloorRoom> getRoomList() {
+        return roomList;
+    }
+
+    public void setRoomList(List<HouseRidgepoleFloorRoom> roomList) {
+        this.roomList = roomList;
     }
 }

@@ -13,13 +13,13 @@ import java.util.List;
  */
 public interface HouseRidgepoleFloorRoomDao extends IBaseJpaRepository<HouseRidgepoleFloorRoom> {
 
-    @Query("select a from HouseRidgepoleFloorRoom a where a.ridgepoleFloor.ridgepole.id = ?1")
+    @Query("select a from HouseRidgepoleFloorRoom a where a.ridgepoleFloorId = ?1")
     public List<HouseRidgepoleFloorRoom> findByRidgepoleId(Long ridgepoleId);
 
-    @Query("select a from HouseRidgepoleFloorRoom a where a.ridgepoleFloor.id = ?1")
+    @Query("select a from HouseRidgepoleFloorRoom a where a.ridgepoleFloorId = ?1")
     public List<HouseRidgepoleFloorRoom> findByRidgepoleFloorId(Long ridgepoleFloorId);
 
-    @Query("select a from HouseRidgepoleFloorRoom a where a.typeUnit.id = ?1")
+    @Query("select a from HouseRidgepoleFloorRoom a where a.typeUnitId = ?1")
     public List<HouseRidgepoleFloorRoom> findByTypeUnitId(Long typeUnitId);
 
 }

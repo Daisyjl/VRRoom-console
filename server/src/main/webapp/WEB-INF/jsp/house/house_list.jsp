@@ -24,9 +24,9 @@
                     <section class="panel">
                         <div class="panel-body">
                             <div class="form-group col-sm-2">
-                                <input type="text" id="username" name="username" class="form-control" placeholder="楼盘名称">
+                                <input type="text" id="name" name="username" class="form-control" placeholder="楼盘名称">
                             </div>
-                            <button id="c_search" class="btn btn-info">搜索</button>
+                            <button id="c_search" class="btn btn-info"><i class='fa icon-search'></i> 搜索</button>
                         </div>
                     </section>
                 </div>
@@ -166,7 +166,7 @@
                         }
                     ],
                     "fnServerParams": function (aoData) {
-                        aoData.username = $("#username").val();
+                        aoData.name = $("#name").val();
                     }
                 });
             },
@@ -203,46 +203,33 @@
             },
             //编辑房间状态
             editRoom : function (id){
-                location.href = "${contextPath}/admin/house/editDynamic/"+id;
+                location.href = "${contextPath}/admin/house/ridgepole/editRoom/"+id;
             },
             del: function (id) {
                 var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');
-                var ids = checkBox.getInputId();
-                $("#confirm").modal("show");
-                $('#showText').html('您确定要彻底删除所选的企业吗？');
-                $("#determine").off("click");
-                $("#determine").on("click",function(){
+                var ids = [];
+                if(id != null){
+                    ids.push(id);
+                }else{
+                    ids = checkBox.getInputId();
+                }
+                $leoman.alertConfirm("确定要删除吗？",function(){
                     $.ajax({
-                        "url": "${contextPath}/admin/enterprise/del",
+                        "url": "${contextPath}/admin/house/del",
                         "data": {
-                            id:id,
                             ids:JSON.stringify(ids)
                         },
                         "dataType": "json",
                         "type": "POST",
                         success: function (result) {
-                            if (result==1) {
-                                $('#showText').html('删除错误');
-                            }else {
-                                $("#deleteBatch").css('display','none');
-                                $house.v.dTable.ajax.reload(null,false);
+                            if(result.status == 0){
+                                window.location.reload();
+                            }else{
+                                $leoman.alertMsg(result.msg);
                             }
-                            $("#confirm").modal("hide");
                         }
                     });
-                })
-            },
-            responseComplete: function (result, action) {
-                if (result.status == "0") {
-                    if (action) {
-                        $house.v.dTable.ajax.reload(null, false);
-                    } else {
-                        $house.v.dTable.ajax.reload();
-                    }
-                    $leoman.notify(result.msg, "success");
-                } else {
-                    $leoman.notify(result.msg, "error");
-                }
+                });
             }
         }
     }

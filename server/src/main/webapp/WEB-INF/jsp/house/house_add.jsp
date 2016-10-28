@@ -250,7 +250,7 @@
                                     <label class="col-sm-1 control-label"></label>
                                     <div class="col-sm-6">
                                         <button type="button" onclick="$house.fn.save()" class="btn btn-primary">保存</button>
-                                        <button type="button" class="btn btn-primary" onclick="history.go(-1);">返回</button>
+                                        <button type="button" class="btn btn-primary" onclick="$house.fn.back()">返回</button>
                                     </div>
                                 </div>
                             </form>
@@ -323,7 +323,7 @@
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            window.location.href = "${contextPath}/admin/house/index";
+                            $house.fn.back();
                         }
                         else {
                             $leoman.alertMsg(result.msg);
@@ -331,9 +331,8 @@
                     }
                 });
             },
-            //跳转至新增户型页面
-            addUnit : function(){
-                location.href = "${contextPath}/admin/house/editUnit";
+            back:function(){
+                window.location.href = "${contextPath}/admin/house/index";
             }
         }
     }

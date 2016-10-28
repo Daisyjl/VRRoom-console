@@ -13,9 +13,12 @@ import javax.persistence.*;
 @Table(name = "t_house_ridgepole_floor_room")
 public class HouseRidgepoleFloorRoom extends BaseEntity{
 
-    @ManyToOne
+    /*@ManyToOne
     @JoinColumn(name = "ridgepole_floor_id")
-    private HouseRidgepoleFloor ridgepoleFloor;//所在层
+    private HouseRidgepoleFloor ridgepoleFloor;//所在层*/
+
+    @Column(name = "ridgepole_floor_id")
+    private Long ridgepoleFloorId;
 
     @Column(name = "room_no")
     private String roomNo;//房间编号
@@ -23,16 +26,18 @@ public class HouseRidgepoleFloorRoom extends BaseEntity{
     @Column(name = "is_sale")
     private Integer isSale;//是否已卖（1-是，0-否）
 
-    @ManyToOne
-    @JoinColumn(name = "type_unit_id")
+    @Transient
     private HouseFloorTypeUnit typeUnit;//此房间对应的户型关系
 
-    public HouseRidgepoleFloor getRidgepoleFloor() {
-        return ridgepoleFloor;
+    @Column(name = "type_unit_id")
+    private Long typeUnitId;
+
+    public Long getRidgepoleFloorId() {
+        return ridgepoleFloorId;
     }
 
-    public void setRidgepoleFloor(HouseRidgepoleFloor ridgepoleFloor) {
-        this.ridgepoleFloor = ridgepoleFloor;
+    public void setRidgepoleFloorId(Long ridgepoleFloorId) {
+        this.ridgepoleFloorId = ridgepoleFloorId;
     }
 
     public String getRoomNo() {
@@ -57,5 +62,13 @@ public class HouseRidgepoleFloorRoom extends BaseEntity{
 
     public void setTypeUnit(HouseFloorTypeUnit typeUnit) {
         this.typeUnit = typeUnit;
+    }
+
+    public Long getTypeUnitId() {
+        return typeUnitId;
+    }
+
+    public void setTypeUnitId(Long typeUnitId) {
+        this.typeUnitId = typeUnitId;
     }
 }

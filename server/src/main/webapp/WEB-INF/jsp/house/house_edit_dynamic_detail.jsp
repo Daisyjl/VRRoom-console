@@ -10,9 +10,6 @@
     <link rel="shortcut icon" href="#" type="image/png">
     <title>编辑动态</title>
     <%@ include file="../inc/new2/css.jsp" %>
-    <style type="text/css">
-        #allmap {width: 600px;height: 400px;overflow: hidden;margin:0;font-family:"微软雅黑";}
-    </style>
 </head>
 
 <body class="sticky-header">
@@ -46,7 +43,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label" style="width: 100px;"><span style="color: red;">* </span>内容：</label>
                                     <div class="col-sm-6">
-                                        <script type="text/plain" id="myEditor" name="content" style="width:700px;height:240px;"></script>
+                                        <script type="text/plain" id="myEditor" name="content" style="width:900px;height:500px;">${dynamic.content}</script>
                                     </div>
                                 </div>
 
@@ -94,7 +91,7 @@
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            window.location.reload();
+                            $houseDynamic.fn.back();
                         }
                         else {
                             $leoman.alertMsg(result.msg);
@@ -106,7 +103,11 @@
                 window.location.href = "${contextPath}/admin/house/dynamic/edit/${dynamic.houseId}";
             }
         }
-    }
+    };
+
+    $(function () {
+        $houseDynamic.fn.init();
+    });
 
 </script>
 </body>

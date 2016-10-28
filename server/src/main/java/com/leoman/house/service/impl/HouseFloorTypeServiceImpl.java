@@ -1,5 +1,6 @@
 package com.leoman.house.service.impl;
 
+import com.leoman.common.core.ErrorType;
 import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
 import com.leoman.house.dao.*;
@@ -7,6 +8,8 @@ import com.leoman.house.entity.*;
 import com.leoman.house.service.HouseAlbumService;
 import com.leoman.house.service.HouseFloorTypeService;
 import com.leoman.image.entity.Image;
+import org.apache.commons.lang.StringUtils;
+import org.apache.taglibs.standard.lang.jstl.IntegerDivideOperator;
 import org.apache.taglibs.standard.tag.common.core.ForEachSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,8 +77,12 @@ public class HouseFloorTypeServiceImpl extends GenericManagerImpl<HouseFloorType
                     String roomNo = (String)tranMap.get("roomNo");
                     String typeUnitId = (String)tranMap.get("typeUnitId");
 
+                    if(imageId == null || unitId == null || roomNo == null){
+                        new Result().failure(ErrorType.ERROR_CODE_00013);//该横切面信息不能为空
+                    }
+
                     //如果该关系存在，则修改，不存在，则新增
-                    HouseFloorTypeUnit houseFloorTypeUnit = houseFloorTypeUnitDao.findOne(Long.valueOf(typeUnitId));
+                    HouseFloorTypeUnit houseFloorTypeUnit = StringUtils.isBlank(typeUnitId)?null:houseFloorTypeUnitDao.findOne(Long.valueOf(typeUnitId));
                     if(houseFloorTypeUnit == null){
                         houseFloorTypeUnit = new HouseFloorTypeUnit();
                     }
@@ -152,35 +159,46 @@ public class HouseFloorTypeServiceImpl extends GenericManagerImpl<HouseFloorType
      * @param typeUnitId
      */
     public void updateRoom(Long typeUnitId){
-        List<HouseRidgepoleFloor> floorList = new ArrayList<>();
+
+        //获取修改的户型关系
+        HouseFloorTypeUnit typeUnit = houseFloorTypeUnitDao.findOne(typeUnitId);
+
+        //获取户型关系被修改的房间列表
         List<HouseRidgepoleFloorRoom> roomList = houseRidgepoleFloorRoomDao.findByTypeUnitId(typeUnitId);
-        for (HouseRidgepoleFloorRoom room:roomList) {
-            if(room != null && !floorList.contains(room.getRidgepoleFloor())){
-                floorList.add(room.getRidgepoleFloor());//获取所有修改了户型的楼层
-                //删除该楼层的所有房间
-                houseRidgepoleFloorRoomDao.delete(room);
+
+        //若没有该户型关系的房间列表，说明新增了一种户型关系，则新增房间
+        if(roomList == null || roomList.size() ==0){
+            HouseFloorType floorType = typeUnit.getFloorType();
+
+            //获取所有这种楼层类型的楼层
+            List<HouseRidgepoleFloor> floorList = houseRidgepoleFloorDao.findByFloorTypeId(floorType.getId());
+            for (HouseRidgepoleFloor floor:floorList) {
+                //为每个楼层新建这种户型关系的房间
+                HouseRidgepoleFloorRoom room = new HouseRidgepoleFloorRoom();
+                room.setIsSale(0);
+                room.setRidgepoleFloorId(floor.getId());
+                room.setRoomNo(floor.getFloorNo() + String.format("%02d", typeUnit.getRoomNo()));
+                room.setTypeUnitId(typeUnitId);
+                houseRidgepoleFloorRoomDao.save(room);
             }
         }
+        //修改户型关系
+        else{
+            for (HouseRidgepoleFloorRoom room:roomList) {
+                //如果修改的户型关系id = 之前生成的房间对应的户型id
+                if(room != null && room.getTypeUnitId().equals(typeUnitId)){
+                    //得到房间号的最后两位数
+                    String roomNum = room.getRoomNo().substring(room.getRoomNo().length()-2, room.getRoomNo().length());
 
-        //重新生成所有房间
-        for (HouseRidgepoleFloor floor:floorList) {
-            if(floor != null){
-                HouseFloorType floorType = floor.getFloorType();
-                List<HouseFloorTypeUnit> typeUnitList = houseFloorTypeUnitDao.findByFloorTypeId(floorType.getId());
-                if(typeUnitList != null && typeUnitList.size() > 0){
-                    for (HouseFloorTypeUnit hftu:typeUnitList) {
-                        Integer roomNo = hftu.getRoomNo();
-                        HouseRidgepoleFloorRoom houseRidgepoleFloorRoom = new HouseRidgepoleFloorRoom();
-                        houseRidgepoleFloorRoom.setRoomNo(floor.getFloorNo() + String.format("%02d", roomNo));
-                        houseRidgepoleFloorRoom.setRidgepoleFloor(floor);
-                        houseRidgepoleFloorRoom.setIsSale(0);
-                        houseRidgepoleFloorRoom.setTypeUnit(hftu);
-                        houseRidgepoleFloorRoomDao.save(houseRidgepoleFloorRoom);
+                    //若该户型关系的房间号与之前生成的房间号后两位不一致，则修改之前生成的房间号
+                    if(Long.parseLong(roomNum) != typeUnit.getRoomNo()){
+                        String floorNum = room.getRoomNo().substring(0, room.getRoomNo().length()-2);
+                        room.setRoomNo(floorNum + String.format("%02d", typeUnit.getRoomNo()));
+                        houseRidgepoleFloorRoomDao.save(room);
                     }
                 }
             }
         }
-
 
     }
 }

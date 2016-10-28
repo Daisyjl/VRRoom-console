@@ -67,6 +67,7 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
         }
 
         //基本信息
+        house.setStatus(0);
         houseDao.save(house);
 
         return new Result().success();

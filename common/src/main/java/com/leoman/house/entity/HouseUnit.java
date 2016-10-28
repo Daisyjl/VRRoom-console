@@ -32,6 +32,9 @@ public class HouseUnit extends BaseEntity {
     @Column(name = "full_view")
     private String fullView;//360全景
 
+    @Column(name = "towards")
+    private String towards;//朝向
+
     @Column(name = "d3_model_recog_url")
     private String d3ModelRecogUrl;//3D模型识别图
 
@@ -130,6 +133,14 @@ public class HouseUnit extends BaseEntity {
 
     public HouseUnit(Long id) {
         super.setId(id);
+    }
+
+    public String getTowards() {
+        return towards;
+    }
+
+    public void setTowards(String towards) {
+        this.towards = towards;
     }
 }
 

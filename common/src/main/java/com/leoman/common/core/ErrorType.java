@@ -17,6 +17,7 @@ public enum ErrorType {
     ERROR_CODE_00010("楼盘名称已存在", 10),
     ERROR_CODE_00011("楼信息不存在", 11),
     ERROR_CODE_00012("楼盘封面图不能为空", 12),
+    ERROR_CODE_00013("该横切面信息不能为空", 13),
 
     ErrorType;
 

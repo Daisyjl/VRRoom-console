@@ -76,7 +76,7 @@
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >编辑标签</label>
-                                    <div class="col-sm-3" id="labelEditDiv">
+                                    <div class="col-sm-5" id="labelEditDiv">
                                         <%--<div class="form-group">
                                             户型名称：<button type="button" onclick="$houseAlbum.fn.editFloor()" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> 编辑</button>
                                         </div>--%>

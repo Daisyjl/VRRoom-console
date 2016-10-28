@@ -18,4 +18,8 @@ public interface HouseRidgepoleService extends GenericManager<HouseRidgepole> {
 
     public List<Map> findByGroupFloorType(Long ridgepoleId) throws Exception;
 
+    public List<HouseRidgepole> findRoomList(Long houseId);
+
+    public Result saveRoom(List<Map> list);
+
 }

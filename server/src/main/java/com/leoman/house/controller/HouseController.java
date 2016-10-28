@@ -63,12 +63,13 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> list(Integer draw, Integer start, Integer length) {
+    public Map<String, Object> list(String name, Integer draw, Integer start, Integer length) {
         int pagenum = getPageNum(start, length);
         Query query = Query.forClass(House.class, houseService);
         query.setPagenum(pagenum);
         query.setPagesize(length);
-//        query.like("name");
+        query.eq("status", 0);
+        query.like("name", name);
         Page<House> page = houseService.queryPage(query);
         return DataTableFactory.fitting(draw, page);
     }
@@ -124,31 +125,22 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
 
     /**
      * 删除
-     * @param id
      * @param ids
      * @return
      */
     @RequestMapping(value = "/del", method = RequestMethod.POST)
     @ResponseBody
-    public Integer del(Long id,String ids) {
-        if (id==null && StringUtils.isBlank(ids)){
-            return 1;
-        }
-        try {
-            if(id!=null){
-                houseService.delete(houseService.queryByPK(id));
-            }else {
-                Long[] ss = JsonUtil.json2Obj(ids,Long[].class);
-                for (Long _id : ss) {
-                    houseService.delete(houseService.queryByPK(_id));
-                }
+    public Result del(String ids) {
+        String[] idArr = JsonUtil.json2Obj(ids,String[].class);
+        for (String id : idArr) {
+            if(StringUtils.isNotEmpty(id)){
+                House house = houseService.queryByPK(Long.valueOf(id));
+                house.setStatus(1);
+                houseService.save(house);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 1;
         }
-        return 0;
-    }
 
+        return Result.success();
+    }
 
 }

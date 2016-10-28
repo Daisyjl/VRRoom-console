@@ -24,6 +24,10 @@
                     <section class="panel">
                         <div class="panel-body">
 
+                            <div class="form-group col-sm-1">
+                                <button class="btn btn-info" onclick="$houseDynamic.fn.back()"><i class='fa fa-reply'></i> 返回</button>
+                            </div>
+
                             <div class="form-group col-sm-2">
                                 <input type="text" id="title" name="title" class="form-control" id="exampleInputEmail2" placeholder="动态标题">
                             </div>
@@ -40,7 +44,8 @@
                                 <input type="text" id="endDate" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="" placeholder="请选择结束时间">
                             </div>
 
-                            <button id="c_search" class="btn btn-info">搜索</button>
+                            <button id="c_search" class="btn btn-info"><i class='fa fa-search'></i> 搜索</button>
+                            <button id="c_clear" class="btn btn-info"><i class='fa fa-refresh'></i> 清空</button>
                         </div>
                     </section>
                 </div>
@@ -79,45 +84,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="pwdModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content" style="width: 850px;">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">新增/编辑动态</h4>
-                </div>
-                <div class="modal-body">
-                    <form class="cmxform form-horizontal adminex-form" id="formId" enctype="multipart/form-data">
-                        <input type="hidden" name="houseId" value="${houseId}">
-                        <input type="hidden" id="dynamicId" name="id" value="">
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" style="width: 100px;"><span style="color: red;">* </span>标题：</label>
-                            <div class="col-sm-6">
-                                <input type="text" name="title" value="" class="form-control" required/>
-                            </div>
-                        </div>
-
-                        <%--<div class="form-group">
-                            <label class="col-sm-2 control-label" style="width: 100px;"><span style="color: red;">* </span>内容：</label>
-                            <div class="col-sm-6">
-                                <script type="text/plain" id="myEditor" name="content" style="width:700px;height:240px;"></script>
-                            </div>
-                        </div>--%>
-
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" onclick="$houseDynamic.fn.save()" class="btn btn-primary">保存</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-
-
 </section>
 <%@ include file="../inc/new2/foot.jsp" %>
 <script>
@@ -130,8 +96,6 @@
         fn: {
             init: function () {
                 $houseDynamic.fn.dataTableInit();
-
-//                $houseDynamic.fn.initEdior();//初始化编辑器
 
                 $('.form_datetime').datetimepicker({
                     language: 'zh-CN',
@@ -148,6 +112,10 @@
                 
                 $("#c_search").click(function () {
                     $houseDynamic.v.dTable.ajax.reload();
+                });
+
+                $("#c_clear").click(function () {
+                    $("input, select").val("");
                 });
             },
             dataTableInit: function () {
@@ -192,46 +160,17 @@
                         }
                     ],
                     "fnServerParams": function (aoData) {
-                        aoData.tilte = $("#title").val();
+                        aoData.title = $("#title").val();
                         aoData.houseId = "${houseId}";
                         aoData.startDate = $("#startDate").val();
                         aoData.endDate = $("#endDate").val();
                     }
                 });
             },
-            initEdior : function() {
-                $houseDynamic.v.um = UM.getEditor('myEditor');
-            },
+            //新增/编辑
             add: function (id) {
-                window.location.href = "${contextPath}/admin/house/dynamic/editDetail?id="+id;
-                /*if(id != undefined && id != ''){
-                    $.post("${contextPath}/admin/house/dynamic/detail", {id:id}, function(result){
-                        if(result.status == 0){
-                            var data = result.data.houseDynamic;
-                            $("#dynamicId").val(data.id);
-                            $("[name=title]").val(data.title);
-                            UM.getEditor('myEditor').setContent(data.content);
-                            $("#myModal").modal("show");
-                        }
-                    });
-                }else{
-                    $("#myModal").modal("show");
-                }*/
-            },
-            save:function(){
-                if(!$("#formId").valid()) return;
-                $("#formId").ajaxSubmit({
-                    url : "${contextPath}/admin/house/dynamic/save",
-                    type : "POST",
-                    success : function(result) {
-                        if(result.status == 0) {
-                            window.location.reload();
-                        }
-                        else {
-                            $leoman.alertMsg(result.msg);
-                        }
-                    }
-                });
+                id = (id==undefined?"":("?id="+id));
+                window.location.href = "${contextPath}/admin/house/dynamic/editDetail"+id;
             },
             del: function (id) {
                 var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');
@@ -251,7 +190,7 @@
                         "type": "POST",
                         success: function (result) {
                             if(result.status == 0){
-                                $bus.v.dTable.ajax.reload(null,false);
+                                window.location.reload();
                             }else{
                                 $leoman.alertMsg(result.msg);
                             }
@@ -259,17 +198,8 @@
                     });
                 });
             },
-            responseComplete: function (result, action) {
-                if (result.status == "0") {
-                    if (action) {
-                        $houseDynamic.v.dTable.ajax.reload(null, false);
-                    } else {
-                        $houseDynamic.v.dTable.ajax.reload();
-                    }
-                    $leoman.notify(result.msg, "success");
-                } else {
-                    $leoman.notify(result.msg, "error");
-                }
+            back : function(){
+                window.location.href = "${contextPath}/admin/house/index";
             }
         }
     }
