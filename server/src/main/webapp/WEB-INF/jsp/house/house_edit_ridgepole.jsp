@@ -153,6 +153,7 @@
                 $("#baseImg").append(tempDiv);
 
                 Label.fn.addLabelEdit(name, id);
+
             },
             deleteLabel: function (self) {
                 $leoman.alertConfirm("确定要删除这个标签吗？若删除，其对应的楼信息将一起删除",function(){
@@ -200,7 +201,7 @@
                     Label.fn.mouseout($(this));
                 });
 
-                Label.fn.addLabelEdit(name, labelId);
+//                Label.fn.addLabelEdit(name, labelId);
 
             },
             addLabelEdit : function(name, labelId){
@@ -261,7 +262,7 @@
                         //将标签位置信息保存在数据库
                         if (x != z) {
                             z = x;
-                            Label.fn.saveLabelInfo();
+                            Label.fn.saveLabelInfo(self);
                         }
                     }
 
@@ -269,7 +270,7 @@
                     $(self).fadeTo("fast", 1);//松开鼠标后停止移动并恢复成不透明
                 });
             },
-            saveLabelInfo: function () {
+            saveLabelInfo: function (self) {
                 $.ajax({
                     type: "post",
                     async: false,
@@ -294,6 +295,14 @@
                     success: function (result) {
                         if (result != 1) {
                             $leoman.alertMsg("操作失败!");
+                        }else{
+                            var name = $(self).find("div").text();
+                            var labelId = $(self).attr("id");
+
+                            if($('div[val="'+labelId+'"]').length == 0){
+                                //成功之后，才添加编辑标签
+                                Label.fn.addLabelEdit(name, labelId);
+                            }
                         }
                     }
                 });

@@ -36,10 +36,9 @@
                                 <input name="album.id" type="hidden" value="${album.id}">
 
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">${house.name}--${album.name}</label>
-                                    <%--<div class="col-sm-6">
-                                        <button type="button" onclick="$houseAlbumImage.fn.back()" class="btn btn-primary"><i class="fa fa-reply"></i> 返回</button>
-                                    </div>--%>
+                                    <div class="col-sm-6">
+                                        ${house.name}--${album.name}
+                                    </div>
                                 </div>
 
                                 <div class="form-group">

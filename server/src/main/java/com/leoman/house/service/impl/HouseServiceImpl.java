@@ -36,12 +36,6 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
     @Transactional
     public Result saveHouse(House house, MultipartRequest multipartRequest){
 
-        MultipartFile coverFile = multipartRequest.getFile("coverFile");
-        if (null != coverFile) {
-            Image image = uploadImageService.uploadImage(coverFile);
-            house.setImage(image);
-        }
-
         Long houseId = house.getId();
 
         //新增
@@ -60,6 +54,12 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
 
             House orgHouse = houseDao.findOne(houseId);
             ClassUtil.copyProperties(house, orgHouse);
+        }
+
+        MultipartFile coverFile = multipartRequest.getFile("coverFile");
+        if (null != coverFile) {
+            Image image = uploadImageService.uploadImage(coverFile);
+            house.setImage(image);
         }
 
         if(house.getImage() == null){

@@ -375,7 +375,10 @@
                 //给第一张图片加锚点
                 if($("#transverseDiv_"+tempFloorId).find("[name=transverseGroup]").length == 1){
                     template.find(".btn-sm").attr("onclick","$houseFloor.fn.editLabel(this)");
-                    template.find(".btn-sm").show();
+                    //已存在的横切面才可以打锚点
+                    if(typeUnitId != null && typeUnitId != undefined){
+                        template.find(".btn-sm").show();
+                    }
                 }
 
                 $houseFloor.v.tempTransverseId++;

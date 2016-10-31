@@ -8,6 +8,7 @@ import com.leoman.enterprise.dao.EnterpriseLoginDao;
 import com.leoman.enterprise.entity.Enterprise;
 import com.leoman.enterprise.entity.EnterpriseLogin;
 import com.leoman.enterprise.service.EnterpriseService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,6 +68,13 @@ public class EnterpriseServiceImpl extends GenericManagerImpl<Enterprise,Enterpr
         if(enterprise.getCity().getId() == null){
             enterprise.setCity(null);
         }
+
+        String intro = enterprise.getIntro();
+        if(StringUtils.isNotBlank(intro)){
+            intro = intro.replace("&lt", "<").replace("&gt", ">");
+            enterprise.setIntro(intro);
+        }
+
         enterpriseDao.save(enterprise);
 
         //保存企业登录

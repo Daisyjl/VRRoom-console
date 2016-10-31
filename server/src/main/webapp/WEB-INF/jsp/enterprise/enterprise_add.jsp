@@ -88,7 +88,7 @@
                                     <label class="col-sm-1 control-label"></label>
                                     <div class="col-sm-6">
                                         <button type="button" onclick="$enterprise.fn.save()" class="btn btn-primary">保存</button>
-                                        <button type="button" class="btn btn-primary" onclick="history.go(-1);">返回</button>
+                                        <button type="button" class="btn btn-primary" onclick="$enterprise.fn.back()">返回</button>
                                     </div>
                                 </div>
                             </form>
@@ -188,13 +188,16 @@
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            window.location.href = "${contextPath}/admin/enterprise/index";
+                            $enterprise.fn.back();
                         }
                         else {
                             $leoman.alertMsg(result.msg);
                         }
                     }
                 });
+            },
+            back : function(){
+                window.location.href = "${contextPath}/admin/enterprise/index";
             }
         }
     }

@@ -32,7 +32,7 @@
                             楼信息
                         </header>
                         <div class="panel-body">
-                            <form class="cmxform form-horizontal adminex-form">
+                            <form class="cmxform form-horizontal adminex-form" id="formId">
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >楼栋编号：</label>
@@ -44,7 +44,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >合计楼层：</label>
                                     <div class="col-sm-2">
-                                        <input type="text" id="floorNum" name="floorNum" value="${ridgepole.floorNum}" class="form-control" required/>
+                                        <input type="text" id="floorNum" name="floorNum" value="${ridgepole.floorNum}" class="form-control" required number-0="true"/>
                                     </div>
                                     <div class="col-sm-2">
                                         <button type="button" class="btn btn-primary" onclick="$ridgepoleFloor.fn.saveFloorNum(this)">确定</button>
@@ -54,7 +54,11 @@
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >最小楼间距：</label>
                                     <div class="col-sm-2">
-                                        <input type="text" id="minSpace" name="minSpace" value="${ridgepole.minSpace}" class="form-control" required/>
+                                        <input type="text" id="minSpace" name="minSpace" value="${ridgepole.minSpace}" class="form-control" required number-2="true"/>
+                                    </div>
+
+                                    <div class="col-sm-2">
+                                        米
                                     </div>
                                 </div>
 
@@ -206,8 +210,11 @@
 
     <!-- 楼层类型 template -->
     <div class="form-group" style="display: none;" id="floorTypeTemplate">
-        <div class="col-sm-1">
+        <%--<div class="col-sm-1">
             <input type="radio" name="floorTypeRadio">
+        </div>--%>
+        <div class="col-sm-1 icheck minimal" name="checkDiv">
+
         </div>
         <label class="col-sm-3 control-label">楼层类型：</label>
         <div class="col-sm-5">
@@ -302,6 +309,11 @@
                     })
                 }else if(btnTxt == '确定'){
                     var floorNum = $(self).parents(".form-group").find("input").val();
+
+                    if(floorNum == '' || floorNum == 0 || !/^[0-9]*$/.test(floorNum)){
+                        $leoman.alertMsg("请输入正确的楼层数量");
+                        return ;
+                    }
                     $(self).parents(".form-group").find("input").attr("readonly",true);
                     $(self).text("编辑");
                     $ridgepoleFloor.fn.initFloorNumList(floorNum);
@@ -360,29 +372,51 @@
                         for(var i=0; i < list.length; i++){
                             var floorTypeTemplate = $("#floorTypeTemplate").clone().removeAttr("id");
                             floorTypeTemplate.find("label").text("楼层类型"+(i+1)+"：");
-                            var path = list[i].typeUnitList[0].transverseImage.path;
+                            var path = list[i].typeUnitList[0].transverseImage.uploadUrl;
                             floorTypeTemplate.find("img").prop("src",path);
-                            floorTypeTemplate.find("input[type=radio]").val(list[i].id);
+//                            floorTypeTemplate.find("input[type=radio]").val(list[i].id);
+                            floorTypeTemplate.find("[name=checkDiv]").append('<div class="radio" val="'+list[i].id+'"><input type="radio" name="unitRadio"></div>');
+
                             floorTypeTemplate.show();
                             $("#floorTypeDiv").append(floorTypeTemplate);
 
                         }
+
+                        $('.minimal input').iCheck({
+                            checkboxClass: 'icheckbox_minimal',
+                            radioClass: 'iradio_minimal',
+                            increaseArea: '20%' // optional
+                        });
+
+                        $(".radio .iradio_minimal").first().addClass("checked");
                     }
                 });
             },
             //打开选择楼层类型对话框
             openModal : function (self){
                 $("#myModal").modal("show");
-                $("#currentFloorTypeId").val($(self).parents(".form-group").find("[name=floorTypeId]").attr("id"));
+//                $("#currentFloorTypeId").val($(self).parents(".form-group").find("[name=floorTypeId]").attr("id"));
+
+                var unitObj = $(self).parents(".form-group").find("[name=floorTypeId]");
+                $("#currentFloorTypeId").val(unitObj.attr("id"));
+
+                if(unitObj.val() == ''){
+                    $(".radio .iradio_minimal").first().addClass("checked");
+                }else{
+                    $(".radio .iradio_minimal").removeClass("checked");
+                    $(".radio[val="+unitObj.val()+"]").find(".iradio_minimal").addClass("checked");
+                }
             },
             //选择楼层类型
             selectFloorType : function (){
-                var floorTypeObj = $("[name=floorTypeRadio]:checked");
+
+                var floorTypeId = $(".iradio_minimal.checked").parent().attr("val");
+                var floorTypeObj = $(".iradio_minimal.checked").parents(".form-group");
 
                 var divObj = $("#"+$("#currentFloorTypeId").val()).parents(".form-group");
 
-                divObj.find("[name=floorTypeId]").val(floorTypeObj.val());
-                divObj.find("[name=tranImg]").attr("src",floorTypeObj.parents(".form-group").find("img").attr("src"));
+                divObj.find("[name=floorTypeId]").val(floorTypeId);
+                divObj.find("[name=tranImg]").attr("src",floorTypeObj.find("img").attr("src"));
 
                 $("#myModal").modal("hide");
             },
@@ -410,6 +444,13 @@
 
             //保存
             save : function() {
+
+                if(!$("#formId").valid()) return;
+
+                if($("#ridgepoleDiv .floor").length == 0){
+                    $leoman.alertMsg("请至少保存一条楼层信息");
+                    return ;
+                }
 
                 var data = {
                     ridgepoleId : "${ridgepole.id}",
