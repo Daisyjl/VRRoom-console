@@ -86,10 +86,11 @@ public class FileController extends CommonController {
         Image image = new Image();
 
         try {
-            MultipartFile multipartFile = multipartRequest.getFile("tempImage");
+            MultipartFile file = multipartRequest.getFile("tempImage");
+
 
             // 验证图片格式
-            String originalFileName = multipartFile.getOriginalFilename().toLowerCase();
+            String originalFileName = file.getOriginalFilename().toLowerCase();
             String fileType = originalFileName.substring(originalFileName.lastIndexOf("."));
 
             List<String> list = new ArrayList<String>();
@@ -103,22 +104,87 @@ public class FileController extends CommonController {
                 return image;
             }
 
-            String url = uploadImageService.uploadFile(multipartFile);
+            image = uploadImageService.uploadImage(file);
+            imageService.create(image);
+            image.setPath(Configue.getUploadUrl()+image.getPath());
+
+
+            /* 以下是上传到其他服务器的做法，先保留 */
+            /*String url = uploadImageService.uploadFile(multipartFile);
             image.setPath(url);
 
             imageService.create(image);
-            image.setPath(Configue.getUploadUrl()+url);
+            image.setPath(Configue.getUploadUrl()+url);*/
 
-            // 使用线程更新图片的宽高信息
+                // 使用线程更新图片的宽高信息
             /*GetImageInfo getImageInfo = new GetImageInfo();
             getImageInfo.setImage(image);
             getImageInfo.setKey(url);
             getImageInfo.run();*/
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return image;
+    }
+
+    /**
+     * 多图上传
+     * @param request
+     * @param multipartRequest
+     * @return
+     */
+    @RequestMapping("/addMultiTempImage")
+    @ResponseBody
+    public List<Image> addMultiTempImage(ServletRequest request, MultipartRequest multipartRequest) {
+        List<Image> imageList = new ArrayList<>();
+
+        try {
+            List<MultipartFile> files = multipartRequest.getFiles("tempImage");
+
+            for (MultipartFile file:files) {
+
+                // 验证图片格式
+                String originalFileName = file.getOriginalFilename().toLowerCase();
+                String fileType = originalFileName.substring(originalFileName.lastIndexOf("."));
+
+                List<String> list = new ArrayList<String>();
+                list.add(".jpg");
+                list.add(".gif");
+                list.add(".jpeg");
+                list.add(".png");
+                list.add(".bmp");
+
+                if (!list.contains(fileType)) {
+                    return imageList;
+                }
+
+                Image image = uploadImageService.uploadImage(file);
+                imageService.create(image);
+                image.setPath(Configue.getUploadUrl()+image.getPath());
+
+                imageList.add(image);
+
+                /* 以下是上传到其他服务器的做法，先保留 */
+                /*String url = uploadImageService.uploadFile(multipartFile);
+                image.setPath(url);
+
+                imageService.create(image);
+                image.setPath(Configue.getUploadUrl()+url);*/
+
+                // 使用线程更新图片的宽高信息
+                /*GetImageInfo getImageInfo = new GetImageInfo();
+                getImageInfo.setImage(image);
+                getImageInfo.setKey(url);
+                getImageInfo.run();*/
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return imageList;
     }
 
 

@@ -56,10 +56,7 @@
                                     <div class="col-sm-2">
                                         <input type="text" id="minSpace" name="minSpace" value="${ridgepole.minSpace}" class="form-control" required number-2="true"/>
                                     </div>
-
-                                    <div class="col-sm-2">
-                                        米
-                                    </div>
+                                    <label class="col-sm-1 control-label" style="text-align: left">米</label>
                                 </div>
 
                             </form>

@@ -32,7 +32,6 @@
                         </header>
                         <div class="panel-body">
                             <form class="cmxform form-horizontal adminex-form">
-                                <input name="id" type="hidden" value="${enterprise.id}">
 
                                 <div class="form-group">
                                     <div class="col-sm-6">
@@ -95,14 +94,20 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label" ><span style="color: red;">* </span>户型名称：</label>
                             <div class="col-sm-6">
-                                <input type="text" name="name" value="" class="form-control" required/>
+                                <input type="text" name="name" value="" class="form-control" required maxlength="30"/>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label" ><span style="color: red;">* </span>户型类型：</label>
                             <div class="col-sm-6">
-                                <input type="text" name="typeName" value="" class="form-control" required/>
+                                <%--<input type="text" name="typeName" value="" class="form-control" required/>--%>
+                                <select class="form-control input-sm" name="typeName" required>
+                                    <option value="">---请选择---</option>
+                                    <option value="一室一厅">一室一厅</option>
+                                    <option value="两室一厅">两室一厅</option>
+                                    <option value="三室两厅">三室两厅</option>
+                                </select>
                             </div>
                         </div>
 
@@ -111,12 +116,22 @@
                             <div class="col-sm-6">
                                 <input type="text" name="totalArea" value="" class="form-control" number-2="true" required/>
                             </div>
+                            <label class="col-sm-3 control-label" style="text-align: left">平方</label>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label" >朝向：</label>
                             <div class="col-sm-6">
-                                <input type="text" name="towards" value="" class="form-control"/>
+                                <%--<input type="text" name="towards" value="" class="form-control"/>--%>
+                                <select class="form-control input-sm" name="towards" required>
+                                    <option value="">---请选择---</option>
+                                    <option value="正南">正南</option>
+                                    <option value="东南">东南</option>
+                                    <option value="东">东</option>
+                                    <option value="西南">西南</option>
+                                    <option value="北">北</option>
+                                    <option value="西">西</option>
+                                </select>
                             </div>
                         </div>
 
@@ -125,10 +140,11 @@
                             <div class="col-sm-6">
                                 <input type="text" name="totalPrice" value="" class="form-control" number-2="true"/>
                             </div>
+                            <label class="col-sm-3 control-label" style="text-align: left">万</label>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">户型图上传：</label>
+                            <label class="col-sm-3 control-label"><span style="color: red;">* </span>户型图上传：</label>
                             <div class="col-sm-5">
                                 <input type="file" name="planeFile" id="planeFile" style="display:none;"/>
                                 <a href="javascript:void(0);" onclick="$('#planeFile').click();">
@@ -160,7 +176,7 @@
                                 <input type="file" name="d3ModelRecogFile" class="default" />
                             </div>
                             <div class="col-sm-3">
-                                <a id="d3ModelRecogFileUrl" style="display: none;">下载地址</a>
+                                <a id="d3ModelRecogFileUrl" style="display: none;">下载模型</a>
                             </div>
                         </div>
 
@@ -170,7 +186,7 @@
                                 <input type="file" name="d3ModelFile" class="default"/>
                             </div>
                             <div class="col-sm-3">
-                                <a id="d3ModelFileUrl" style="display: none;">下载地址</a>
+                                <a id="d3ModelFileUrl" style="display: none;">下载模型</a>
                             </div>
                         </div>
 
@@ -238,8 +254,12 @@
                             $("#unitForm").find("[name=totalArea]").val(obj.totalArea);
                             $("#unitForm").find("[name=totalPrice]").val(obj.totalPrice);
                             $("#unitForm").find("[name=towards]").val(obj.towards);
-                            $("#unitForm").find("#planeImg").attr("src", obj.planeImage.uploadUrl);
-                            $("#unitForm").find("#d3Img").attr("src", obj.d3Image.uploadUrl);
+                            if(obj.planeImage != null){
+                                $("#unitForm").find("#planeImg").attr("src", obj.planeImage.uploadUrl);
+                            }
+                            if(obj.d3Image != null){
+                                $("#unitForm").find("#planeImg").attr("src", obj.d3Image.uploadUrl);
+                            }
                             $("#unitForm").find("[name=fullView]").val(obj.fullView);
                             if(obj.d3ModelRecogUrl != null && obj.d3ModelRecogUrl != ''){
                                 $("#unitForm").find("#d3ModelRecogFileUrl").show();
@@ -255,12 +275,21 @@
                         }
                     });
                 }else{
+                    $("#unitForm").find("input:not(:hidden), select").val("");
                     $("#myModal").modal("show");
                 }
+                console.info("${houseId}");
+
             },
             //保存弹出的新增户型
             save : function (){
                 if(!$("#unitForm").valid()) return;
+
+                if($("#planeImg").attr("src") == ''){
+                    $leoman.alertMsg("户型图不能为空");
+                    return ;
+                }
+
                 $("#unitForm").ajaxSubmit({
                     url : "${contextPath}/admin/house/unit/save",
                     type : "POST",

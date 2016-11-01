@@ -53,7 +53,8 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
             }
 
             House orgHouse = houseDao.findOne(houseId);
-            ClassUtil.copyProperties(house, orgHouse);
+            house.setImage(orgHouse.getImage());
+            house.setStatus(orgHouse.getStatus());
         }
 
         MultipartFile coverFile = multipartRequest.getFile("coverFile");

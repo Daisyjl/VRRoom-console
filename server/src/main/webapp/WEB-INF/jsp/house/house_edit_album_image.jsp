@@ -57,7 +57,6 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label"></label>
                                     <div class="col-sm-6">
                                         <button type="button" onclick="$houseAlbumImage.fn.save()" class="btn btn-primary"><i class="fa fa-check"></i> 保存</button>
                                         <button type="button" onclick="$houseAlbumImage.fn.back()" class="btn btn-primary"><i class="fa fa-reply"></i> 返回</button>
@@ -65,7 +64,6 @@
                                 </div>
 
                             </form>
-                            <%--<form action="${contextPath}/static/html/js/dropzone/upload.php" class="dropzone" id="my-awesome-dropzone"></form>--%>
                         </div>
                     </section>
                 </div>
@@ -75,15 +73,15 @@
     </div>
     <!-- main content end-->
 
-    <form id="tempImageForm" method="post" action="${contextPath}/common/file/addTempImage" enctype="multipart/form-data" class="form-horizontal" role="form">
-        <input type="file" name="tempImage" id="tempImage" data-rule="required" style="display:none;" onchange="$houseAlbumImage.fn.saveTempImage()"/>
+    <form id="tempImageForm" method="post" action="${contextPath}/common/file/addMultiTempImage" enctype="multipart/form-data" class="form-horizontal" role="form">
+        <input type="file" multiple name="tempImage" id="tempImage" data-rule="required" style="display:none;" onchange="$houseAlbumImage.fn.saveTempImage()"/>
     </form>
 
     <input type="hidden" id="curImageId" value="">
     <div class="col-sm-2" style="display: none;" id="imageTemplate">
         <%--<input type="file" name="file" style="display:none;"/>--%>
         <input type="hidden" name="imageId" value="">
-        <a href="javascript:void(0);" onclick="$houseAlbumImage.fn.AddTempImg(this)">
+        <a href="javascript:void(0);">
             <img id="" name="path" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 10px;" border="1"/>
         </a>
         <a href="javascript:void(0);" style="z-index: 10; position: relative; bottom: 70px; left: -23px;" class="axx" onclick="$houseAlbumImage.fn.deleteImage(this)">
@@ -150,16 +148,21 @@
                 $("#tempImageForm").ajaxSubmit({
                     dataType: "json",
                     success: function (data) {
-                        if (null != data.path && data.path != '') {
-                            //新增一个图片模板
-                            if($("#curImageId").val() == 'addImg'){
-                                $houseAlbumImage.fn.addImgTemplate(data.path, data.id);
-                            }
-                            //修改当前图片
-                            else{
-                                var obj = $("#"+$("#curImageId").val());
-                                obj.attr("src",data.path);
-                                obj.parent().prev("input").val(data.id);
+                        if (null != data && data.length > 0) {
+
+                            for(var i=0; i<data.length; i++){
+                                var image = data[i];
+                                $houseAlbumImage.fn.addImgTemplate(image.path, image.id);
+                                /*//新增一个图片模板
+                                if($("#curImageId").val() == 'addImg'){
+                                    $houseAlbumImage.fn.addImgTemplate(data.path, data.id);
+                                }
+                                //修改当前图片
+                                else{
+                                    var obj = $("#"+$("#curImageId").val());
+                                    obj.attr("src",data.path);
+                                    obj.parent().prev("input").val(data.id);
+                                }*/
                             }
                         } else {
                             $leoman.alertMsg("上传错误");

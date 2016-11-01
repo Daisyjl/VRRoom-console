@@ -32,6 +32,7 @@
                         <div class="panel-body">
                             <form class="cmxform form-horizontal adminex-form" id="formId" method="post" enctype="multipart/form-data">
                                 <input type="hidden" name="id" value="${dynamic.id}">
+                                <input type="hidden" name="houseId" value="${houseId}">
 
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label" style="width: 100px;"><span style="color: red;">* </span>标题：</label>
@@ -100,7 +101,7 @@
                 });
             },
             back : function(){
-                window.location.href = "${contextPath}/admin/house/dynamic/edit/${dynamic.houseId}";
+                window.location.href = "${contextPath}/admin/house/dynamic/edit/${houseId}";
             }
         }
     };

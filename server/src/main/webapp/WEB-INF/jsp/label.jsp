@@ -54,13 +54,41 @@
                     <section class="panel">
                         <header class="panel-heading">
                             编辑标签
-                            <button type="button" onclick="Label.fn.back()" class="btn btn-primary"><i class="fa fa-reply"></i> 返回</button>
-                            <button type="button" style="float: right;" onclick="Label.fn.addLabel()" class="btn btn-primary btn-sl">添加标签</button>
-                            <input type="text" id="labelInput" class="form-control" style="width:150px;margin-right: 15px; float: right;">
                         </header>
                         <div class="panel-body" id="panelBody">
 
                             <form class="cmxform form-horizontal adminex-form" id="formId" method="post" >
+
+                                <div class="form-group">
+                                    <div class="col-sm-3">
+                                        <button type="button" onclick="Label.fn.back()" class="btn btn-primary"><i class="fa fa-reply"></i> 返回</button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label">操作提示：</label>
+                                    <label class="col-sm-6 control-label" style="text-align: left">
+                                        输入房间号后，点击添加标签，移动生成的标签至图上的对应的房间位置，如下图即可
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label">示例图：</label>
+                                    <div class="col-sm-3">
+                                        <img src="${contextPath}/static/images/label_demo.png" style="width: 300px;height: 150px;">
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label">输入标签：</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" id="labelInput" class="form-control">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button type="button" style="" onclick="Label.fn.addLabel()" class="btn btn-primary btn-sl">添加标签</button>
+                                    </div>
+                                </div>
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" ></label>
@@ -89,7 +117,7 @@
     <!-- 隐藏区域--标签 -->
     <div id="temp" style="display: none;" class="drag" onmousedown="Label.fn.dragMove(this,event)">
         <div></div>
-        <a href="javascript:void(0);" style="float: none; z-index: 10; position: relative; bottom: 22px; left: 65px;display: none;" onclick="Label.fn.deleteLabel(this)">
+        <a href="javascript:void(0);" style="float: none; z-index: 10; position: relative; bottom: 22px; left: 33px;display: none;" onclick="Label.fn.deleteLabel(this)">
             <img id="pic1" src="${contextPath}/static/images/xx.png" style="height: 16px; width: 16px; display: inherit;" border="1"/>
         </a>
         <div style="display: none;"></div>

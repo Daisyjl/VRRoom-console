@@ -169,8 +169,8 @@
             },
             //新增/编辑
             add: function (id) {
-                id = (id==undefined?"":("?id="+id));
-                window.location.href = "${contextPath}/admin/house/dynamic/editDetail"+id;
+                id = (id==undefined?"":("&id="+id));
+                window.location.href = "${contextPath}/admin/house/dynamic/editDetail?houseId=${houseId}"+id;
             },
             del: function (id) {
                 var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');

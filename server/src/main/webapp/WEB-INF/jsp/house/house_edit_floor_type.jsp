@@ -36,9 +36,10 @@
                                 <input name="id" type="hidden" value="${enterprise.id}">
 
                                 <div class="form-group">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-1">
                                         <button type="button" onclick="$houseFloor.fn.addFloorType()" class="btn btn-primary"><i class="fa fa-plus"></i> 新增楼层类型</button>
                                     </div>
+                                    <label class="col-sm-4 control-label" style="text-align: left">(先保存楼层类型，再编辑该楼层类型，给每个类型的第一个横切面图添加锚点)</label>
                                 </div>
                             </form>
                         </div>
@@ -148,6 +149,11 @@
                 <option value="3">3</option>
                 <option value="4">4</option>
                 <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
             </select>
         </div>
 
@@ -314,8 +320,8 @@
                                 unitTemplate.find("img").prop("src",list[i].planeImage.uploadUrl);
                             }
                             unitTemplate.find(".form-group").eq(0).text("户型名称："+list[i].name);
-                            unitTemplate.find(".form-group").eq(1).text("建筑面积："+list[i].totalArea);
-                            unitTemplate.find(".form-group").eq(2).text("参考总价："+list[i].totalPrice);
+                            unitTemplate.find(".form-group").eq(1).text("建筑面积："+(list[i].totalArea==null?'':list[i].totalArea));
+                            unitTemplate.find(".form-group").eq(2).text("参考总价："+(list[i].totalPrice==null?'':list[i].totalPrice));
                             unitTemplate.find("[name=checkDiv]").append('<div class="radio" val="'+list[i].id+'"><input type="radio" name="unitRadio"></div>');
                             unitTemplate.show();
                             $("#unitDiv").append(unitTemplate);
@@ -398,8 +404,8 @@
                     obj.find("[name=unitImg]").attr("src", typeUnit.unit.planeImage.uploadUrl);
                 }
                 obj.find("[name=unitName]").text("户型名称："+typeUnit.unit.name);
-                obj.find("[name=unitArea]").text("建筑面积："+typeUnit.unit.totalArea);
-                obj.find("[name=unitPrice]").text("参考总价："+typeUnit.unit.totalPrice);
+                obj.find("[name=unitArea]").text("建筑面积："+(typeUnit.unit.totalArea==null?'':typeUnit.unit.totalArea));
+                obj.find("[name=unitPrice]").text("参考总价："+(typeUnit.unit.totalPrice==null?'':typeUnit.unit.totalPrice));
                 obj.find("select option[value="+typeUnit.roomNo+"]").attr("selected",true);
             },
             //删除横切面
@@ -452,11 +458,18 @@
                         tranArr : []
                     };
 
+                    var roomArr = [];
+
                     var transverseArr = $(floorArr[i]).find("[name=transverseGroup]");
                     for(var j=0; j<transverseArr.length; j++){
                         var imageId = $(transverseArr[j]).find("[name=transverseImageId]").val();
                         var unitId = $(transverseArr[j]).find("[name=unitId]").val();
                         var roomNo = $(transverseArr[j]).find("[name=roomNo]").val();
+
+                        if(imageId == '' || unitId == ''){
+                            $leoman.alertMsg("横切面图和户型都不能为空");
+                            return ;
+                        }
                         var typeUnitId = $(transverseArr[j]).attr("typeUnitId");
                         var transverseJson = {
                             imageId : imageId,
@@ -465,9 +478,21 @@
                             typeUnitId : typeUnitId
                         };
                         floorJson.tranArr.push(transverseJson);
+
+                        //如果房间中已存在该房间号，则报错
+                        if($.inArray(roomNo, roomArr) > -1){
+                            $leoman.alertMsg(floorJson.name+"中存在相同的房间号，请修改");
+                            return ;
+                        }
+                        roomArr.push(roomNo);
                     }
 
                     data.push(floorJson);
+                }
+
+                if(floorArr.length == 0 || $("[name=transverseDiv]").find("[name=transverseGroup]").length == 0){
+                    $leoman.alertMsg("请至少添加一种楼层类型");
+                    return ;
                 }
 
                 $.post("${contextPath}/admin/house/floor/save",{'data':JSON.stringify(data)},function(result){

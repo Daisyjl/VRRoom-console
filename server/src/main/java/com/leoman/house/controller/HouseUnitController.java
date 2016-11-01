@@ -97,12 +97,6 @@ public class HouseUnitController extends GenericEntityController<House,House,Hou
     @ResponseBody
     public Result delete(Long id) {
 
-        /*String[] idArr = JsonUtil.json2Obj(ids,String[].class);
-        for (String id : idArr) {
-            if(StringUtils.isNotEmpty(id)){
-                houseUnitService.deleteByPK(Long.valueOf(id));
-            }
-        }*/
         HouseUnit hu = houseUnitService.queryByPK(id);
         if(hu != null){
             houseUnitService.delete(hu);

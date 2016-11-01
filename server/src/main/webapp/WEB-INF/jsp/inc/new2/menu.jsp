@@ -3,7 +3,7 @@
 <div class="left-side sticky-left-side">
     <!--logo and iconic logo start-->
     <div class="logo" style="height: 70px;">
-        <a href="index.html"><img src="${contextPath}/static/html/images/rcbus_logo.png" alt="" style="width: 140px;height: 68px;"></a>
+        <a href="index.html"><img src="${contextPath}/static/html/images/login-logo.png" alt="" style="width: 140px;height: 68px;"></a>
     </div>
     <div class="logo-icon text-center">
         <a href="index.html"><img src="${contextPath}/static/html/images/logo_icon.png" alt=""></a>

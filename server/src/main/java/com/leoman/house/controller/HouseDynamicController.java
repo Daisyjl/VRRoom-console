@@ -86,11 +86,12 @@ public class HouseDynamicController extends GenericEntityController<HouseDynamic
      * @return
      */
     @RequestMapping(value = "/editDetail")
-    public String editDetail(Long id, Model model){
+    public String editDetail(Long id, Long houseId, Model model){
         if(id != null){
             HouseDynamic dynamic = houseDynamicService.queryByPK(id);
             model.addAttribute("dynamic", dynamic);
         }
+        model.addAttribute("houseId", houseId);
         return "house/house_edit_dynamic_detail";
     }
 

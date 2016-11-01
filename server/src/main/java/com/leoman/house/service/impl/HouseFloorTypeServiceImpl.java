@@ -113,7 +113,6 @@ public class HouseFloorTypeServiceImpl extends GenericManagerImpl<HouseFloorType
         List<HouseFloorTypeUnit> typeUnitList = houseFloorTypeUnitDao.findByFloorTypeId(floorTypeId);
         for (HouseFloorTypeUnit typeUnit:typeUnitList) {
             if(typeUnit != null){
-//                houseFloorTypeUnitDao.delete(typeUnit);
                 this.deleteTypeUnit(typeUnit.getId());
             }
         }

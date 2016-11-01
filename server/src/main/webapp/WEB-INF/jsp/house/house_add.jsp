@@ -36,8 +36,11 @@
                         <div class="panel-body">
                             <form class="cmxform form-horizontal adminex-form" id="formId" method="post" enctype="multipart/form-data">
 
+                                <input type="hidden" name="openTime" value="">
+                                <input type="hidden" name="dealTime" value="">
+
                                 <div class="form-group">
-                                    <label class="col-sm-1 control-label">楼盘封面：</label>
+                                    <label class="col-sm-1 control-label"><span style="color: red;">* </span>楼盘封面：</label>
                                     <div class="col-sm-5">
                                         <input type="file" name="coverFile" id="coverFile" style="display:none;"/>
                                         <a href="javascript:void(0);" onclick="$('#coverFile').click();">
@@ -49,7 +52,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" ><span style="color: red;">* </span>楼盘名称：</label>
                                     <div class="col-sm-2">
-                                        <input type="text" name="name" value="${enterprise.name}" class="form-control" required/>
+                                        <input type="text" name="name" value="${enterprise.name}" class="form-control" required maxlength="30"/>
                                     </div>
                                 </div>
 
@@ -70,6 +73,7 @@
                                     <div class="col-sm-3">
                                         <input id="tags_1" type="text" name="label" class="tags" value="" />
                                     </div>
+                                    <label class="col-sm-2 control-label" style="text-align: left">(每输入一个标签，按回车键即可)</label>
                                 </div>
 
                                 <div class="form-group">
@@ -79,8 +83,9 @@
                                         &nbsp;
                                         <input type="radio" name="isOpenWait" value="1">指定开盘时间
                                     </div>
+
                                     <div class="col-sm-2">
-                                        <input type="text" name="openTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="">
+                                        <input type="text" id="openTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="">
                                     </div>
                                 </div>
 
@@ -99,7 +104,7 @@
                                         <input type="radio" name="isDealWait" value="1">交房时间
                                     </div>
                                     <div class="col-sm-2">
-                                        <input type="text" name="dealTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="">
+                                        <input type="text" id="dealTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="">
                                     </div>
                                 </div>
 
@@ -108,6 +113,7 @@
                                     <div class="col-sm-2">
                                         <input type="text" name="propertyLimit" value="${coupon.discountPercent}" class="form-control" number-0="true"/>
                                     </div>
+                                    <label class="col-sm-1 control-label" style="text-align: left">年</label>
                                 </div>
 
                                 <div class="form-group">
@@ -128,9 +134,7 @@
                                     <div class="col-sm-2">
                                         <input type="text" name="plotTatio" value="${coupon.discountPercent}" class="form-control" number-2="true"/>
                                     </div>
-                                    <div class="col-sm-2">
-                                        %
-                                    </div>
+                                    <label class="col-sm-1 control-label" style="text-align: left">%</label>
                                 </div>
 
                                 <div class="form-group">
@@ -138,9 +142,7 @@
                                     <div class="col-sm-2">
                                         <input type="text" name="greening" value="${coupon.discountPercent}" class="form-control" number-2="true"/>
                                     </div>
-                                    <div class="col-sm-2">
-                                        %
-                                    </div>
+                                    <label class="col-sm-1 control-label" style="text-align: left">%</label>
                                 </div>
 
                                 <div class="form-group">
@@ -148,6 +150,7 @@
                                     <div class="col-sm-2">
                                         <input type="text" name="householdNum" value="${coupon.discountPercent}" class="form-control" number-0="true"/>
                                     </div>
+                                    <label class="col-sm-1 control-label" style="text-align: left">户</label>
                                 </div>
 
                                 <div class="form-group">
@@ -168,6 +171,7 @@
                                     <div class="col-sm-2">
                                         <input type="text" name="unitPrice" value="${coupon.discountPercent}" class="form-control" number-2="true"/>
                                     </div>
+                                    <label class="col-sm-1 control-label" style="text-align: left">元</label>
                                 </div>
 
                                 <div class="form-group">
@@ -179,6 +183,7 @@
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" ></label>
+                                    <label class="col-sm-1 control-label" >关键字搜索：</label>
                                     <div class="col-sm-3">
                                         <input type="text" id="suggestId" placeholder="请输入关键字搜索地址" class="form-control"/>
                                         <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
@@ -192,60 +197,6 @@
                                     </div>
                                 </div>
 
-                            </form>
-                        </div>
-                    </section>
-                </div>
-            </div>
-
-            <!-- 户型信息 -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <section class="panel">
-                        <header class="panel-heading">
-                            户型信息
-                        </header>
-                        <div class="panel-body">
-                            <form class="cmxform form-horizontal adminex-form">
-                                <input id="id" name="id" type="hidden" value="${enterprise.id}">
-
-                                <%--<div class="form-group">
-                                    <label class="col-sm-1 control-label" >楼盘名称：</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" name="name" value="${enterprise.name}" class="form-control" required/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label"></label>
-                                    <div class="col-sm-6">
-                                        <button type="button" onclick="$house.fn.addUnit()" class="btn btn-primary"><i class="fa fa-plus"></i> 新增户型</button>
-                                    </div>
-                                </div>--%>
-                            </form>
-                        </div>
-                    </section>
-                </div>
-            </div>
-
-            <!-- 楼盘动态 -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <section class="panel">
-                        <header class="panel-heading">
-                            楼盘动态
-                        </header>
-                        <div class="panel-body">
-                            <form class="cmxform form-horizontal adminex-form">
-                                <input id="dynamicId" name="dynamicId" type="hidden" value="${enterprise.id}">
-
-                                <%--<div class="form-group">
-                                    <label class="col-sm-1 control-label" >楼盘名称：</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" name="name" value="${enterprise.name}" class="form-control" required/>
-                                    </div>
-                                </div>--%>
-
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label"></label>
                                     <div class="col-sm-6">
@@ -253,6 +204,7 @@
                                         <button type="button" class="btn btn-primary" onclick="$house.fn.back()">返回</button>
                                     </div>
                                 </div>
+
                             </form>
                         </div>
                     </section>
@@ -275,7 +227,6 @@
             list: [],
             chart: null,
             dTable: null,
-            um : null,
         },
         fn: {
             init: function () {
@@ -290,20 +241,30 @@
                     todayBtn: 1,
                     autoclose: 1,
                     todayHighlight: 1,
-                    startView: 'hour',
+                    minView: "month",
                     forceParse: 0,
                     showMeridian: false,
-                    format: 'yyyy-mm-dd hh:ii'
+                    format: 'yyyy-mm-dd'
+                });
+
+                $('.minimal input').iCheck({
+                    checkboxClass: 'icheckbox_minimal',
+                    radioClass: 'iradio_minimal',
+                    increaseArea: '20%' // optional
                 });
 
                 //初始化radio
                 $("input[type=radio]").click(function(){
                     if($(this).val() == 0){
+                        $(this).parent().next().find("input").val("");
                         $(this).parent().next().find("input").hide();
                     }else {
                         $(this).parent().next().find("input").show();
                     }
                 });
+
+                $("[name=isOpenWait]").first().click();
+                $("[name=isDealWait]").first().click();
 
             },
 
@@ -317,6 +278,19 @@
                 });
 
                 $("#tags_1").val(lableArr.join(","));
+
+                var openTime = $("#openTime").val();
+                var dealTime = $("#dealTime").val();
+
+                if(openTime != ''){
+                    var openDate = Date.parse(new Date(openTime));
+                    $("[name=openTime]").val(openDate);
+                }
+
+                if(dealTime != ''){
+                    var dealDate = Date.parse(new Date(dealTime));
+                    $("[name=dealTime]").val(dealDate);
+                }
 
                 $("#formId").ajaxSubmit({
                     url : "${contextPath}/admin/house/save",
@@ -350,6 +324,8 @@
             var myCity = new BMap.LocalCity();
             myCity.get(myFun);
         }
+
+        map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
 
     })
 
@@ -419,8 +395,7 @@
             var addComp = rs.addressComponents;
             address =addComp.province  + addComp.city  + addComp.district  + addComp.street  + addComp.streetNumber
                     + (rs.surroundingPois.length > 0 ? rs.surroundingPois[0].title : '');
-            $("#district").val(addComp.province + addComp.city + addComp.district);
-            $("[name=address]").val(addComp.street + addComp.streetNumber+ (rs.surroundingPois.length > 0 ? rs.surroundingPois[0].title : ''));
+            $("[name=address]").val(address);
             $("#longitude").val(rs.point.lng);
             $("#latitude").val(rs.point.lat);
 

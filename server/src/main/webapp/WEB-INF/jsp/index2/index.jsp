@@ -201,7 +201,7 @@
                     <%--</li>--%>
                     <li>
                         <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                            <img src="${contextPath}/static/html/images/photos/user-avatar.png" alt="" />
+                            <%--<img src="${contextPath}/static/html/images/photos/user-avatar.png" alt="" />--%>
                             ${sessionScope.loginAdmin.username}
                             <span class="caret"></span>
                         </a>
@@ -222,7 +222,7 @@
             <h3>
                 欢迎使用看房管理平台
             </h3>
-            <ul class="breadcrumb">
+            <%--<ul class="breadcrumb">
                 <li>
                     <a href="#">Dashboard</a>
                 </li>
@@ -247,12 +247,12 @@
                         <div id="expense" class="chart-bar"></div>
                     </div>
                 </section>
-            </div>
+            </div>--%>
         </div>
         <!-- page heading end-->
 
         <!--body wrapper start-->
-        <div class="wrapper">
+        <%--<div class="wrapper">
             <div class="row">
                 <div class="col-md-6">
                     <!--statistics start-->
@@ -715,7 +715,7 @@
         <!--footer section start-->
         <footer>
             2014 &copy; AdminEx by ThemeBucket
-        </footer>
+        </footer>--%>
         <!--footer section end-->
     </div>
     <!-- main content end-->
