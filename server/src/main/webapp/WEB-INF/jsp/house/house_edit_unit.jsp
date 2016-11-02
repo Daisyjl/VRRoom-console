@@ -254,12 +254,12 @@
                             $("#unitForm").find("[name=typeName]").val(obj.typeName);
                             $("#unitForm").find("[name=totalArea]").val(obj.totalArea);
                             $("#unitForm").find("[name=totalPrice]").val(obj.totalPrice);
-                            $("#unitForm").find("[name=towards]").val(obj.towards);
+//                            $("#unitForm").find("[name=towards]").val(obj.towards);
                             if(obj.planeImage != null){
                                 $("#unitForm").find("#planeImg").attr("src", obj.planeImage.uploadUrl);
                             }
                             if(obj.d3Image != null){
-                                $("#unitForm").find("#planeImg").attr("src", obj.d3Image.uploadUrl);
+                                $("#unitForm").find("#d3Img").attr("src", obj.d3Image.uploadUrl);
                             }
                             $("#unitForm").find("[name=fullView]").val(obj.fullView);
                             if(obj.d3ModelRecogUrl != null && obj.d3ModelRecogUrl != ''){
@@ -270,6 +270,10 @@
                                 $("#unitForm").find("#d3ModelFileUrl").show();
                                 $("#unitForm").find("#d3ModelFileUrl").attr("href", obj.d3ModelUrl);
                             }
+
+                            //设置户型类型和朝向的下拉框的值
+                            $("[name=typeName]").find("option[value="+obj.typeName+"]").attr("selected", true);
+                            $("[name=towards]").find("option[value="+obj.towards+"]").attr("selected", true);
                             $("#myModal").modal("show");
                         }else{
                             $leoman.alertMsg(result.msg);
@@ -279,7 +283,6 @@
                     $("#unitForm").find("input:not(:hidden), select").val("");
                     $("#myModal").modal("show");
                 }
-                console.info("${houseId}");
 
             },
             //保存弹出的新增户型
