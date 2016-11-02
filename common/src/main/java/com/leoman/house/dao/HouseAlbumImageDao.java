@@ -3,6 +3,7 @@ package com.leoman.house.dao;
 import com.leoman.common.dao.IBaseJpaRepository;
 import com.leoman.house.entity.HouseAlbum;
 import com.leoman.house.entity.HouseAlbumImage;
+import com.leoman.image.entity.Image;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -15,5 +16,8 @@ public interface HouseAlbumImageDao extends IBaseJpaRepository<HouseAlbumImage> 
 
     @Query("select a from HouseAlbumImage a where a.houseId = ?1 and a.album.id = ?2")
     public List<HouseAlbumImage> findImage(Long houseId, Long albumId);
+
+    @Query("select a.image from HouseAlbumImage a where a.houseId = ?1")
+    public List<Image> findImage(Long houseId);
 
 }

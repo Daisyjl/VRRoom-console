@@ -77,7 +77,14 @@ public class House extends BaseEntity{
     @Column(name = "lat")
     private Double lat;//纬度
 
+    @Column(name = "status")
     private Integer status;//0-新增，1-删除
+
+    @Transient
+    private Integer roomNum;//房间数
+
+    @Transient
+    private Integer housePercent;//资料完善百分比
 
     public String getName() {
         return name;
@@ -245,5 +252,21 @@ public class House extends BaseEntity{
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getRoomNum() {
+        return roomNum;
+    }
+
+    public void setRoomNum(Integer roomNum) {
+        this.roomNum = roomNum;
+    }
+
+    public Integer getHousePercent() {
+        return housePercent;
+    }
+
+    public void setHousePercent(Integer housePercent) {
+        this.housePercent = housePercent;
     }
 }

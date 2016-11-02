@@ -3,10 +3,8 @@ package com.leoman.house.service.impl;
 import com.leoman.common.core.ErrorType;
 import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
-import com.leoman.house.dao.HouseDao;
-import com.leoman.house.dao.HouseDynamicDao;
-import com.leoman.house.dao.HouseUnitDao;
-import com.leoman.house.entity.House;
+import com.leoman.house.dao.*;
+import com.leoman.house.entity.*;
 import com.leoman.house.service.HouseService;
 import com.leoman.image.entity.Image;
 import com.leoman.image.service.UploadImageService;
@@ -16,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
+
+import java.util.List;
 
 /**
  * Created by Daisy on 2016/10/11.
@@ -27,7 +27,80 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
     private HouseDao houseDao;
 
     @Autowired
+    private HouseUnitDao houseUnitDao;
+
+    @Autowired
+    private HouseFloorTypeDao houseFloorTypeDao;
+
+    @Autowired
+    private HouseRidgepoleDao houseRidgepoleDao;
+
+    @Autowired
+    private HouseAlbumImageDao houseAlbumImageDao;
+
+    @Autowired
+    private HouseDynamicDao houseDynamicDao;
+
+    @Autowired
+    private HouseRidgepoleFloorRoomDao houseRidgepoleFloorRoomDao;
+
+    @Autowired
     private UploadImageService uploadImageService;
+
+    //资料百分比比重
+    private enum HousePercent{
+        BASIC(10), //基本信息
+        UNIT(20), //户型信息
+        FLOOR(20), //楼层类型
+        RIDGEPOLE(20), //楼栋信息
+        ALBUM(20), //相册图片
+        DYNAMIC(10); //动态
+
+        private Integer value;
+
+        public Integer getValue() {
+            return value;
+        }
+
+        HousePercent(int value){
+            this.value = value;
+        }
+
+    };
+
+    @Override
+    public void setHouse(House house){
+        if(house != null){
+
+            Long houseId = house.getId();
+            //获取房间数
+            Integer roomNum = houseRidgepoleFloorRoomDao.findRoomNumByHouseId(houseId);
+            house.setRoomNum(roomNum);
+
+            Integer percent = HousePercent.BASIC.getValue();
+            //获取户型信息百分比
+            List<HouseUnit> unitList = houseUnitDao.findByHouseId(houseId);
+            percent += (unitList==null||unitList.size()==0)?0:HousePercent.UNIT.getValue();
+
+            //获取楼层类型信息百分比
+            List<HouseFloorType> typeList = houseFloorTypeDao.findByHouseId(houseId);
+            percent += (typeList==null||typeList.size()==0)?0:HousePercent.FLOOR.getValue();
+
+            //获取楼信息百分比
+            List<HouseRidgepole> ridgepoleList = houseRidgepoleDao.findByHouseId(houseId);
+            percent += (ridgepoleList==null||ridgepoleList.size()==0)?0:HousePercent.RIDGEPOLE.getValue();
+
+            //获取楼盘相册
+            List<Image> imageList = houseAlbumImageDao.findImage(houseId);
+            percent += (imageList==null||imageList.size()==0)?0:HousePercent.ALBUM.getValue();
+
+            //获取楼盘动态
+            Integer dynamicNum = houseDynamicDao.findNumByHouseId(houseId);
+            percent += (dynamicNum <= 0)?0:HousePercent.DYNAMIC.getValue();
+
+            house.setHousePercent(percent);
+        }
+    }
 
     /**
      * 保存

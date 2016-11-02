@@ -22,4 +22,7 @@ public interface HouseRidgepoleFloorRoomDao extends IBaseJpaRepository<HouseRidg
     @Query("select a from HouseRidgepoleFloorRoom a where a.typeUnitId = ?1")
     public List<HouseRidgepoleFloorRoom> findByTypeUnitId(Long typeUnitId);
 
+    @Query("select count(a.id) from HouseRidgepoleFloorRoom a where a.ridgepoleFloorId in (select b.id from HouseRidgepoleFloor b where b.ridgepole.houseId = ?1)")
+    public Integer findRoomNumByHouseId(Long houseId);
+
 }

@@ -71,6 +71,10 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
         query.eq("status", 0);
         query.like("name", name);
         Page<House> page = houseService.queryPage(query);
+        for (House house:page.getContent()) {
+            houseService.setHouse(house);
+        }
+
         return DataTableFactory.fitting(draw, page);
     }
 

@@ -124,7 +124,7 @@
                             <label class="col-sm-3 control-label" >朝向：</label>
                             <div class="col-sm-6">
                                 <%--<input type="text" name="towards" value="" class="form-control"/>--%>
-                                <select class="form-control input-sm" name="towards" required>
+                                <select class="form-control input-sm" name="towards">
                                     <option value="">---请选择---</option>
                                     <option value="正南">正南</option>
                                     <option value="东南">东南</option>

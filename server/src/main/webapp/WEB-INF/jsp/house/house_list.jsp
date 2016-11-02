@@ -111,17 +111,11 @@
                                 return str;
                             }
                         },
+                        {"data": "roomNum"},
                         {
-                            "data": "id",
+                            "data": "housePercent",
                             "render": function (data) {
-                                var str = "0";
-                                return str;
-                            }
-                        },
-                        {
-                            "data": "id",
-                            "render": function (data) {
-                                var str = "0%";
+                                var str = data + "%";
                                 return str;
                             }
                         },
