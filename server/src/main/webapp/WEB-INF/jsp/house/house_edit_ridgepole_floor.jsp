@@ -188,6 +188,12 @@
                     <form class="cmxform form-horizontal adminex-form" enctype="multipart/form-data">
 
                         <div class="form-group">
+                            <div class="col-sm-9 icheck minimal" id="selectAllChk">
+                                <div class="checkbox"><input type="checkbox"><label>全选</label></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <div class="col-sm-9 icheck minimal" id="floorDiv">
 
                             </div>
@@ -249,7 +255,9 @@
                     $("#floorNum").parent().next().find("button").text("编辑");
 
                 }
+
             },
+            //初始化楼层列表
             initFloorList : function(){
                 $.post("${contextPath}/admin/house/ridgepole/floorList",{'ridgepoleId':"${ridgepole.id}"},function(result){
                     if(result != null){
@@ -282,7 +290,9 @@
             },
             //删除横切面
             removeRow : function(self){
-                $(self).parents(".form-group").remove();
+                $leoman.alertConfirm("确定要移除该楼层类型信息吗？",function(){
+                    $(self).parents(".form-group").remove();
+                });
             },
             //设置当前行的值
             setRowValue : function(tempFloorTypeId, value){
@@ -292,7 +302,9 @@
                     obj.find("[name=tranImg]").attr("src",value.typeUnit.transverseImage.uploadUrl);
                 }
                 obj.find("[name=directionImageId]").val(value.directionImageId);
-                obj.find("img").eq(1).attr("src",value.directionImage.uploadUrl);
+                if(value.directionImage != null){
+                    obj.find("img").eq(1).attr("src",value.directionImage.uploadUrl);
+                }
                 obj.find("[name=selectedFloorValue]").val(value.floorNos);
                 obj.find("[name=selectedFloor]").text(value.floorNos.split(",").join("楼，")+"楼");
             },
@@ -324,12 +336,27 @@
                         $("#floorDiv").append('<div class="checkbox" val="'+(i+1)+'"><input type="checkbox"><label>'+(i+1)+'楼</label></div>');
                     }
 
-                    $('.minimal input').iCheck({
-                        checkboxClass: 'icheckbox_minimal',
-                        radioClass: 'iradio_minimal',
-                        increaseArea: '20%' // optional
-                    });
+                    $ridgepoleFloor.fn.initCheckClick();
                 }
+            },
+            //初始化checkbox的click事件
+            initCheckClick : function(){
+                $('.minimal input').iCheck({
+                    checkboxClass: 'icheckbox_minimal',
+                    radioClass: 'iradio_minimal',
+                    increaseArea: '20%' // optional
+                });
+
+                $('#selectAllChk input').on('ifClicked', function(){
+                    //如果点击之前是选中的，则点击全选为取消全选
+                    if($(this).is(":checked")){
+                        $("#floorDiv .icheckbox_minimal").removeClass("checked");
+                    }
+                    //如果点击之前不是选中的，则点击全选为全选
+                    else{
+                        $("#floorDiv .icheckbox_minimal").addClass("checked");
+                    }
+                });
             },
             //打开选择楼层弹出框
             openFloorModal : function(self){
@@ -407,7 +434,13 @@
             //选择楼层类型
             selectFloorType : function (){
 
+                //当前选中的楼层类型的id
                 var floorTypeId = $(".iradio_minimal.checked").parent().attr("val");
+                if($("[name=floorTypeId][value="+floorTypeId+"]").length > 0){
+                    $leoman.alertMsg("当前楼层类型已存在，可以在该楼层类型里修改对应的楼层");
+                    return ;
+                }
+
                 var floorTypeObj = $(".iradio_minimal.checked").parents(".form-group");
 
                 var divObj = $("#"+$("#currentFloorTypeId").val()).parents(".form-group");
@@ -459,12 +492,28 @@
                     floorArr : []
                 };
 
+                var floorNoArr = [];
                 var floorArr = $("#ridgepoleDiv .floor");
                 for(var i=0; i<floorArr.length; i++){
 
                     var floorTypeId = $(floorArr[i]).find("[name=floorTypeId]").val();
                     var imageId = $(floorArr[i]).find("[name=directionImageId]").val();
                     var floorNos = $(floorArr[i]).find("[name=selectedFloorValue]").val();
+
+                    if(floorTypeId == '' || floorNos == ''){
+                        $leoman.alertMsg("楼层类型和楼层都不能为空");
+                        return ;
+                    }
+
+                    var perFloorNoArr = floorNos.split(",");
+                    for(var j=0; j<perFloorNoArr.length; j++){
+                        //如果楼层列表中包含新增的楼层，则说明重复，报错
+                        if($.inArray(perFloorNoArr[j], floorNoArr) > -1){
+                            $leoman.alertMsg("选择的楼层存在重复，请重新选择");
+                            return ;
+                        }
+                        floorNoArr.push(perFloorNoArr[j]);
+                    }
 
                     var floorType = {
                         imageId : imageId,
@@ -474,6 +523,7 @@
                     data.floorArr.push(floorType);
                 }
 
+                //保存
                 $.post("${contextPath}/admin/house/ridgepole/save",{'data':JSON.stringify(data)},function(result){
                     if(result.status == 0){
                         $ridgepoleFloor.fn.back();
@@ -486,10 +536,11 @@
                 window.location.href = "${contextPath}/admin/house/ridgepole/edit/${houseId}";
             }
         }
-    }
+    };
+
     $(function () {
         $ridgepoleFloor.fn.init();
-    })
+    });
 </script>
 </body>
 </html>

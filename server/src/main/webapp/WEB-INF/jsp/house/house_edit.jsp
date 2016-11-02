@@ -77,11 +77,19 @@
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >开盘时间：</label>
-                                    <div class="col-sm-2">
-                                        <input type="radio" name="isOpenWait" value="0" checked="checked">待定
-                                        &nbsp;
-                                        <input type="radio" name="isOpenWait" value="1">指定开盘时间
+
+                                    <div class="col-sm-4 icheck minimal">
+                                        <div class="radio" val="0">
+                                            <input type="radio" name="isOpenWait" value="0">
+                                            <label>待定</label>
+                                        </div>
+
+                                        <div class="radio" val="1">
+                                            <input type="radio" name="isOpenWait" value="1">
+                                            <label>指定开盘时间</label>
+                                        </div>
                                     </div>
+
                                     <div class="col-sm-2">
                                         <input type="text" id="openTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="">
                                     </div>
@@ -96,11 +104,19 @@
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >交房时间：</label>
-                                    <div class="col-sm-2">
-                                        <input type="radio" name="isDealWait" value="0" checked="checked">待定
-                                        &nbsp;
-                                        <input type="radio" name="isDealWait" value="1">交房时间
+
+                                    <div class="col-sm-4 icheck minimal">
+                                        <div class="radio" val="0">
+                                            <input type="radio" name="isDealWait" value="0">
+                                            <label>待定</label>
+                                        </div>
+
+                                        <div class="radio" val="1">
+                                            <input type="radio" name="isDealWait" value="1">
+                                            <label>指定交房时间</label>
+                                        </div>
                                     </div>
+
                                     <div class="col-sm-2">
                                         <input type="text" id="dealTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="">
                                     </div>
@@ -241,13 +257,20 @@
                     format: 'yyyy-mm-dd'
                 });
 
-                //初始化radio
-                $("input[type=radio]").click(function(){
-                    if($(this).val() == 0){
-                        $(this).parent().next().find("input").val("");
-                        $(this).parent().next().find("input").hide();
-                    }else {
-                        $(this).parent().next().find("input").show();
+                $('.minimal input').iCheck({
+                    checkboxClass: 'icheckbox_minimal',
+                    radioClass: 'iradio_minimal',
+                    increaseArea: '20%' // optional
+                });
+
+                //单选框的选择事件
+                $('.minimal input').on('ifChecked', function(){
+                    if($(this).val() == '0'){
+                        $(this).parents(".icheck").next().find("input").val("");
+                        $(this).parents(".icheck").next().find("input").hide();
+                    }
+                    else{
+                        $(this).parents(".icheck").next().find("input").show();
                     }
                 });
 
@@ -255,8 +278,8 @@
                 $("#coverImg").attr("src","${house.image.uploadUrl}");
                 $("select").eq(0).find("option[value=${house.enterprise.id}]").attr("selected",true);
                 $("select").eq(1).find("option[value=${house.decorateType}]").attr("selected",true);
-                $("[name=isOpenWait][value=${house.isOpenWait}]").click();
-                $("[name=isDealWait][value=${house.isDealWait}]").click();
+                $("[name=isOpenWait][value=${house.isOpenWait}]").iCheck('check');
+                $("[name=isDealWait][value=${house.isDealWait}]").iCheck('check');
 
                 if("${house.openTime}" != ''){
                     var date = new Date(parseInt("${house.openTime}"));
@@ -273,6 +296,16 @@
             //保存
             save : function() {
                 if(!$("#formId").valid()) return;
+
+                if($("[name=isOpenWait][value='1']").parent().hasClass("checked") && $("#openTime").val() == ''){
+                    $leoman.alertMsg("请指定开盘时间");
+                    return ;
+                }
+
+                if($("[name=isDealWait][value='1']").parent().hasClass("checked") && $("#dealTime").val() == ''){
+                    $leoman.alertMsg("请指定交房时间");
+                    return ;
+                }
 
                 var lableArr = [];
                 $("#tags_1_tagsinput .tag span").each(function(){

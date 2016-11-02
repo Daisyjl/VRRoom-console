@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -90,8 +91,10 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
             BigInteger floorTypeId = (BigInteger) map.get("floorTypeId");
             BigInteger directionImageId = (BigInteger) map.get("directionImageId");
 
-            Image directionImage = imageDao.findOne(directionImageId.intValue());
-            map.put("directionImage",directionImage);
+            if(directionImageId != null){
+                Image directionImage = imageDao.findOne(directionImageId.intValue());
+                map.put("directionImage",directionImage);
+            }
 
             List<HouseFloorTypeUnit> typeUnitList = houseFloorTypeUnitDao.findByFloorTypeId(floorTypeId.longValue());
             HouseFloorTypeUnit typeUnit = (typeUnitList==null || typeUnitList.size()==0)?null:typeUnitList.get(0);
@@ -169,6 +172,7 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
 
             String [] floorNoArr = floorNos.split("\\,");
             for (String floorNo:floorNoArr) {
+
                 //保存栋的层信息
                 HouseRidgepoleFloor houseRidgepoleFloor = new HouseRidgepoleFloor();
                 if(!StringUtils.isEmpty(imageId)){

@@ -104,9 +104,10 @@
                                 <%--<input type="text" name="typeName" value="" class="form-control" required/>--%>
                                 <select class="form-control input-sm" name="typeName" required>
                                     <option value="">---请选择---</option>
-                                    <option value="一室一厅">一室一厅</option>
-                                    <option value="两室一厅">两室一厅</option>
-                                    <option value="三室两厅">三室两厅</option>
+                                    <option value="一室一厅一卫">一室一厅一卫</option>
+                                    <option value="两室一厅一卫">两室一厅一卫</option>
+                                    <option value="三室两厅一卫">三室两厅一卫</option>
+                                    <option value="三室两厅两卫">三室两厅两卫</option>
                                 </select>
                             </div>
                         </div>
