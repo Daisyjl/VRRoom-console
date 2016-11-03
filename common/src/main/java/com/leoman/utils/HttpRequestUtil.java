@@ -9,6 +9,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -21,6 +22,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Http请求工具类
@@ -330,5 +332,48 @@ public class HttpRequestUtil {
 
         String sr = HttpRequestUtil.sendPost(url, para, true);
         System.out.println(sr);
+    }
+
+    public static Response sendGet(String url,Map<String,String> headers){
+        Response result = new Response();
+
+        if(StringUtils.isBlank(url)){
+            result.setError("url为空!");
+            result.setStatus(false);
+            return result;
+        }
+        HttpGet httpGet= new HttpGet(url);
+        try {
+            if(null!=headers){
+                Set<String> keys =  headers.keySet();
+                for(String key :keys){
+                    httpGet.setHeader(key,headers.get(key));
+                }
+            }
+            CloseableHttpResponse response = httpClient.execute(httpGet);
+            int statusCode = response.getStatusLine().getStatusCode();
+            result.setStatusCode(statusCode);
+            if (statusCode != 200) {
+                httpGet.abort();
+                result.setError("返回状态错误，错误码:"+statusCode);
+                result.setStatus(false);
+                return result;
+            }
+            HttpEntity entity = response.getEntity();
+            String content = null;
+            if (entity != null){
+                content = EntityUtils.toString(entity, "utf-8");
+            }
+            EntityUtils.consume(entity);
+            response.close();
+            result.setStatus(true);
+            result.setBody(content);
+        } catch (Exception e) {
+            result.setStatus(false);
+            result.setError(e.getMessage());
+            logger.error(e);
+        }
+        return result;
+
     }
 }

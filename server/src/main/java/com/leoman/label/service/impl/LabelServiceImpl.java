@@ -25,11 +25,6 @@ public class LabelServiceImpl  extends GenericManagerImpl<Label,LabelDao> implem
     public List<Label> findListByParams(Integer objectId) {
         List<Label> list = labelDao.findListByParams(objectId);
 
-        /*for (Label label : list) {
-            label.setProductId(label.getProduct().getId());
-            label.setProductCover(imageDao.findOne(label.getProduct().getCoverId()).getPath());
-        }*/
-
         return list;
     }
 

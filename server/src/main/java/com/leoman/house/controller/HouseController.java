@@ -51,7 +51,7 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
 
     @RequestMapping(value = "/index")
     public String index(){
-        return "house/house_list";
+        return "house/house_list_copy";
     }
 
     /**
@@ -92,7 +92,7 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
         }
         List<Enterprise> enterpriseList = enterpriseService.queryAll();
         model.addAttribute("enterpriseList", enterpriseList);
-        return "house/house_add";
+        return "house/house_add_copy";
     }
 
     /**
@@ -109,7 +109,7 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
         }
         List<Enterprise> enterpriseList = enterpriseService.queryAll();
         model.addAttribute("enterpriseList", enterpriseList);
-        return "house/house_edit";
+        return "house/house_edit_copy";
     }
 
 

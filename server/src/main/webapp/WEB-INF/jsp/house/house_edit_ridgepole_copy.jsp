@@ -1,15 +1,20 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: wangbin
+  Date: 2015/3/3
+  Time: 9:33
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../inc/taglibs.jsp" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <%@ include file="../inc/meta.jsp" %>
     <meta name="description" content="">
-    <meta name="author" content="ThemeBucket">
-    <link rel="shortcut icon" href="#" type="image/png">
+    <meta name="author" content="">
     <title>编辑楼信息</title>
-    <%@ include file="../inc/new2/css.jsp" %>
+    <%@ include file="../inc/css.jsp" %>
 
     <style type="text/css">
         /*模块拖拽*/
@@ -26,109 +31,112 @@
             border-radius: 5px;
         }
     </style>
+
 </head>
+<body>
 
-<body class="sticky-header">
+<div id="posts" class="wrapper">
 
-<section>
-    <%@ include file="../inc/new2/menu.jsp" %>
-    <!-- main content start-->
-    <div class="main-content">
-        <%@ include file="../inc/new2/header.jsp" %>
-        <!--body wrapper start-->
+    <%@ include file="../inc/nav.jsp" %>
 
-        <section class="wrapper">
-            <!-- page start-->
-
-            <input id="objectId" type="hidden" value="${house.image.id }">
-            <%--<input id="ridgepoleId" type="hidden" value="1">--%>
-            <input id="labelId" type="hidden" value="">
-            <input id="height" type="hidden" value="">
-            <input id="width" type="hidden" value="">
-            <input id="left" type="hidden" value="">
-            <input id="top" type="hidden" value="">
-            <input id="name" type="hidden" value="">
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <section class="panel">
-                        <header class="panel-heading">
-                            编辑楼信息
-                        </header>
-                        <div class="panel-body" id="panelBody">
-
-                            <form class="cmxform form-horizontal adminex-form" id="formId" method="post" >
-
-                                <div class="form-group">
-                                    <div class="col-sm-3">
-                                        <button type="button" onclick="Label.fn.back()" class="btn btn-primary"><i class="fa fa-reply"></i> 返回</button>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label">操作提示：</label>
-                                    <label class="col-sm-6 control-label" style="text-align: left">
-                                        输入楼名称后，点击添加标签，移动生成的标签至图上的对应的楼即可
-                                    </label>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label">输入标签：</label>
-                                    <div class="col-sm-2">
-                                        <input type="text" id="labelInput" class="form-control">
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <button type="button" style="" onclick="Label.fn.addLabel()" class="btn btn-primary btn-sl">添加标签</button>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" ></label>
-                                    <div>
-                                        <img id="mainImg" style="position: relative;" src="${house.image.path }"/>
-                                        <div id="baseImg"></div>
-                                    </div>
-
-                                    <div class="">
-                                        <div id="tempLabels" style="border: 1px;"></div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >编辑标签</label>
-                                    <div class="col-sm-5" id="labelEditDiv">
-
-                                    </div>
-                                </div>
-
-                            </form>
-
-                        </div>
-                    </section>
-                </div>
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">编辑楼信息</h1>
             </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <!-- /.panel-heading -->
+                    <div class="panel-heading">
+                        <a href="admin/house/index" class="btn btn-outline btn-primary btn-lg"
+                           role="button"><i class='fa fa-reply'></i> 返回</a>
+                    </div>
 
-        </section>
+                    <div class="panel-body">
+                        <form method="post" class="form-horizontal" role="form">
+
+                            <input id="objectId" type="hidden" value="${house.image.id }">
+                            <input id="labelId" type="hidden" value="">
+                            <input id="height" type="hidden" value="">
+                            <input id="width" type="hidden" value="">
+                            <input id="left" type="hidden" value="">
+                            <input id="top" type="hidden" value="">
+                            <input id="name" type="hidden" value="">
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">操作提示：</label>
+                                <label class="col-sm-6 control-label" style="text-align: left">
+                                    输入楼名称后，点击添加标签，移动生成的标签至图上的对应的楼即可
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">输入标签：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" id="labelInput" class="form-control">
+                                </div>
+                                <div class="col-sm-3">
+                                    <button type="button" style="" onclick="Label.fn.addLabel()" class="btn btn-primary btn-sl">添加标签</button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" ></label>
+                                <div>
+                                    <img id="mainImg" style="position: relative;" src="${house.image.path }"/>
+                                    <div id="baseImg"></div>
+                                </div>
+
+                                <div class="">
+                                    <div id="tempLabels" style="border: 1px;"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" >编辑标签</label>
+                                <div class="col-sm-5" id="labelEditDiv">
+
+                                </div>
+                            </div>
+
+
+                        </form>
+                    </div>
+                    <!-- /.panel-body -->
+
+                </div>
+                <!-- /.panel -->
+            </div>
+        </div>
 
     </div>
-    <!-- main content end-->
+    <!-- /#page-wrapper -->
 
-    <!-- 隐藏区域--标签 -->
-    <div id="temp" style="display: none;" class="drag" onmousedown="Label.fn.dragMove(this,event)">
-        <div></div>
-        <a href="javascript:void(0);" style="float: none; z-index: 10; position: relative; bottom: 22px; left: 57px;display: none;" onclick="Label.fn.deleteLabel(this)">
-            <img id="pic1" src="${contextPath}/static/images/xx.png" style="height: 16px; width: 16px; display: inherit;" border="1"/>
-        </a>
-        <div style="display: none;"></div>
-    </div>
+</div>
+<!-- /#wrapper -->
 
-    <div class="form-group" style="display: none;" id="editTemplate">
-        <label class="col-sm-3 control-label" >标签名称</label>
-        <button type="button" onclick="Label.fn.editFloor()" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> 编辑</button>
-    </div>
+<!-- 隐藏区域--标签 -->
+<div id="temp" style="display: none;" class="drag" onmousedown="Label.fn.dragMove(this,event)">
+    <div></div>
+    <a href="javascript:void(0);" style="float: none; z-index: 10; position: relative; bottom: 22px; left: 57px;display: none;" onclick="Label.fn.deleteLabel(this)">
+        <img id="pic1" src="${contextPath}/static/images/xx.png" style="height: 16px; width: 16px; display: inherit;" border="1"/>
+    </a>
+    <div style="display: none;"></div>
+</div>
 
-</section>
-<%@ include file="../inc/new2/foot.jsp" %>
+<div class="form-group" style="display: none;" id="editTemplate">
+    <label class="col-sm-3 control-label" >标签名称</label>
+    <button type="button" onclick="Label.fn.editFloor()" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> 编辑</button>
+</div>
+
+<!-- 配置文件 -->
+
+</body>
+
+<%@ include file="../inc/footer.jsp" %>
 <script type="text/javascript">
     var x = 0;
     var y = 0;
@@ -303,8 +311,6 @@
                         labelId: $("#labelId").val(),
                         //标签名称
                         name: $("#name").val(),
-                        //数据来源
-//                        ridgepoleId: $('#objectType').val(),
                         //偏移高度(相对于原图)
                         height: $("#height").val() * 2,
                         //偏移宽度(想对于原图)
@@ -342,5 +348,6 @@
         Label.fn.init();
     });
 </script>
-</body>
+
+
 </html>

@@ -58,3 +58,28 @@
         background-size: 200px 20px;
     }
 }
+
+/*----------------------------------------------
+    CUSTOM CHECKBOX & RADIO BUTTONS STYLES
+----------------------------------------------*/
+
+.icheck div, .icheck .disabled {
+    float: left;
+}
+
+.icheck div {
+    margin-right: 10px;
+}
+
+.icheck label {
+    font-weight: normal;
+}
+
+.icheck .checkbox, .icheck .radio {
+    margin-bottom: 10px;
+}
+
+.icheck .single-row {
+    display: inline-block;
+    width: 100%;
+}

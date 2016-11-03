@@ -58,7 +58,7 @@ public class HouseRidgepoleController extends GenericEntityController<HouseDynam
             model.addAttribute("labelList", JSONArray.fromObject(labelList));
         }
         model.addAttribute("house", house);
-        return "house/house_edit_ridgepole";
+        return "house/house_edit_ridgepole_copy";
     }
 
     /**
@@ -78,7 +78,7 @@ public class HouseRidgepoleController extends GenericEntityController<HouseDynam
 
         model.addAttribute("label", label);
         model.addAttribute("houseId", houseId);
-        return "house/house_edit_ridgepole_floor";
+        return "house/house_edit_ridgepole_floor_copy";
     }
 
     /**
@@ -121,7 +121,7 @@ public class HouseRidgepoleController extends GenericEntityController<HouseDynam
         List<HouseRidgepole> list = houseRidgepoleService.findRoomList(id);
         model.addAttribute("list", list);
 
-        return "house/house_edit_room";
+        return "house/house_edit_room_copy";
     }
 
     /**

@@ -1,110 +1,101 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: wangbin
+  Date: 2015/3/3
+  Time: 9:33
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../../inc/taglibs.jsp" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <%@ include file="../../inc/meta.jsp" %>
     <meta name="description" content="">
-    <meta name="author" content="ThemeBucket">
-    <link rel="shortcut icon" href="#" type="image/png">
-    <title>Dynamic Table</title>
-    <%@ include file="../../inc/new2/css.jsp" %>
+    <meta name="author" content="">
+    <title>管理员列表</title>
+    <%@ include file="../../inc/css.jsp" %>
+
 </head>
-<body class="sticky-header">
-<section>
-    <%@ include file="../../inc/new2/menu.jsp" %>
-    <!-- main content start-->
-    <div class="main-content">
-        <%@ include file="../../inc/new2/header.jsp" %>
-        <!--body wrapper start-->
-        <div class="wrapper">
-            <div class="row">
-                <div class="col-sm-12">
-                    <input type="hidden" id="userType" value="${userInfo.type}">
-                    <section class="panel">
-                        <div class="panel-body">
-                            <div class="form-group col-sm-2">
-                                <input type="text" id="username" name="username" class="form-control"
-                                       id="exampleInputEmail2" placeholder="姓名">
-                                <c:if test="${userInfo.type eq 0}">
-                                    <input type="hidden" id="enterpriseId" name="enterpriseId" value="${userInfo.enterprise.id}">
-                                </c:if>
-                            </div>
-                            <button id="c_search" class="btn btn-info">搜索</button>
-                        </div>
-                    </section>
-                </div>
+
+<body>
+
+<div id="posts" class="wrapper">
+
+    <%@ include file="../../inc/nav.jsp" %>
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">管理员列表</h1>
             </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <section class="panel">
-                        <header class="panel-heading">
-                            管理员列表
-                            <span class="tools pull-right" style="margin-right: 10px;margin-left: 10px">
-                               <button class="btn btn-info" type="button" onclick="$admin.fn.del();" id="deleteBatch" style="display: none">删除</button>
-                            </span>
-                            <span class="tools pull-right">
-                               <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i>刷新</button>
-                               <button class="btn btn-info" type="button" onclick="$admin.fn.add();">新增用户</button>
-                            </span>
-                        </header>
-                        <div class="panel-body">
-                            <div class="adv-table">
-                                <table class="display table table-bordered table-striped" id="dataTables" width="100%">
-                                    <thead>
-                                    <tr>
-                                        <th><input type="checkbox" class="list-parent-check"
-                                                   onclick="$leoman.checkAll(this);"/></th>
-                                        <th>账号</th>
-                                        <th>创建时间</th>
-                                        <th>手机号</th>
-                                        <th>最后登录时间</th>
-                                        <th>权限</th>
-                                        <th>企业</th>
-                                        <th>操作</th>
-                                    </tr>
-                                    </thead>
-                                </table>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+
+                        <a href="admin/admin/add" class="btn btn-outline btn-primary btn-lg"
+                           role="button">新增管理员</a>
+
+                        <form class="navbar-form navbar-right" role="search">
+                            <div class="form-group">
+                                <label>名称：</label>
+                                <input type="text" id="name" name="username" class="form-control" placeholder="名称">
                             </div>
+                            <button type="button" id="c_search" class="btn btn-default btn-sm">查询</button>
+                        </form>
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+
+                        <div class="table-responsive">
+
+                            <table class="table table-striped table-bordered table-hover" id="dataTables">
+                                <colgroup>
+                                    <col class="gradeA even"/>
+                                    <col class="gradeA odd"/>
+                                    <col class="gradeA even"/>
+                                    <col class="gradeA odd"/>
+                                    <col class="gradeA even"/>
+                                    <col class="gradeA odd"/>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" onclick="$leoman.checkAll(this)" class="checkall"/></th>
+                                    <th>账号</th>
+                                    <th>创建时间</th>
+                                    <th>手机号</th>
+                                    <th>最后登录时间</th>
+                                    <th>权限</th>
+                                    <th>企业</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                         </div>
-                        <!-- Modal -->
-                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                             aria-hidden="true">
-                            <input type="hidden" id="adminId" name="adminId" value>
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal"
-                                                aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title">选择角色</h4>
-                                    </div>
-                                    <div class="modal-body row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <select multiple="multiple" class="multi-select" id="my_multi_select1"
-                                                        name="my_multi_select1[]">
-                                                </select>
-                                            </div>
-                                            <hr>
-                                            <div class="form-group">
-                                                <div class="col-sm-6">
-                                                    <button type="button" id="getOptionBtn" class="btn btn-primary">保存
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
+
+                    </div>
+                    <!-- /.panel-body -->
+
                 </div>
+                <!-- /.panel -->
             </div>
         </div>
+
     </div>
-</section>
-<%@ include file="../../inc/new2/foot.jsp" %>
+    <!-- /#page-wrapper -->
+
+
+</div>
+<!-- /#wrapper -->
+
+<%@ include file="../../inc/footer.jsp" %>
+</body>
+
 <script>
     $admin = {
         v: {
@@ -164,11 +155,11 @@
                         {
                             "data": "enterprise.name",
                             "render" : function(data){
-                              if(data==null){
-                                  return "——";
-                              }else {
-                                  return data;
-                              }
+                                if(data==null){
+                                    return "——";
+                                }else {
+                                    return data;
+                                }
                             },
                             "sDefaultContent" : ""
                         },
@@ -220,28 +211,6 @@
                 window.location.href = "${contextPath}/admin/admin/add" + params;
             },
             reset: function (id) {
-                /*$("#confirm").modal("show");
-                $('#showText').html('您确定要重置该管理员的密码吗？');
-                $("#determine").off("click");
-                $("#determine").on("click",function(){
-                    $.ajax({
-                        "url": "${contextPath}/admin/admin/reset",
-                        "data": {
-                            id:id
-                        },
-                        "dataType": "json",
-                        "type": "POST",
-                        success: function (result) {
-                            if (result.status==0) {
-                                alert("重置成功");
-                                $admin.v.dTable.ajax.reload(null,false);
-                            }else {
-                                alert("重置失败");
-                            }
-                            $("#confirm").modal("hide");
-                        }
-                    });
-                })*/
                 var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');
                 var ids = [];
                 if(id != null){
@@ -269,15 +238,16 @@
             },
             del: function (id) {
                 var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');
-                var ids = checkBox.getInputId();
-                $("#confirm").modal("show");
-                $('#showText').html('您确定要彻底删除所选的管理员吗？');
-                $("#determine").off("click");
-                $("#determine").on("click",function(){
+                var ids = [];
+                if(id != null){
+                    ids.push(id);
+                }else{
+                    ids = checkBox.getInputId();
+                }
+                $leoman.alertConfirm("您确定要彻底删除所选的管理员吗？",function(){
                     $.ajax({
                         "url": "${contextPath}/admin/admin/del",
                         "data": {
-                            id:id,
                             ids:JSON.stringify(ids)
                         },
                         "dataType": "json",
@@ -291,31 +261,11 @@
                                 $("#deleteBatch").css('display','none');
                                 $admin.v.dTable.ajax.reload(null,false);
                             }
-                            $("#confirm").modal("hide");
                         }
                     });
-                })
+                });
             },
-            
-            <%--delete: function () {--%>
-                <%--var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');--%>
-                <%--var ids = checkBox.getInputId();--%>
-                <%--$.ajax({--%>
-                    <%--url: "${contextPath}/admin/cq/deleteBatch",--%>
-                    <%--data: {--%>
-                        <%--"ids": JSON.stringify(ids)--%>
-                    <%--},--%>
-                    <%--type: "post",--%>
-                    <%--dataType: "json",--%>
-                    <%--success: function (result) {--%>
-                        <%--if (!result.status) {--%>
-                            <%--$common.fn.notify(result.msg);--%>
-                            <%--return;--%>
-                        <%--}--%>
-                        <%--$admin.v.dTable.ajax.reload();--%>
-                    <%--}--%>
-                <%--});--%>
-            <%--},--%>
+
             openModal: function (adminId) {
                 $("#adminId").val(adminId);
                 $('#my_multi_select1').multiSelect('refresh');
@@ -387,5 +337,6 @@
         $admin.fn.init();
     })
 </script>
-</body>
+
+
 </html>

@@ -7,7 +7,26 @@
                 <a href="admin/dashboard"><i class="fa fa-gear fa-fw"></i>控制面板</a>
             </li>
 
-            <li>
+
+            <c:forEach items="${sessionScope.moduleList}" var="topModule">
+                <li>
+                    <a href="#"><i class="fa fa-user fa-fw"></i>${topModule.name}<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <c:forEach items="${topModule.list}" var="subModule">
+                        <li >
+                            <a href="${contextPath}${subModule.url}"><i class="fa fa-user fa-fw"></i>${subModule.name}</a>
+                        </li>
+                        </c:forEach>
+                        <%--<li >
+                            <a href="admin/payrecord/index"><i class="fa fa-user fa-fw"></i>缴费列表</a>
+                        </li>
+                        <li >
+                            <a href="admin/webpay/index"><i class="fa fa-user fa-fw"></i>网站收支</a>
+                        </li>--%>
+                    </ul>
+                </li>
+            </c:forEach>
+            <%--<li>
                 <a href="#"><i class="fa fa-user fa-fw"></i>账户管理<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li >
@@ -56,7 +75,7 @@
                         <a href="admin/salemanrecord/index"><i class="fa fa-user fa-fw"></i>业务员记录列表</a>
                     </li>
                 </ul>
-            </li>
+            </li>--%>
             <!-- 微信菜单测试
             <li>
                 <a href="#"><i class="fa fa-user fa-fw"></i>微信菜单测试<span class="fa arrow"></span></a>

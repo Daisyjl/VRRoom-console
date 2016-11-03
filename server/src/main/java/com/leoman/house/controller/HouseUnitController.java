@@ -29,9 +29,6 @@ import java.util.List;
 public class HouseUnitController extends GenericEntityController<House,House,HouseServiceImpl> {
 
     @Autowired
-    private HouseService houseService;
-
-    @Autowired
     private HouseUnitService houseUnitService;
 
     /**
@@ -43,7 +40,7 @@ public class HouseUnitController extends GenericEntityController<House,House,Hou
     @RequestMapping(value = "/edit/{houseId}")
     public String index(@PathVariable("houseId") Long houseId, Model model){
         model.addAttribute("houseId", houseId);
-        return "house/house_edit_unit";
+        return "house/house_edit_unit_copy";
     }
 
     /**

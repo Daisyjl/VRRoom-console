@@ -1,23 +1,29 @@
 package com.leoman.index.controller;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.leoman.common.controller.common.CommonController;
+import com.leoman.common.core.bean.Response;
 import com.leoman.common.log.entity.Log;
+import com.leoman.entity.Configue;
 import com.leoman.entity.Constant;
 import com.leoman.index.service.LoginService;
 import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.permissions.module.entity.vo.ModuleVo;
 import com.leoman.permissions.module.service.ModuleService;
-import com.leoman.utils.CookiesUtils;
-import com.leoman.utils.Md5Util;
+import com.leoman.utils.*;
+import com.sun.deploy.net.HttpUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +58,7 @@ public class IndexController extends CommonController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "index2/login";
+        return "login";
     }
 
     @Log(message = "{0}登录了系统")
@@ -88,7 +94,7 @@ public class IndexController extends CommonController {
         loginService.logOut(request, Constant.MEMBER_TYPE_GLOBLE);
         // 减少今日在线人数
 //        recordCountService.addCount(0, -1);
-        return "index2/login";
+        return "login";
     }
 
     @RequestMapping(value = "/")
@@ -133,7 +139,54 @@ public class IndexController extends CommonController {
 //        // 将该用户信息和权限列表放入界面中
 //        request.getSession().setAttribute("menu_moduleList", modulesList);
 //        request.getSession().setAttribute("menu_adminRole", adminRole);
-        return "index2/index";
+        return "index";
+    }
+
+    /**
+     * 获取天气信息
+     * @param request
+     * @param response
+     */
+    @RequestMapping("/weather")
+    public void weather(HttpServletRequest request,
+                        HttpServletResponse response){
+
+        String ip = HttpRequestUtil.getUserIpByRequest(request);
+        //如果获取不到ip默认为武汉ip
+        if(ip==null){
+            ip="27.17.56.92";
+        }
+
+        String city = getCity(ip);
+
+        if(city==null){
+            return;
+        }
+        String apiKey = Configue.getBaiDuApiKey();
+        Map<String,String> header = new HashMap<>();
+        header.put("apikey",apiKey);
+        String cityUrl = "http://apis.baidu.com/heweather/weather/free";
+
+        Response cityResult =  HttpRequestUtil.sendGet(cityUrl+"?city="+city,header);
+
+        WebUtil.printJson(response,cityResult.getBody());
+    }
+
+    private String getCity(String ip){
+        String apiKey = Configue.getBaiDuApiKey();
+        Map<String,String> header = new HashMap<>();
+        header.put("apikey",apiKey);
+        String ipUrl =  "http://apis.baidu.com/apistore/iplookupservice/iplookup";
+        Response result =  HttpRequestUtil.sendGet(ipUrl+"?ip="+ip,header);
+        if(result.getStatus()){
+            String  body = result.getBody();
+            JSONObject jso = JSON.parseObject(body);
+            if("success".equals(jso.getString("errMsg"))){
+                String city = jso.getJSONObject("retData").getString("city");
+                return city;
+            }
+        }
+        return null;
     }
 
 

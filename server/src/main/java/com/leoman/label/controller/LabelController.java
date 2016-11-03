@@ -89,7 +89,6 @@ public class LabelController extends GenericEntityController<HouseDynamic,HouseD
      * @param width
      * @param leftPoint
      * @param topPoint
-     * @param productId
      * @return
      */
     @RequestMapping("/saveLabelInfo")
@@ -102,7 +101,8 @@ public class LabelController extends GenericEntityController<HouseDynamic,HouseD
                                  String width,
                                  Double leftPoint,
                                  Double topPoint,
-                                 Integer productId) {
+                                 Double newLeft,
+                                 Double newTop) {
         try {
             Label label = new Label();
             Label tempLabel = null;
@@ -121,6 +121,9 @@ public class LabelController extends GenericEntityController<HouseDynamic,HouseD
             label.setLabelId(labelId);
             label.setLeftPoint(leftPoint);
             label.setTopPoint(topPoint);
+
+            label.setNewLeftPoint(newLeft);
+            label.setNewTopPoint(newTop);
 
             if (null == tempLabel) {
                 labelService.save(label);

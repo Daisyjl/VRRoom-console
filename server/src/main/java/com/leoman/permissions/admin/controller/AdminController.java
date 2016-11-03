@@ -58,7 +58,7 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
         model.addAttribute("admin", admin);
 //        UserInfo userInfo = this.getUser(request);
 //        model.addAttribute("userInfo",userInfo);
-        return "permissions/admin/list2";
+        return "permissions/admin/list2_copy";
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.POST)
@@ -110,7 +110,7 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
         /*UserInfo userInfo = this.getUser(request);
         model.addAttribute("userInfo",userService.findByMobile(admin.getMobile()));*/
 
-        return "permissions/admin/add";
+        return "permissions/admin/add_copy";
     }
 
     /**

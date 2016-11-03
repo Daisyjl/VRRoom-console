@@ -1,225 +1,222 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: wangbin
+  Date: 2015/3/3
+  Time: 9:33
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../inc/taglibs.jsp" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <%@ include file="../inc/meta.jsp" %>
     <meta name="description" content="">
-    <meta name="author" content="ThemeBucket">
-    <link rel="shortcut icon" href="#" type="image/png">
-    <title>编辑楼层类型</title>
-    <%@ include file="../inc/new2/css.jsp" %>
+    <meta name="author" content="">
+    <title>楼层类型</title>
+    <%@ include file="../inc/css.jsp" %>
+    <style type="text/css">
+        #allmap {width: 600px;height: 400px;overflow: hidden;margin:0;font-family:"微软雅黑";}
+    </style>
 </head>
+<body>
 
-<body class="sticky-header">
+<div id="posts" class="wrapper">
 
-<section>
-    <%@ include file="../inc/new2/menu.jsp" %>
-    <!-- main content start-->
-    <div class="main-content">
-        <%@ include file="../inc/new2/header.jsp" %>
-        <!--body wrapper start-->
+    <%@ include file="../inc/nav.jsp" %>
 
-        <section class="wrapper">
-            <!-- page start-->
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">楼层类型</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="admin/house/index" class="btn btn-outline btn-primary btn-lg"
+                           role="button"><i class='fa fa-reply'></i> 返回</a>
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <section class="panel">
+                        <a href="javascript:;" onclick="$houseFloor.fn.save()" class="btn btn-outline btn-primary btn-lg"
+                           role="button"><i class='fa fa-check'></i> 保存</a>
+                    </div>
+                    <div class="panel-body">
+                        <form id="formId" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
 
-                        <header class="panel-heading">
-                            楼层类型
-                        </header>
-                        <div class="panel-body">
-                            <form class="cmxform form-horizontal adminex-form">
-                                <div class="form-group">
-                                    <div class="col-sm-1">
-                                        <button type="button" onclick="$houseFloor.fn.addFloorType()" class="btn btn-primary"><i class="fa fa-plus"></i> 新增楼层类型</button>
-                                    </div>
-                                    <label class="col-sm-4 control-label" style="text-align: left">(先保存楼层类型，再编辑该楼层类型，给每个类型的第一个横切面图添加锚点)</label>
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <button type="button" onclick="$houseFloor.fn.addFloorType()" class="btn btn-primary"><i class="fa fa-plus"></i> 新增楼层类型</button>
                                 </div>
-                            </form>
-                        </div>
-                    </section>
-                </div>
-            </div>
-
-            <div id="floorDiv">
-
-            </div>
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <section class="panel">
-
-                        <div class="panel-body">
-                            <form class="cmxform form-horizontal adminex-form">
-
-                                <div class="form-group">
-                                    <div class="col-sm-6">
-                                        <button type="button" onclick="$houseFloor.fn.save();" class="btn btn-primary">保存</button>
-                                        <button type="button" onclick="$houseFloor.fn.back();" class="btn btn-primary">返回</button>
-                                    </div>
-                                </div>
-
-                            </form>
-                        </div>
-                    </section>
-                </div>
-            </div>
-
-        </section>
-
-    </div>
-    <!-- main content end-->
-
-    <!-- 楼层类型template -->
-    <div class="row" style="display: none;" id="floorTypeTemplate">
-        <div class="col-lg-12">
-            <section class="panel">
-
-                <header class="panel-heading">
-                    <label>楼层类型</label>
-                            <span class="tools pull-right">
-                                <a href="javascript:;" class="fa fa-chevron-down"></a>
-                                <a href="javascript:;" class="fa fa-times"></a>
-                            </span>
-                </header>
-                <div class="panel-body">
-                    <form class="cmxform form-horizontal adminex-form">
-
-                        <div class="form-group">
-                            <label class="col-sm-1 control-label">楼层横切面图：</label>
-                            <div class="col-sm-6">
-                                <button type="button" onclick="$houseFloor.fn.addTransverse()" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> 新增横切面</button>
+                                <label class="col-sm-4 control-label" style="text-align: left">(先保存楼层类型，再编辑该楼层类型，给每个类型的第一个横切面图添加锚点)</label>
                             </div>
+
+                        </form>
+                    </div>
+                    <!-- /.panel-body -->
+
+                </div>
+                <!-- /.panel -->
+            </div>
+        </div>
+
+        <div id="floorDiv">
+
+        </div>
+
+    </div>
+    <!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- 配置文件 -->
+
+<!-- 楼层类型template -->
+<div class="row" style="display: none;" id="floorTypeTemplate">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <label>楼层类型</label>
+                <span class="tools pull-right">
+                    <a href="javascript:;" class="fa fa-chevron-down"></a>
+                    <a href="javascript:;" class="fa fa-times"></a>
+                </span>
+            </div>
+            <div class="panel-body">
+                <form class="cmxform form-horizontal adminex-form">
+
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">楼层横切面图：</label>
+                        <div class="col-sm-6">
+                            <button type="button" onclick="$houseFloor.fn.addTransverse()" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> 新增横切面</button>
                         </div>
+                    </div>
 
-                        <div id="transverseDiv_" name="transverseDiv">
+                    <div id="transverseDiv_" name="transverseDiv">
 
-                        </div>
+                    </div>
 
-
-
-                    </form>
-                </div>
-            </section>
-        </div>
-    </div>
-
-    <!-- 横切面template -->
-    <input type="hidden" id="currentTransverseId" value="">
-    <div class="form-group" style="display: none;" id="transverseTemplate" name="transverseGroup">
-
-        <label class="col-sm-1 control-label">上传横切面图：</label>
-        <div class="col-sm-2">
-            <input type="hidden" name="transverseImageId" value="">
-            <a href="javascript:void(0);" onclick="$houseFloor.fn.AddTempImg(this)">
-                <img src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 200px; display: inline; margin-bottom: 5px;" border="1"/>
-            </a>
-            <a href="javascript:void(0)" target="_blank" class="btn btn-primary btn-sm" role="button" style="color: white; display: none;margin-bottom: 5px;">添加锚点</a>
-        </div>
-
-        <label class="col-sm-1 control-label">选择户型：</label>
-        <input type="hidden" name="unitId" value="">
-        <div class="col-sm-2">
-            <a href="javascript:void(0);" onclick="$houseFloor.fn.openModal(this)">
-                <img name="unitImg" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
-            </a>
-        </div>
-        <div class="col-sm-2">
-            <div class="form-group" name="unitName">
-                户型名称：
-            </div>
-            <div class="form-group" name="unitArea">
-                建筑面积：
-            </div>
-            <div class="form-group" name="unitPrice">
-                参考总价：
-            </div>
-        </div>
-
-        <label class="col-sm-1 control-label">选择房间号：</label>
-        <div class="col-sm-1">
-            <select class="form-control" name="roomNo">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-            </select>
-        </div>
-
-        <div class="col-sm-2">
-            <button type="button" class="btn btn-primary" onclick="$houseFloor.fn.removeTransverse(this)"><i class="fa fa-minus"></i> 移除</button>
-        </div>
-
-    </div>
-
-    <form id="tempImageForm" method="post" action="${contextPath}/common/file/addTempImage" enctype="multipart/form-data" class="form-horizontal" role="form">
-        <input type="file" name="tempImage" id="tempImage" data-rule="required" style="display:none;" onchange="$houseFloor.fn.saveTempImage()"/>
-    </form>
-
-
-    <!-- 选择户型弹出框 -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="pwdModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">选择户型</h4>
-                </div>
-                <div class="modal-body">
-                    <form class="cmxform form-horizontal adminex-form" id="unitForm" enctype="multipart/form-data">
-                        <input type="hidden" id="currentUnitId" value="">
-
-                        <div id="unitDiv">
-
-                        </div>
-
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" onclick="$houseFloor.fn.selectUnit()" class="btn btn-primary">确定</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-
-    <!-- 户型 template -->
-    <div class="form-group" style="display: none;" id="unitTemplate">
-        <div class="col-sm-1 icheck minimal" name="checkDiv">
-
-        </div>
-
-        <label class="col-sm-2 control-label">户型：</label>
-        <div class="col-sm-5">
-            <img src="" style="height: 200px; width: 200px; display: inline; margin-bottom: 5px;" border="1"/>
-        </div>
-        <div class="col-sm-3">
-            <div class="form-group">
-                户型名称：
-            </div>
-            <div class="form-group">
-                建筑面积：
-            </div>
-            <div class="form-group">
-                参考总价：
+                </form>
             </div>
         </div>
     </div>
+</div>
 
-</section>
-<%@ include file="../inc/new2/foot.jsp" %>
+<!-- 横切面template -->
+<input type="hidden" id="currentTransverseId" value="">
+<div class="form-group" style="display: none;" id="transverseTemplate" name="transverseGroup">
+
+    <label class="col-sm-1 control-label">上传横切面图：</label>
+    <div class="col-sm-2">
+        <input type="hidden" name="transverseImageId" value="">
+        <a href="javascript:void(0);" onclick="$houseFloor.fn.AddTempImg(this)">
+            <img src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 200px; display: inline; margin-bottom: 5px;" border="1"/>
+        </a>
+        <a href="javascript:void(0)" target="_blank" class="btn btn-primary btn-sm" role="button" style="color: white; display: none;margin-bottom: 5px;">添加锚点</a>
+    </div>
+
+    <label class="col-sm-1 control-label">选择户型：</label>
+    <input type="hidden" name="unitId" value="">
+    <div class="col-sm-2">
+        <a href="javascript:void(0);" onclick="$houseFloor.fn.openModal(this)">
+            <img name="unitImg" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
+        </a>
+    </div>
+    <div class="col-sm-2">
+        <div class="form-group" name="unitName">
+            户型名称：
+        </div>
+        <div class="form-group" name="unitArea">
+            建筑面积：
+        </div>
+        <div class="form-group" name="unitPrice">
+            参考总价：
+        </div>
+    </div>
+
+    <label class="col-sm-1 control-label">选择房间号：</label>
+    <div class="col-sm-1">
+        <select class="form-control" name="roomNo">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+        </select>
+    </div>
+
+    <div class="col-sm-2">
+        <button type="button" class="btn btn-primary" onclick="$houseFloor.fn.removeTransverse(this)"><i class="fa fa-minus"></i> 移除</button>
+    </div>
+
+</div>
+
+<form id="tempImageForm" method="post" action="${contextPath}/common/file/addTempImage" enctype="multipart/form-data" class="form-horizontal" role="form">
+    <input type="file" name="tempImage" id="tempImage" data-rule="required" style="display:none;" onchange="$houseFloor.fn.saveTempImage()"/>
+</form>
+
+
+<!-- 选择户型弹出框 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="pwdModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">选择户型</h4>
+            </div>
+            <div class="modal-body">
+                <form class="cmxform form-horizontal adminex-form" id="unitForm" enctype="multipart/form-data">
+                    <input type="hidden" id="currentUnitId" value="">
+
+                    <div id="unitDiv">
+
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" onclick="$houseFloor.fn.selectUnit()" class="btn btn-primary">确定</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<!-- 户型 template -->
+<div class="form-group" style="display: none;" id="unitTemplate">
+    <div class="col-sm-1 icheck minimal" name="checkDiv">
+
+    </div>
+
+    <label class="col-sm-2 control-label">户型：</label>
+    <div class="col-sm-5">
+        <img src="" style="height: 200px; width: 200px; display: inline; margin-bottom: 5px;" border="1"/>
+    </div>
+    <div class="col-sm-3">
+        <div class="form-group">
+            户型名称：
+        </div>
+        <div class="form-group">
+            建筑面积：
+        </div>
+        <div class="form-group">
+            参考总价：
+        </div>
+    </div>
+</div>
+
+</body>
+
+<%@ include file="../inc/footer.jsp" %>
 <script>
     $houseFloor = {
         v: {
@@ -276,24 +273,25 @@
 
                 //初始化楼层右上角的收缩和删除楼层块的事件
                 obj.find('.panel .tools .fa-times').click(function () {
-                    if(floorTypeId != '' && floorTypeId != undefined){
-                        $leoman.alertConfirm("确定要删除该楼层类型吗？若删除，则其相关数据都删除",function(){
+                    var deleteObj = $(this);
+                    $leoman.alertConfirm("确定要删除该楼层类型吗？若删除，则其相关数据都删除",function(){
+                        if(floorTypeId != '' && floorTypeId != undefined){
                             $.post("${contextPath}/admin/house/floor/delFloorType", {floorTypeId:floorTypeId}, function(result){
                                 if(result.status == 0){
-                                    $(this).parents(".panel").parent().remove();
+                                    deleteObj.parents(".panel").parent().remove();
                                 }else{
                                     $leoman.alertMsg(result.msg);
                                 }
                             });
-                        });
-                    }else{
-                        $(this).parents(".panel").parent().remove();
-                    }
+                        }else{
+                            deleteObj.parents(".panel").parent().remove();
+                        }
+                    });
                 });
 
 
                 //按钮展开收缩事件
-                obj.find('.panel .tools .fa').click(function () {
+                obj.find('.panel .tools').find(".fa-chevron-down,fa-chevron-up").click(function () {
                     var el = $(this).parents(".panel").children(".panel-body");
                     if ($(this).hasClass("fa-chevron-down")) {
                         $(this).removeClass("fa-chevron-down").addClass("fa-chevron-up");
@@ -314,7 +312,7 @@
                         var list = result.data.list;
                         for(var i=0; i < list.length; i++){
                             var unitTemplate = $("#unitTemplate").clone().removeAttr("id");
-                            unitTemplate.find("label").text("户型"+(i+1)+"：");
+                            unitTemplate.find("label").text((i+1)+". ");
                             if(list[i].planeImage != null){
                                 unitTemplate.find("img").prop("src",list[i].planeImage.uploadUrl);
                             }
@@ -410,17 +408,18 @@
             //删除横切面
             removeTransverse : function(self){
                 var typeUnitId = $(self).parents(".form-group").attr("typeunitid");
-                if(typeUnitId != undefined && typeUnitId != ''){
-                    $leoman.alertConfirm("确定要删除该户型吗？若删除，则相关数据都删除",function(){
+                $leoman.alertConfirm("确定要删除该户型吗？若删除，则相关数据都删除",function(){
+                    if(typeUnitId != '' && typeUnitId != undefined){
                         $.post("${contextPath}/admin/house/floor/delTypeUnit", {typeUnitId:typeUnitId}, function(result){
                             if(result.status == 0){
                                 $(self).parents(".form-group").remove();
                             }
                         });
-                    });
-                }else{
-                    $(self).parents(".form-group").remove();
-                }
+                    }else{
+                        $(self).parents(".form-group").remove();
+                    }
+                });
+
             },
             /* 图片 */
             AddTempImg: function (self) {
@@ -516,5 +515,4 @@
         $houseFloor.fn.init();
     })
 </script>
-</body>
 </html>

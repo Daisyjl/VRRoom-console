@@ -66,7 +66,6 @@
     </div>
 </section>
 <%@ include file="../inc/new2/foot.jsp" %>
-<%@ include file="../inc/new2/confirm.jsp" %>
 <script>
     $enterprise = {
         v: {

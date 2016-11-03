@@ -37,7 +37,7 @@ public class RoleController extends GenericEntityController<Role, Role, RoleServ
 
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String index() {
-        return "permissions/role/list";
+        return "permissions/role/list_copy";
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.POST)
@@ -66,7 +66,7 @@ public class RoleController extends GenericEntityController<Role, Role, RoleServ
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "permissions/role/add";
+        return "permissions/role/add_copy";
     }
 
     /**

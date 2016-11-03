@@ -38,6 +38,13 @@ public class Label extends BaseEntity{
     @Column(name = "top_point")
     private Double topPoint;
 
+    @Column(name = "new_left_point")
+    private Double newLeftPoint;
+
+    @Column(name = "new_top_point")
+    private Double newTopPoint;
+
+
     public String getName() {
         return name;
     }
@@ -108,5 +115,21 @@ public class Label extends BaseEntity{
 
     public void setTopPoint(Double topPoint) {
         this.topPoint = topPoint;
+    }
+
+    public Double getNewLeftPoint() {
+        return newLeftPoint;
+    }
+
+    public void setNewLeftPoint(Double newLeftPoint) {
+        this.newLeftPoint = newLeftPoint;
+    }
+
+    public Double getNewTopPoint() {
+        return newTopPoint;
+    }
+
+    public void setNewTopPoint(Double newTopPoint) {
+        this.newTopPoint = newTopPoint;
     }
 }

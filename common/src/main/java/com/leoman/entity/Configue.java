@@ -27,4 +27,9 @@ public class Configue {
     public static String getSmsApiKey(){
         return ConfigUtil.getString("sms.api.key");
     }
+
+    public static String getBaiDuApiKey() {
+        return ConfigUtil.getString("baidu.api.key");
+    }
+
 }
