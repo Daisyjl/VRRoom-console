@@ -309,6 +309,7 @@
                     return ;
                 }
 
+                $leoman.showLoading();
                 $("#unitForm").ajaxSubmit({
                     url : "${contextPath}/admin/house/unit/save",
                     type : "POST",
@@ -317,6 +318,7 @@
                             window.location.reload();
                         }
                         else {
+                            $leoman.hideLoading();
                             $leoman.alertMsg(result.msg);
                         }
                     }

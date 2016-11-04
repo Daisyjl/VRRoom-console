@@ -66,6 +66,7 @@ public class ModuleVo {
         vo.setId(module.getId());
         vo.setName(module.getName());
         vo.setUrl(module.getUrl());
+        vo.setModuleIcon(module.getModuleIcon());
         this.list.add(vo);
     }
 }

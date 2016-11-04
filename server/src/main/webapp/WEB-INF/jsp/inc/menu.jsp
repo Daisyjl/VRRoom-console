@@ -10,11 +10,11 @@
 
             <c:forEach items="${sessionScope.moduleList}" var="topModule">
                 <li>
-                    <a href="#"><i class="fa fa-user fa-fw"></i>${topModule.name}<span class="fa arrow"></span></a>
+                    <a href="#"><i class="${topModule.moduleIcon}"></i> ${topModule.name}<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <c:forEach items="${topModule.list}" var="subModule">
-                        <li >
-                            <a href="${contextPath}${subModule.url}"><i class="fa fa-user fa-fw"></i>${subModule.name}</a>
+                        <li>
+                            <a href="${contextPath}${subModule.url}"><i class="${subModule.moduleIcon}"></i> ${subModule.name}</a>
                         </li>
                         </c:forEach>
                         <%--<li >

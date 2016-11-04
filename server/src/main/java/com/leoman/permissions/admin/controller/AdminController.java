@@ -58,7 +58,7 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
         model.addAttribute("admin", admin);
 //        UserInfo userInfo = this.getUser(request);
 //        model.addAttribute("userInfo",userInfo);
-        return "permissions/admin/list2_copy";
+        return "permissions/admin/list_copy";
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.POST)

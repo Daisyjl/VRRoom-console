@@ -57,5 +57,6 @@
 <!-- editor -->
 <link href="${contextPath}/static/umeditor/_css/umeditor.css" type="text/css" rel="stylesheet">
 
-<%--<link href="${contextPath}/static/html/css/style.css" rel="stylesheet">--%>
+<!-- msgbox -->
+<link href="static/js/msgbox/msgbox.css" rel="stylesheet" type="text/css">
 

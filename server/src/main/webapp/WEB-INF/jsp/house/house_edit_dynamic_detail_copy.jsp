@@ -45,7 +45,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" style="width: 100px;"><span style="color: red;">* </span>标题：</label>
                                 <div class="col-sm-6">
-                                    <input type="text" name="title" value="${dynamic.title}" class="form-control" required/>
+                                    <input type="text" name="title" value="${dynamic.title}" class="form-control" data-rule="required"/>
                                 </div>
                             </div>
 
@@ -103,7 +103,14 @@
             },
             //保存
             save : function() {
-                if(!$("#formId").valid()) return;
+                if(!$("#formId").isValid()) return;
+
+                if(UM.getEditor('myEditor').getContent() == ''){
+                    $leoman.alertMsg("请输入内容");
+                    return ;
+                }
+
+                $leoman.showLoading();
                 $("#formId").ajaxSubmit({
                     url : "${contextPath}/admin/house/dynamic/save",
                     type : "POST",
@@ -112,6 +119,7 @@
                             $houseDynamic.fn.back();
                         }
                         else {
+                            $leoman.hideLoading();
                             $leoman.alertMsg(result.msg);
                         }
                     }

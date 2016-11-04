@@ -131,10 +131,12 @@
                     arr.push(data);
                 });
 
+                $leoman.showLoading();
                 $.post("${contextPath}/admin/house/ridgepole/saveRoom", {data:JSON.stringify(arr)}, function(result){
                     if(result.status == 0){
                         $houseRoom.fn.back();
                     }else{
+                        $leoman.hideLoading();
                         $leoman.alertMsg(result.msg);
                     }
                 });

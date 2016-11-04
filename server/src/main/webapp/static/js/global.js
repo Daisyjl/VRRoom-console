@@ -255,6 +255,15 @@ var $leoman = {
             }
         });
     },
+    showLoading: function (msg) {
+        if(msg == null || msg == ''){
+            msg = "保存中";
+        }
+        ZENG.msgbox.show(msg, 6);
+    },
+    hideLoading: function () {
+        ZENG.msgbox._hide();
+    },
     /**
      * 描述：点击click事件提交表单，跳转页面，兼容所有的浏览器
      *

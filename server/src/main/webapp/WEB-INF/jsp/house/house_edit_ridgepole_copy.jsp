@@ -69,7 +69,7 @@
                             <div class="form-group">
                                 <label class="col-sm-1 control-label">操作提示：</label>
                                 <label class="col-sm-6 control-label" style="text-align: left">
-                                    输入楼名称后，点击添加标签，移动生成的标签至图上的对应的楼即可
+                                    输入楼名称后，点击添加标签，移动生成的标签至图上的对应的楼即可保存
                                 </label>
                             </div>
 

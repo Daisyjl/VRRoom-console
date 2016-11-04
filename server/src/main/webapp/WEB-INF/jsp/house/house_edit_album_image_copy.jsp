@@ -49,7 +49,7 @@
 
                             <div class="form-group">
                                 <div class="col-sm-6">
-                                    ${house.name}--${album.name}
+                                    ${house.name} -- ${album.name}
                                 </div>
                             </div>
 
@@ -173,6 +173,8 @@
             },
             save : function() {
                 if(!$("#formId").valid()) return;
+
+                $leoman.showLoading();
                 $("#formId").ajaxSubmit({
                     url : "${contextPath}/admin/house/album/saveImage",
                     type : "POST",
@@ -181,6 +183,7 @@
                             window.location.href = "${contextPath}/admin/house/album/edit/${house.id}";
                         }
                         else {
+                            $leoman.hideLoading();
                             $leoman.alertMsg(result.msg);
                         }
                     }

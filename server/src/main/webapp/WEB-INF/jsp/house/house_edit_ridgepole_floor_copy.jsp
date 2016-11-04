@@ -38,14 +38,14 @@
                         <form id="formId" method="post" class="form-horizontal" role="form">
 
                             <div class="form-group">
-                                <label class="col-sm-1 control-label" >楼栋编号：</label>
+                                <label class="col-sm-1 control-label" ><span style="color: red;">* </span>楼栋编号：</label>
                                 <div class="col-sm-2">
                                     <input type="text" id="name" name="name" value="${ridgepole.name}" class="form-control" data-rule="required"/>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-1 control-label" >合计楼层：</label>
+                                <label class="col-sm-1 control-label" ><span style="color: red;">* </span>合计楼层：</label>
                                 <div class="col-sm-2">
                                     <input type="text" id="floorNum" name="floorNum" value="${ridgepole.floorNum}" class="form-control"
                                            data-rule="required" data-rule="integer(+0)"/>
@@ -62,6 +62,16 @@
                                            data-rule="price"  data-rule-price="[/^\d{0,8}\.{0,1}(\d{1,2})?$/, '请输入正确的最小楼间距']"/>
                                 </div>
                                 <label class="col-sm-1 control-label" style="text-align: left">米</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" >选择方位图：</label>
+                                <div class="col-sm-2">
+                                    <input type="hidden" id="directionImageId" value="${ridgepole.directionImage.id}">
+                                    <a href="javascript:void(0);" onclick="$ridgepoleFloor.fn.AddTempImg(this)">
+                                        <img src="static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
+                                    </a>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -124,15 +134,15 @@
         </a>
     </div>
 
-    <label class="col-sm-1 control-label">选择方位图：</label>
+    <%--<label class="col-sm-1 control-label">选择方位图：</label>
     <div class="col-sm-2">
         <input type="hidden" name="directionImageId" value="">
         <a href="javascript:void(0);" onclick="$ridgepoleFloor.fn.AddTempImg(this)">
             <img src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
         </a>
-    </div>
+    </div>--%>
 
-    <div class="col-sm-2">
+    <div class="col-sm-3">
         <input type="hidden" name="selectedFloorValue" value="">
         <div class="form-group" name="selectedFloor">
 
@@ -264,6 +274,10 @@
 
                 }
 
+                if("${ridgepole.directionImage}" != ''){
+                    $("form img").attr("src", "${ridgepole.directionImage.uploadUrl}");
+                }
+
             },
             //初始化楼层列表
             initFloorList : function(){
@@ -309,10 +323,10 @@
                 if(value.typeUnit != null){
                     obj.find("[name=tranImg]").attr("src",value.typeUnit.transverseImage.uploadUrl);
                 }
-                obj.find("[name=directionImageId]").val(value.directionImageId);
-                if(value.directionImage != null){
-                    obj.find("img").eq(1).attr("src",value.directionImage.uploadUrl);
-                }
+//                obj.find("[name=directionImageId]").val(value.directionImageId);
+//                if(value.directionImage != null){
+//                    obj.find("img").eq(1).attr("src",value.directionImage.uploadUrl);
+//                }
                 obj.find("[name=selectedFloorValue]").val(value.floorNos);
                 obj.find("[name=selectedFloor]").text(value.floorNos.split(",").join("楼，")+"楼");
             },
@@ -460,7 +474,7 @@
             /* 图片 */
             AddTempImg: function (self) {
                 $('#tempImage').click();
-                $("#currentFloorTypeId").val($(self).parents(".form-group").attr("val"));
+//                $("#currentFloorTypeId").val($(self).parents(".form-group").attr("val"));
             },
             //上传图片
             saveTempImage: function () {
@@ -468,9 +482,10 @@
                     dataType: "json",
                     success: function (data) {
                         if (null != data.path && data.path != '') {
-                            var obj = $("div.form-group[val="+$("#currentFloorTypeId").val()+"]");
-                            obj.find("img").eq(1).attr("src",data.path);
-                            obj.find("[name=directionImageId]").val(data.id);
+//                            var obj = $("div.form-group[val="+$("#currentFloorTypeId").val()+"]");
+//                            obj.find("img").eq(1).attr("src",data.path);
+                            $("form img").attr("src",data.path);
+                            $("#directionImageId").val(data.id);
                         } else {
                             $leoman.alertMsg("上传错误");
                         }
@@ -495,6 +510,7 @@
                     name : $("#name").val(),
                     floorNum : $("#floorNum").val(),
                     minSpace : $("#minSpace").val(),
+                    directionImageId : $("#directionImageId").val(),
                     floorArr : []
                 };
 
@@ -503,7 +519,7 @@
                 for(var i=0; i<floorArr.length; i++){
 
                     var floorTypeId = $(floorArr[i]).find("[name=floorTypeId]").val();
-                    var imageId = $(floorArr[i]).find("[name=directionImageId]").val();
+//                    var imageId = $(floorArr[i]).find("[name=directionImageId]").val();
                     var floorNos = $(floorArr[i]).find("[name=selectedFloorValue]").val();
 
                     if(floorTypeId == '' || floorNos == ''){
@@ -522,18 +538,20 @@
                     }
 
                     var floorType = {
-                        imageId : imageId,
+//                        imageId : imageId,
                         floorTypeId : floorTypeId,
                         floorNos : floorNos
                     };
                     data.floorArr.push(floorType);
                 }
 
+                $leoman.showLoading();
                 //保存
                 $.post("${contextPath}/admin/house/ridgepole/save",{'data':JSON.stringify(data)},function(result){
                     if(result.status == 0){
                         $ridgepoleFloor.fn.back();
                     }else{
+                        $leoman.hideLoading();
                         $leoman.alertMsg(result.msg);
                     }
                 });

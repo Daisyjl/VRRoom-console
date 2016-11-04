@@ -37,10 +37,16 @@
                     <div class="panel-heading">
                         <a href="admin/house/index" class="btn btn-outline btn-primary btn-lg"
                            role="button"><i class='fa fa-reply'></i> 返回</a>
+
+
                     </div>
                     <div class="panel-body">
                         <form id="productForm" method="post" class="form-horizontal" role="form">
                             <input type="hidden" id="id" name="id" value="${product.id}">
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" style="text-align: left">操作提示：点击相册编辑该相册的图片</label>
+                            </div>
 
                             <div class="form-group" id="albumDiv">
 

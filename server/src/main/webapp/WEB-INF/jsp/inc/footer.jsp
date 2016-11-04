@@ -98,6 +98,12 @@
 <%--<script type="text/javascript" charset="utf-8" src="${contextPath}/static/umeditor/js/editor_api.js"></script>--%>
 <script type="text/javascript" src="${contextPath}/static/umeditor/js/zh-cn.js"></script>
 
+<!-- msgbox -->
+<script src="static/js/msgbox/msgbox.js"></script>
+
+<!--multi-select-->
+<script type="text/javascript" src="${contextPath}/static/html/js/jquery-multi-select/js/jquery.multi-select.js"></script>
+
 <script type="text/javascript">
 	$(function() {
 		$("#mediator").click(function() {

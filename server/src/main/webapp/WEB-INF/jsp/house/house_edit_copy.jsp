@@ -42,6 +42,7 @@
                             <input type="hidden" name="id" value="${house.id}">
                             <input type="hidden" name="openTime" value="">
                             <input type="hidden" name="dealTime" value="">
+                            <input type="hidden" name="privilege" value="">
 
                             <div class="form-group">
                                 <label class="col-sm-1 control-label"><span style="color: red;">* </span>楼盘封面：</label>
@@ -182,11 +183,19 @@
                                     <input type="text" name="propertyCompany" value="${house.propertyCompany}" class="form-control"/>
                                 </div>
                             </div>
+
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >购房优惠：</label>
                                 <div class="col-sm-2">
-                                    <input type="text" name="privilege" value="${house.privilege}" class="form-control"/>
+                                    <input type="text" name="privil" value="" class="form-control"/>
                                 </div>
+                                <div class="col-sm-2">
+                                    <button type="button" onclick="$house.fn.addRow()" class="btn btn-primary btn-circle"><i class='fa fa-plus'></i> </button>
+                                </div>
+                            </div>
+
+                            <div id="privilegeDiv">
+
                             </div>
 
                             <div class="form-group">
@@ -195,11 +204,11 @@
                                     <input type="text" name="unitPrice" value="${house.unitPrice}" class="form-control"
                                            data-rule="price"  data-rule-price="[/^\d{0,8}\.{0,1}(\d{1,2})?$/, '请输入正确的绿化比例']"/>
                                 </div>
-                                <label class="col-sm-1 control-label" style="text-align: left">元</label>
+                                <label class="col-sm-1 control-label" style="text-align: left">￥</label>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-1 control-label" >楼盘地址：</label>
+                                <label class="col-sm-1 control-label" ><span style="color: red;">* </span>楼盘地址：</label>
                                 <div class="col-sm-3">
                                     <div id="allmap"></div>
                                 </div>
@@ -212,12 +221,19 @@
                                     <input type="text" id="suggestId" placeholder="请输入关键字搜索地址" class="form-control"/>
                                     <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
                                 </div>
+                            </div>
 
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" ></label>
                                 <label class="col-sm-1 control-label" >楼盘地址：</label>
                                 <div class="col-sm-3">
-                                    <input type="text" name="address" value="${house.address}" class="form-control" required/>
+                                    <input type="text" name="address" value="${house.address}" class="form-control" required readonly/>
                                     <input type="hidden" id="longitude" name="lng" value="${house.lng}">
                                     <input type="hidden" id="latitude" name="lat" value="${house.lat}">
+                                </div>
+                                <label class="col-sm-1 control-label" >详细地址：</label>
+                                <div class="col-sm-3">
+                                    <input type="text" name="addressDetail" value="${house.addressDetail}" class="form-control" placeholder="详细地址：如xx层xx号"/>
                                 </div>
                             </div>
 
@@ -243,6 +259,17 @@
 
 </div>
 <!-- /#wrapper -->
+
+<!-- 优惠模板 -->
+<div class="form-group" id="privilegeTempalte" style="display: none;">
+    <label class="col-sm-1 control-label" ></label>
+    <div class="col-sm-2">
+        <input type="text" name="privil" value="" class="form-control"/>
+    </div>
+    <div class="col-sm-2">
+        <button type="button" onclick="$house.fn.removeRow(this)" class="btn btn-primary btn-circle"><i class='fa fa-minus'></i> </button>
+    </div>
+</div>
 
 </body>
 
@@ -309,11 +336,32 @@
                     $("#dealTime").val(date.format("yyyy-MM-dd"));
                 }
 
+                if("${house.privilege}" != ''){
+                    var arr = "${house.privilege}".split("|");
+                    if(arr.length > 0){
+                        $("#privilegeDiv").prev().find("input").val(arr[0]);
+                    }
+                    for(var i=1; i<arr.length; i++){
+                        $house.fn.addRow(arr[i]);
+                    }
+                }
             },
-
+            //添加购房优惠
+            addRow:function(value){
+                var template = $("#privilegeTempalte").clone().removeAttr("id");
+                if(value != undefined){
+                    template.find("input").val(value);
+                }
+                template.show();
+                $("#privilegeDiv").append(template);
+            },
+            //删除购房优惠
+            removeRow: function (self) {
+                $(self).parents(".form-group").remove();
+            },
             //保存
             save : function() {
-                if(!$("#formId").valid()) return;
+                if(!$("#formId").isValid()) return;
 
                 if($("[name=isOpenWait][value='1']").parent().hasClass("checked") && $("#openTime").val() == ''){
                     $leoman.alertMsg("请指定开盘时间");
@@ -345,6 +393,14 @@
                     $("[name=dealTime]").val(dealDate);
                 }
 
+                var privilArr = [];
+                $("#formId [name=privil]").each(function(){
+                    privilArr.push($(this).val());
+                });
+
+                $("[name=privilege]").val(privilArr.join("|"));
+
+                $leoman.showLoading();
                 $("#formId").ajaxSubmit({
                     url : "${contextPath}/admin/house/save",
                     type : "POST",
@@ -353,6 +409,7 @@
                             window.location.href = "${contextPath}/admin/house/index";
                         }
                         else {
+                            $leoman.hideLoading();
                             $leoman.alertMsg(result.msg);
                         }
                     }

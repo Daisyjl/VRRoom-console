@@ -117,6 +117,7 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
         String name = (String)map.get("name");
         String floorNum = (String)map.get("floorNum");
         String minSpace = (String)map.get("minSpace");
+        String directionImageId = (String)map.get("directionImageId");
 
         HouseRidgepole houseRidgepole;
 
@@ -155,6 +156,9 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
         houseRidgepole.setFloorNum(Long.valueOf(floorNum));
         houseRidgepole.setMinSpace(minSpace);
         houseRidgepole.setName(name);
+        if(!StringUtils.isEmpty(directionImageId)){
+            houseRidgepole.setDirectionImage(new Image(Integer.valueOf(directionImageId)));
+        }
         houseRidgepoleDao.save(houseRidgepole);
 
         //设置该label的关联哪一栋
@@ -166,7 +170,7 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
         //楼层信息
         List<Map> list = (List)map.get("floorArr");
         for (Map floor:list) {
-            String imageId = (String)floor.get("imageId");
+//            String imageId = (String)floor.get("imageId");
             String floorTypeId = (String)floor.get("floorTypeId");
             String floorNos = (String)floor.get("floorNos");
 
@@ -175,9 +179,9 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
 
                 //保存栋的层信息
                 HouseRidgepoleFloor houseRidgepoleFloor = new HouseRidgepoleFloor();
-                if(!StringUtils.isEmpty(imageId)){
-                    houseRidgepoleFloor.setDirectionImage(new Image(Integer.valueOf(imageId)));
-                }
+//                if(!StringUtils.isEmpty(imageId)){
+//                    houseRidgepoleFloor.setDirectionImage(new Image(Integer.valueOf(imageId)));
+//                }
                 houseRidgepoleFloor.setFloorNo(Long.valueOf(floorNo));
                 houseRidgepoleFloor.setFloorType(new HouseFloorType(Long.valueOf(floorTypeId)));
                 houseRidgepoleFloor.setRidgepole(houseRidgepole);

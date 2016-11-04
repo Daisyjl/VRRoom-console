@@ -63,6 +63,9 @@ public class House extends BaseEntity{
     @Column(name = "address")
     private String address;//楼盘地址
 
+    @Column(name = "address_detail")
+    private String addressDetail;//详细地址
+
     @ManyToOne
     @JoinColumn(name = "image_id")
     private Image image;//封面图
@@ -268,5 +271,13 @@ public class House extends BaseEntity{
 
     public void setHousePercent(Integer housePercent) {
         this.housePercent = housePercent;
+    }
+
+    public String getAddressDetail() {
+        return addressDetail;
+    }
+
+    public void setAddressDetail(String addressDetail) {
+        this.addressDetail = addressDetail;
     }
 }

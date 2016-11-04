@@ -37,14 +37,18 @@
                     <div class="panel-heading">
 
                         <a href="admin/house/add" class="btn btn-outline btn-primary btn-lg"
-                           role="button">新增楼盘</a>
+                           role="button"><i class='fa fa-plus'></i> 新增楼盘</a>
+
+                        <a href="javascript:;" onclick="$house.fn.del()" class="btn btn-outline btn-danger btn-lg"
+                           role="button"><i class='fa fa-trash-o'></i> 删除</a>
 
                         <form class="navbar-form navbar-right" role="search">
                             <div class="form-group">
                                 <label>楼盘名称：</label>
                                 <input type="text" id="name" name="username" class="form-control" placeholder="楼盘名称">
                             </div>
-                            <button type="button" id="c_search" class="btn btn-default btn-sm">查询</button>
+                            <button type="button" id="searchBtn" class="btn btn-primary btn-sm"><i class='fa fa-search'></i> 查询</button>
+                            <button type="button" id="clearBtn" class="btn btn-primary btn-sm"><i class='fa fa-refresh'></i> 清空</button>
                         </form>
                     </div>
                     <!-- /.panel-heading -->
@@ -63,7 +67,7 @@
                                 </colgroup>
                                 <thead>
                                 <tr>
-                                    <th><input type="checkbox" onclick="$health.checkAll(this)" class="checkall"/></th>
+                                    <th><input type="checkbox" onclick="$leoman.checkAll(this)" class="checkall"/></th>
                                     <th>楼盘名称</th>
                                     <th>所属企业</th>
                                     <th>城市</th>
@@ -106,8 +110,13 @@
         fn: {
             init: function () {
                 $house.fn.dataTableInit();
-                $("#c_search").click(function () {
+
+                $("#searchBtn").click(function () {
                     $house.v.dTable.ajax.reload();
+                });
+
+                $("#clearBtn").click(function () {
+                    $("form").find("input, select").val("");
                 });
             },
             dataTableInit: function () {
@@ -233,6 +242,10 @@
                     ids.push(id);
                 }else{
                     ids = checkBox.getInputId();
+                }
+                if(ids.length == 0 || ids == false){
+                    $leoman.alertMsg("请至少选择一条数据");
+                    return ;
                 }
                 $leoman.alertConfirm("确定要删除吗？",function(){
                     $.ajax({

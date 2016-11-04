@@ -36,18 +36,19 @@
                 <div class="panel panel-default">
 
                     <div class="panel-heading">
-                        <div class="btn-group pull-left">
-                            <a href="admin/house/index" class="btn btn-outline btn-primary btn-lg"
-                               role="button"><i class='fa fa-reply'></i> 返回</a>
+                        <a href="admin/house/index" class="btn btn-outline btn-primary btn-lg"
+                           role="button"><i class='fa fa-reply'></i> 返回</a>
 
-                            <a href="admin/house/dynamic/editDetail?houseId=${houseId}" class="btn btn-outline btn-primary btn-lg"
-                               role="button"><i class='fa fa-plus'></i> 新增动态</a>
-                        </div>
+                        <a href="admin/house/dynamic/editDetail?houseId=${houseId}" class="btn btn-outline btn-primary btn-lg"
+                           role="button"><i class='fa fa-plus'></i> 新增动态</a>
+
+                        <a href="javascript:;" onclick="$houseDynamic.fn.del()" class="btn btn-outline btn-danger btn-lg"
+                           role="button"><i class='fa fa-trash-o'></i> 删除</a>
 
                         <form class="navbar-form navbar-right" role="search">
                             <div class="form-group">
                                 <label>动态标题：</label>
-                                <input type="text" class="form-control" value="" id="s_name"  name="name" maxlength="20" placeholder="请输入动态标题">
+                                <input type="text" class="form-control" value="" id="title"  name="title" maxlength="20" placeholder="请输入动态标题">
                             </div>
                             <div class="form-group">
                                 <label>从：</label>
@@ -57,7 +58,8 @@
                                 <label>至：</label>
                                 <input type="text" id="endDate" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="" placeholder="请选择结束时间">
                             </div>
-                            <button type="button" id="c_search" class="btn btn-info btn-sm">查询</button>
+                            <button type="button" id="searchBtn" class="btn btn-primary btn-sm"><i class='fa fa-search'></i> 查询</button>
+                            <button type="button" id="clearBtn" class="btn btn-primary btn-sm"><i class='fa fa-refresh'></i> 清空</button>
                         </form>
 
                         <div class="clearfix"></div>
@@ -131,12 +133,12 @@
                     format: 'yyyy-mm-dd hh:ii'
                 });
 
-                $("#c_search").click(function () {
+                $("#searchBtn").click(function () {
                     $houseDynamic.v.dTable.ajax.reload();
                 });
 
-                $("#c_clear").click(function () {
-                    $("input, select").val("");
+                $("#clearBtn").click(function () {
+                    $("form").find("input, select").val("");
                 });
             },
             dataTableInit: function () {
@@ -200,6 +202,10 @@
                     ids.push(id);
                 }else{
                     ids = checkBox.getInputId();
+                }
+                if(ids.length == 0 || ids == false){
+                    $leoman.alertMsg("请至少选择一条数据");
+                    return ;
                 }
                 $leoman.alertConfirm("确定要删除吗？",function(){
                     $.ajax({

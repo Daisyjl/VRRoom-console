@@ -25,10 +25,6 @@ public class HouseRidgepoleFloor extends BaseEntity{
     @JoinColumn(name = "floor_type_id")
     private HouseFloorType floorType;//楼层类型
 
-    @ManyToOne
-    @JoinColumn(name = "direction_image_id")
-    private Image directionImage;//方位图
-
     @Transient
     private List<HouseRidgepoleFloorRoom> roomList;
 
@@ -54,14 +50,6 @@ public class HouseRidgepoleFloor extends BaseEntity{
 
     public void setFloorType(HouseFloorType floorType) {
         this.floorType = floorType;
-    }
-
-    public Image getDirectionImage() {
-        return directionImage;
-    }
-
-    public void setDirectionImage(Image directionImage) {
-        this.directionImage = directionImage;
     }
 
     public List<HouseRidgepoleFloorRoom> getRoomList() {

@@ -493,10 +493,12 @@
                     return ;
                 }
 
+                $leoman.showLoading();
                 $.post("${contextPath}/admin/house/floor/save",{'data':JSON.stringify(data)},function(result){
                     if(result.status == 0){
                         window.location.href = "${contextPath}/admin/house/index";
                     }else{
+                        $leoman.hideLoading();
                         $leoman.alertMsg(result.msg);
                     }
                 });
