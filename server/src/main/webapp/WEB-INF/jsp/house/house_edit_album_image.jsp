@@ -1,98 +1,109 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: wangbin
+  Date: 2015/3/3
+  Time: 9:33
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../inc/taglibs.jsp" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <%@ include file="../inc/meta.jsp" %>
     <meta name="description" content="">
-    <meta name="author" content="ThemeBucket">
-    <link rel="shortcut icon" href="#" type="image/png">
-    <title>新增/编辑楼盘相册图片</title>
-    <%@ include file="../inc/new2/css.jsp" %>
+    <meta name="author" content="">
+    <title>楼盘相册</title>
+    <%@ include file="../inc/css.jsp" %>
+
 </head>
+<body>
 
-<body class="sticky-header">
+<div id="posts" class="wrapper">
 
-<section>
-    <%@ include file="../inc/new2/menu.jsp" %>
-    <!-- main content start-->
-    <div class="main-content">
-        <%@ include file="../inc/new2/header.jsp" %>
-        <!--body wrapper start-->
-        <section class="wrapper">
-            <!-- page start-->
+    <%@ include file="../inc/nav.jsp" %>
 
-            <!-- 户型信息 -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <section class="panel">
-                        <header class="panel-heading">
-                            楼盘相册图片
-                        </header>
-                        <div class="panel-body">
-                            <form class="cmxform form-horizontal adminex-form" id="formId" enctype="multipart/form-data">
-                                <input name="houseId" type="hidden" value="${house.id}">
-                                <input name="album.id" type="hidden" value="${album.id}">
-
-                                <div class="form-group">
-                                    <div class="col-sm-6">
-                                        ${house.name}--${album.name}
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-
-                                    <div id="imageDiv">
-
-                                    </div>
-
-                                    <div class="col-sm-2">
-                                        <input type="file" style="display:none;"/>
-                                        <a href="javascript:void(0);" onclick="$houseAlbumImage.fn.AddTempImg(this)">
-                                            <img id="addImg" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
-                                        </a>
-                                    </div>
-
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="col-sm-6">
-                                        <button type="button" onclick="$houseAlbumImage.fn.save()" class="btn btn-primary"><i class="fa fa-check"></i> 保存</button>
-                                        <button type="button" onclick="$houseAlbumImage.fn.back()" class="btn btn-primary"><i class="fa fa-reply"></i> 返回</button>
-                                    </div>
-                                </div>
-
-                            </form>
-                        </div>
-                    </section>
-                </div>
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">楼盘相册</h1>
             </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <!-- /.panel-heading -->
+                    <div class="panel-heading">
+                        <a href="admin/house/album/edit/${house.id}" class="btn btn-outline btn-primary btn-lg"
+                           role="button"><i class='fa fa-reply'></i> 返回</a>
 
-        </section>
+                        <a href="javascript:;" onclick="$houseAlbumImage.fn.save()" class="btn btn-outline btn-primary btn-lg"
+                           role="button"><i class='fa fa-check'></i> 保存</a>
+                    </div>
+
+                    <div class="panel-body">
+                        <form id="formId" method="post" class="form-horizontal" role="form">
+                            <input name="houseId" type="hidden" value="${house.id}">
+                            <input name="album.id" type="hidden" value="${album.id}">
+
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    ${house.name} -- ${album.name}
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+
+                                <div id="imageDiv">
+
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <input type="file" style="display:none;"/>
+                                    <a href="javascript:void(0);" onclick="$houseAlbumImage.fn.AddTempImg(this)">
+                                        <img id="addImg" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
+                                    </a>
+                                </div>
+
+                            </div>
+
+                        </form>
+                    </div>
+                    <!-- /.panel-body -->
+
+                </div>
+                <!-- /.panel -->
+            </div>
+        </div>
+
     </div>
-    <!-- main content end-->
+    <!-- /#page-wrapper -->
 
-    <form id="tempImageForm" method="post" action="${contextPath}/common/file/addMultiTempImage" enctype="multipart/form-data" class="form-horizontal" role="form">
-        <input type="file" multiple name="tempImage" id="tempImage" data-rule="required" style="display:none;" onchange="$houseAlbumImage.fn.saveTempImage()"/>
-    </form>
+</div>
+<!-- /#wrapper -->
 
-    <input type="hidden" id="curImageId" value="">
-    <div class="col-sm-2" style="display: none;" id="imageTemplate">
-        <%--<input type="file" name="file" style="display:none;"/>--%>
-        <input type="hidden" name="imageId" value="">
-        <a href="javascript:void(0);">
-            <img id="" name="path" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 10px;" border="1"/>
-        </a>
-        <a href="javascript:void(0);" style="z-index: 10; position: relative; bottom: 70px; left: -23px;" class="axx" onclick="$houseAlbumImage.fn.deleteImage(this)">
-            <img src="${contextPath}/static/images/xx.png" style="height: 16px; width: 16px; display: inline;" border="1"/>
-        </a>
-    </div>
+<form id="tempImageForm" method="post" action="${contextPath}/common/file/addMultiTempImage" enctype="multipart/form-data" class="form-horizontal" role="form">
+    <input type="file" multiple name="tempImage" id="tempImage" data-rule="required" style="display:none;" onchange="$houseAlbumImage.fn.saveTempImage()"/>
+</form>
 
+<input type="hidden" id="curImageId" value="">
+<div class="col-sm-2" style="display: none;" id="imageTemplate">
+    <%--<input type="file" name="file" style="display:none;"/>--%>
+    <input type="hidden" name="imageId" value="">
+    <a href="javascript:void(0);">
+        <img id="" name="path" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 10px;" border="1"/>
+    </a>
+    <a href="javascript:void(0);" style="z-index: 10; position: relative; bottom: 70px; left: -23px;" class="axx" onclick="$houseAlbumImage.fn.deleteImage(this)">
+        <img src="${contextPath}/static/images/xx.png" style="height: 16px; width: 16px; display: inline;" border="1"/>
+    </a>
+</div>
 
+<%@ include file="../inc/footer.jsp" %>
+<!-- 配置文件 -->
 
-</section>
-<%@ include file="../inc/new2/foot.jsp" %>
+</body>
+
 <script>
     $houseAlbumImage = {
         v: {
@@ -153,16 +164,6 @@
                             for(var i=0; i<data.length; i++){
                                 var image = data[i];
                                 $houseAlbumImage.fn.addImgTemplate(image.path, image.id);
-                                /*//新增一个图片模板
-                                if($("#curImageId").val() == 'addImg'){
-                                    $houseAlbumImage.fn.addImgTemplate(data.path, data.id);
-                                }
-                                //修改当前图片
-                                else{
-                                    var obj = $("#"+$("#curImageId").val());
-                                    obj.attr("src",data.path);
-                                    obj.parent().prev("input").val(data.id);
-                                }*/
                             }
                         } else {
                             $leoman.alertMsg("上传错误");
@@ -172,6 +173,8 @@
             },
             save : function() {
                 if(!$("#formId").valid()) return;
+
+                $leoman.showLoading();
                 $("#formId").ajaxSubmit({
                     url : "${contextPath}/admin/house/album/saveImage",
                     type : "POST",
@@ -180,6 +183,7 @@
                             window.location.href = "${contextPath}/admin/house/album/edit/${house.id}";
                         }
                         else {
+                            $leoman.hideLoading();
                             $leoman.alertMsg(result.msg);
                         }
                     }
@@ -194,5 +198,6 @@
         $houseAlbumImage.fn.init();
     })
 </script>
-</body>
+
+
 </html>

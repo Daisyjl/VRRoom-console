@@ -57,7 +57,7 @@ public class HouseAlbumController extends GenericEntityController<HouseAlbum,Hou
     @RequestMapping(value = "/edit/{id}")
     public String editAlbum(@PathVariable("id") Long id, Model model){
         model.addAttribute("houseId", id);
-        return "house/house_edit_album_copy";
+        return "house/house_edit_album";
     }
 
     /**
@@ -73,7 +73,7 @@ public class HouseAlbumController extends GenericEntityController<HouseAlbum,Hou
 
         House house = houseService.queryByPK(houseId);
         model.addAttribute("house",house);
-        return "house/house_edit_album_image_copy";
+        return "house/house_edit_album_image";
     }
 
     /**

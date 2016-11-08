@@ -1,67 +1,97 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: wangbin
+  Date: 2015/3/3
+  Time: 9:33
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../../inc/taglibs.jsp" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <meta name="description" content="">
-  <meta name="author" content="ThemeBucket">
-  <link rel="shortcut icon" href="#" type="image/png">
-  <title>Dynamic Table</title>
-  <%@ include file="../../inc/new2/css.jsp"%>
+    <%@ include file="../../inc/meta.jsp" %>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>角色列表</title>
+    <%@ include file="../../inc/css.jsp" %>
+
 </head>
-<body class="sticky-header">
-<section>
-    <%@ include file="../../inc/new2/menu.jsp"%>
-    <!-- main content start-->
-    <div class="main-content" >
-        <%@ include file="../../inc/new2/header.jsp"%>
-        <!--body wrapper start-->
-        <div class="wrapper">
-            <div class="row">
-                <div class="col-sm-12">
-                    <section class="panel">
-                        <div class="panel-body">
-                            <div class="form-group col-sm-2">
-                                <input type="text" id="name" name="name" class="form-control" placeholder="姓名">
-                            </div>
-                            <button id="c_search" class="btn btn-info">搜索</button>
-                        </div>
-                    </section>
-                </div>
+
+<body>
+
+<div id="posts" class="wrapper">
+
+    <%@ include file="../../inc/nav.jsp" %>
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">角色列表</h1>
             </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <section class="panel">
-                        <header class="panel-heading">
-                            角色列表
-                            <span class="tools pull-right">
-                               <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i>刷新</button>
-                               <button class="btn btn-info" type="button" onclick="$admin.fn.add();">新增角色</button>
-                            </span>
-                        </header>
-                        <div class="panel-body">
-                            <div class="adv-table">
-                                <table  class="display table table-bordered table-striped" id="dataTables" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th><input type="checkbox" class="list-parent-check" onclick="$leoman.checkAll(this);"/></th>
-                                            <th>名称</th>
-                                            <th>创建时间</th>
-                                            <th>操作</th>
-                                        </tr>
-                                    </thead>
-                                </table>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+
+                        <a href="admin/role/add" class="btn btn-outline btn-primary btn-lg"
+                           role="button">新增角色</a>
+
+                        <form class="navbar-form navbar-right" role="search">
+                            <div class="form-group">
+                                <label>角色名称：</label>
+                                <input type="text" id="name" name="name" class="form-control" placeholder="角色名称">
                             </div>
+                            <button type="button" id="c_search" class="btn btn-default btn-sm">查询</button>
+                        </form>
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+
+                        <div class="table-responsive">
+
+                            <table class="table table-striped table-bordered table-hover" id="dataTables">
+                                <colgroup>
+                                    <col class="gradeA even"/>
+                                    <col class="gradeA odd"/>
+                                    <col class="gradeA even"/>
+                                    <col class="gradeA odd"/>
+                                    <col class="gradeA even"/>
+                                    <col class="gradeA odd"/>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" onclick="$leoman.checkAll(this)" class="checkall"/></th>
+                                    <th>名称</th>
+                                    <th>创建时间</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                         </div>
-                    </section>
+
+                    </div>
+                    <!-- /.panel-body -->
+
                 </div>
+                <!-- /.panel -->
             </div>
         </div>
+
     </div>
-</section>
-<%@ include file="../../inc/new2/foot.jsp"%>
+    <!-- /#page-wrapper -->
+
+
+</div>
+<!-- /#wrapper -->
+
+<%@ include file="../../inc/footer.jsp" %>
+</body>
+
 <script>
     $admin = {
         v: {
@@ -163,5 +193,5 @@
         $admin.fn.init();
     })
 </script>
-</body>
+
 </html>

@@ -1,234 +1,279 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: wangbin
+  Date: 2015/3/3
+  Time: 9:33
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../inc/taglibs.jsp" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <%@ include file="../inc/meta.jsp" %>
     <meta name="description" content="">
-    <meta name="author" content="ThemeBucket">
-    <link rel="shortcut icon" href="#" type="image/png">
+    <meta name="author" content="">
     <title>编辑楼盘</title>
-    <%@ include file="../inc/new2/css.jsp" %>
+    <%@ include file="../inc/css.jsp" %>
     <style type="text/css">
         #allmap {width: 600px;height: 400px;overflow: hidden;margin:0;font-family:"微软雅黑";}
     </style>
 </head>
+<body>
 
-<body class="sticky-header">
+<div id="posts" class="wrapper">
 
-<section>
-    <%@ include file="../inc/new2/menu.jsp" %>
-    <!-- main content start-->
-    <div class="main-content">
-        <%@ include file="../inc/new2/header.jsp" %>
-        <!--body wrapper start-->
-        <section class="wrapper">
-            <!-- page start-->
+    <%@ include file="../inc/nav.jsp" %>
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <section class="panel">
-                        <header class="panel-heading">
-                            详细信息
-                        </header>
-                        <div class="panel-body">
-                            <form class="cmxform form-horizontal adminex-form" id="formId" method="post" enctype="multipart/form-data">
-                                <input type="hidden" name="id" value="${house.id}">
-                                <input type="hidden" name="openTime" value="">
-                                <input type="hidden" name="dealTime" value="">
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label"><span style="color: red;">* </span>楼盘封面：</label>
-                                    <div class="col-sm-5">
-                                        <input type="file" name="coverFile" id="coverFile" style="display:none;"/>
-                                        <a href="javascript:void(0);" onclick="$('#coverFile').click();">
-                                            <img id="coverImg" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" ><span style="color: red;">* </span>楼盘名称：</label>
-                                    <div class="col-sm-2">
-                                        <input type="text" name="name" value="${house.name}" class="form-control" required maxlength="30"/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" ><span style="color: red;">* </span>所属企业：</label>
-                                    <div class="col-sm-2">
-                                        <select class="form-control input-sm" name="enterprise.id" required>
-                                            <option value="">---请选择---</option>
-                                            <c:forEach items="${enterpriseList}" var="enterprise">
-                                                <option value="${enterprise.id}">${enterprise.name}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label">楼盘标签：</label>
-                                    <div class="col-sm-3">
-                                        <input id="tags_1" type="text" name="label" class="tags" value="${house.label}" />
-                                    </div>
-                                    <label class="col-sm-2 control-label" style="text-align: left">(每输入一个标签，按回车键即可)</label>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >开盘时间：</label>
-
-                                    <div class="col-sm-4 icheck minimal">
-                                        <div class="radio" val="0">
-                                            <input type="radio" name="isOpenWait" value="0">
-                                            <label>待定</label>
-                                        </div>
-
-                                        <div class="radio" val="1">
-                                            <input type="radio" name="isOpenWait" value="1">
-                                            <label>指定开盘时间</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-2">
-                                        <input type="text" id="openTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >开发商：</label>
-                                    <div class="col-sm-2">
-                                        <input type="text" name="developers" value="${house.developers}" class="form-control" />
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >交房时间：</label>
-
-                                    <div class="col-sm-4 icheck minimal">
-                                        <div class="radio" val="0">
-                                            <input type="radio" name="isDealWait" value="0">
-                                            <label>待定</label>
-                                        </div>
-
-                                        <div class="radio" val="1">
-                                            <input type="radio" name="isDealWait" value="1">
-                                            <label>指定交房时间</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-2">
-                                        <input type="text" id="dealTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >产权年限：</label>
-                                    <div class="col-sm-2">
-                                        <input type="text" name="propertyLimit" value="${house.propertyLimit}" class="form-control" number-0="true"/>
-                                    </div>
-                                    <label class="col-sm-1 control-label" style="text-align: left">年</label>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >装修类型：</label>
-                                    <div class="col-sm-2">
-                                        <select class="form-control input-sm" name="decorateType">
-                                            <option value="">---请选择---</option>
-                                            <option value="1">毛胚</option>
-                                            <option value="2">简装</option>
-                                            <option value="3">精装</option>
-                                            <option value="4">豪华装修</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >容积率：</label>
-                                    <div class="col-sm-2">
-                                        <input type="text" name="plotTatio" value="${house.plotTatio}" class="form-control" number-2="true"/>
-                                    </div>
-                                    <label class="col-sm-1 control-label" style="text-align: left">%</label>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >绿化比例：</label>
-                                    <div class="col-sm-2">
-                                        <input type="text" name="greening" value="${house.greening}" class="form-control" number-2="true"/>
-                                    </div>
-                                    <label class="col-sm-1 control-label" style="text-align: left">%</label>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >总户数：</label>
-                                    <div class="col-sm-2">
-                                        <input type="text" name="householdNum" value="${house.householdNum}" class="form-control" number-0="true"/>
-                                    </div>
-                                    <label class="col-sm-1 control-label" style="text-align: left">户</label>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >物业公司：</label>
-                                    <div class="col-sm-2">
-                                        <input type="text" name="propertyCompany" value="${house.propertyCompany}" class="form-control"/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >购房优惠：</label>
-                                    <div class="col-sm-2">
-                                        <input type="text" name="privilege" value="${house.privilege}" class="form-control"/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >预估单价：</label>
-                                    <div class="col-sm-2">
-                                        <input type="text" name="unitPrice" value="${house.unitPrice}" class="form-control" number-2="true"/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >楼盘地址：</label>
-                                    <div class="col-sm-3">
-                                        <div id="allmap"></div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" ></label>
-                                    <label class="col-sm-1 control-label" >关键字搜索：</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" id="suggestId" placeholder="请输入关键字搜索地址" class="form-control"/>
-                                        <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
-                                    </div>
-
-                                    <label class="col-sm-1 control-label" >楼盘地址：</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" name="address" value="${house.address}" class="form-control" required/>
-                                        <input type="hidden" id="longitude" name="lng" value="${house.lng}">
-                                        <input type="hidden" id="latitude" name="lat" value="${house.lat}">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label"></label>
-                                    <div class="col-sm-6">
-                                        <button type="button" onclick="$house.fn.save()" class="btn btn-primary">保存</button>
-                                        <button type="button" class="btn btn-primary" onclick="$house.fn.back()">返回</button>
-                                    </div>
-                                </div>
-
-                            </form>
-                        </div>
-                    </section>
-                </div>
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">编辑楼盘</h1>
             </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <form id="formId" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
 
-        </section>
+                            <input type="hidden" name="id" value="${house.id}">
+                            <input type="hidden" name="openTime" value="">
+                            <input type="hidden" name="dealTime" value="">
+                            <input type="hidden" name="privilege" value="">
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label"><span style="color: red;">* </span>楼盘封面：</label>
+                                <div class="col-sm-5">
+                                    <input type="file" name="coverFile" id="coverFile" style="display:none;"/>
+                                    <a href="javascript:void(0);" onclick="$('#coverFile').click();">
+                                        <img id="coverImg" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" ><span style="color: red;">* </span>楼盘名称：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="name" value="${house.name}" class="form-control" data-rule="required" maxlength="30"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" ><span style="color: red;">* </span>所属企业：</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control input-sm" name="enterprise.id"  data-rule="required">
+                                        <option value="">---请选择---</option>
+                                        <c:forEach items="${enterpriseList}" var="enterprise">
+                                            <option value="${enterprise.id}">${enterprise.name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">楼盘标签：</label>
+                                <div class="col-sm-3">
+                                    <input id="tags_1" type="text" name="label" class="tags" value="${house.label}" />
+                                </div>
+                                <label class="col-sm-2 control-label" style="text-align: left">(每输入一个标签，按回车键即可)</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" >开盘时间：</label>
+
+                                <div class="col-sm-2 icheck minimal">
+                                    <div class="radio" val="0">
+                                        <input type="radio" name="isOpenWait" value="0">
+                                        <label>待定</label>
+                                    </div>
+
+                                    <div class="radio" val="1">
+                                        <input type="radio" name="isOpenWait" value="1">
+                                        <label>指定开盘时间</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <input type="text" id="openTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" >开发商：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="developers" value="${house.developers}" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" >交房时间：</label>
+
+                                <div class="col-sm-2 icheck minimal">
+                                    <div class="radio" val="0">
+                                        <input type="radio" name="isDealWait" value="0">
+                                        <label>待定</label>
+                                    </div>
+
+                                    <div class="radio" val="1">
+                                        <input type="radio" name="isDealWait" value="1">
+                                        <label>指定交房时间</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <input type="text" id="dealTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" >产权年限：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="propertyLimit" value="${house.propertyLimit}" class="form-control"
+                                           data-rule="integer(+0)"/>
+                                </div>
+                                <label class="col-sm-1 control-label" style="text-align: left">年</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" >装修类型：</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control input-sm" name="decorateType">
+                                        <option value="">---请选择---</option>
+                                        <option value="1">毛胚</option>
+                                        <option value="2">简装</option>
+                                        <option value="3">精装</option>
+                                        <option value="4">豪华装修</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" >容积率：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="plotTatio" value="${house.plotTatio}" class="form-control"
+                                           data-rule="price"  data-rule-price="[/^\d{0,8}\.{0,1}(\d{1,2})?$/, '请输入正确的容积率']" />
+                                </div>
+                                <label class="col-sm-1 control-label" style="text-align: left">%</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" >绿化比例：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="greening" value="${house.greening}" class="form-control"
+                                           data-rule="price"  data-rule-price="[/^\d{0,8}\.{0,1}(\d{1,2})?$/, '请输入正确的绿化比例']"/>
+                                </div>
+                                <label class="col-sm-1 control-label" style="text-align: left">%</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" >总户数：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="householdNum" value="${house.householdNum}" class="form-control"
+                                           data-rule="integer(+0)"/>
+                                </div>
+                                <label class="col-sm-1 control-label" style="text-align: left">户</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" >物业公司：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="propertyCompany" value="${house.propertyCompany}" class="form-control"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" >购房优惠：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="privil" value="" class="form-control"/>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" onclick="$house.fn.addRow()" class="btn btn-primary btn-circle"><i class='fa fa-plus'></i> </button>
+                                </div>
+                            </div>
+
+                            <div id="privilegeDiv">
+
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" >预估单价：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="unitPrice" value="${house.unitPrice}" class="form-control"
+                                           data-rule="price"  data-rule-price="[/^\d{0,8}\.{0,1}(\d{1,2})?$/, '请输入正确的绿化比例']"/>
+                                </div>
+                                <label class="col-sm-1 control-label" style="text-align: left">￥</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" ><span style="color: red;">* </span>楼盘地址：</label>
+                                <div class="col-sm-3">
+                                    <div id="allmap"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" ></label>
+                                <label class="col-sm-1 control-label" >关键字搜索：</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="suggestId" placeholder="请输入关键字搜索地址" class="form-control"/>
+                                    <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" ></label>
+                                <label class="col-sm-1 control-label" >楼盘地址：</label>
+                                <div class="col-sm-3">
+                                    <input type="text" name="address" value="${house.address}" class="form-control" required readonly/>
+                                    <input type="hidden" id="longitude" name="lng" value="${house.lng}">
+                                    <input type="hidden" id="latitude" name="lat" value="${house.lat}">
+                                </div>
+                                <label class="col-sm-1 control-label" >详细地址：</label>
+                                <div class="col-sm-3">
+                                    <input type="text" name="addressDetail" value="${house.addressDetail}" class="form-control" placeholder="详细地址：如xx层xx号"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label"></label>
+                                <div class="col-sm-6">
+                                    <button type="button" onclick="$house.fn.save()" class="btn btn-primary">保存</button>
+                                    <button type="button" class="btn btn-primary" onclick="$house.fn.back()">返回</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                    <!-- /.panel-body -->
+
+                </div>
+                <!-- /.panel -->
+            </div>
+        </div>
+
     </div>
-    <!-- main content end-->
-</section>
-<%@ include file="../inc/new2/foot.jsp" %>
+    <!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- 优惠模板 -->
+<div class="form-group" id="privilegeTempalte" style="display: none;">
+    <label class="col-sm-1 control-label" ></label>
+    <div class="col-sm-2">
+        <input type="text" name="privil" value="" class="form-control"/>
+    </div>
+    <div class="col-sm-2">
+        <button type="button" onclick="$house.fn.removeRow(this)" class="btn btn-primary btn-circle"><i class='fa fa-minus'></i> </button>
+    </div>
+</div>
+
+</body>
+
+<%@ include file="../inc/footer.jsp" %>
 <script src="http://api.map.baidu.com/api?v=2.0&ak=pcExWaLfoopv7vZ5hO1B8ej8"></script>
 <script>
     $house = {
@@ -291,11 +336,32 @@
                     $("#dealTime").val(date.format("yyyy-MM-dd"));
                 }
 
+                if("${house.privilege}" != ''){
+                    var arr = "${house.privilege}".split("|");
+                    if(arr.length > 0){
+                        $("#privilegeDiv").prev().find("input").val(arr[0]);
+                    }
+                    for(var i=1; i<arr.length; i++){
+                        $house.fn.addRow(arr[i]);
+                    }
+                }
             },
-
+            //添加购房优惠
+            addRow:function(value){
+                var template = $("#privilegeTempalte").clone().removeAttr("id");
+                if(value != undefined){
+                    template.find("input").val(value);
+                }
+                template.show();
+                $("#privilegeDiv").append(template);
+            },
+            //删除购房优惠
+            removeRow: function (self) {
+                $(self).parents(".form-group").remove();
+            },
             //保存
             save : function() {
-                if(!$("#formId").valid()) return;
+                if(!$("#formId").isValid()) return;
 
                 if($("[name=isOpenWait][value='1']").parent().hasClass("checked") && $("#openTime").val() == ''){
                     $leoman.alertMsg("请指定开盘时间");
@@ -327,6 +393,14 @@
                     $("[name=dealTime]").val(dealDate);
                 }
 
+                var privilArr = [];
+                $("#formId [name=privil]").each(function(){
+                    privilArr.push($(this).val());
+                });
+
+                $("[name=privilege]").val(privilArr.join("|"));
+
+                $leoman.showLoading();
                 $("#formId").ajaxSubmit({
                     url : "${contextPath}/admin/house/save",
                     type : "POST",
@@ -335,6 +409,7 @@
                             window.location.href = "${contextPath}/admin/house/index";
                         }
                         else {
+                            $leoman.hideLoading();
                             $leoman.alertMsg(result.msg);
                         }
                     }
@@ -440,5 +515,5 @@
         });
     });
 </script>
-</body>
+
 </html>

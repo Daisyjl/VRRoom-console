@@ -1,210 +1,224 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: wangbin
+  Date: 2015/3/3
+  Time: 9:33
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../inc/taglibs.jsp" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <%@ include file="../inc/meta.jsp" %>
     <meta name="description" content="">
-    <meta name="author" content="ThemeBucket">
-    <link rel="shortcut icon" href="#" type="image/png">
-    <title>新增/编辑户型</title>
-    <%@ include file="../inc/new2/css.jsp" %>
+    <meta name="author" content="">
+    <title>户型信息</title>
+    <%@ include file="../inc/css.jsp" %>
+
 </head>
+<body>
 
-<body class="sticky-header">
+<div id="posts" class="wrapper">
 
-<section>
-    <%@ include file="../inc/new2/menu.jsp" %>
-    <!-- main content start-->
-    <div class="main-content">
-        <%@ include file="../inc/new2/header.jsp" %>
-        <!--body wrapper start-->
-        <section class="wrapper">
-            <!-- page start-->
+    <%@ include file="../inc/nav.jsp" %>
 
-            <!-- 户型信息 -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <section class="panel">
-                        <header class="panel-heading">
-                            户型信息
-                        </header>
-                        <div class="panel-body">
-                            <form class="cmxform form-horizontal adminex-form">
-
-                                <div class="form-group">
-                                    <div class="col-sm-6">
-                                        <button type="button" onclick="$houseUnit.fn.openModal()" class="btn btn-primary"><i class="fa fa-plus"></i> 添加户型</button>
-                                        <button type="button" onclick="$houseUnit.fn.back()" class="btn btn-primary"><i class="fa fa-reply"></i> 返回</button>
-                                    </div>
-                                </div>
-
-                                <div id="unitDiv">
-
-                                </div>
-
-
-                            </form>
-                        </div>
-                    </section>
-                </div>
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">户型信息</h1>
             </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <!-- /.panel-heading -->
+                    <div class="panel-heading">
+                        <a href="admin/house/index" class="btn btn-outline btn-primary btn-lg"
+                           role="button"><i class='fa fa-reply'></i> 返回</a>
 
-        </section>
+                        <a href="javascript:;" onclick="$houseUnit.fn.openModal()" class="btn btn-outline btn-primary btn-lg"
+                           role="button"><i class='fa fa-plus'></i> 添加户型</a>
+                    </div>
+
+                    <div class="panel-body">
+                        <form method="post" class="form-horizontal" role="form">
+                            <input type="hidden" id="id" name="id" value="${product.id}">
+
+                            <div id="unitDiv">
+
+                            </div>
+
+                        </form>
+                    </div>
+                    <!-- /.panel-body -->
+
+                </div>
+                <!-- /.panel -->
+            </div>
+        </div>
+
     </div>
-    <!-- main content end-->
+    <!-- /#page-wrapper -->
 
-    <!-- 户型模板 -->
-    <div class="form-group" style="display: none;" id="unitTemplate">
-        <label class="col-sm-1 control-label">户型：</label>
-        <div class="col-sm-2">
-            <img src="" style="height: 200px; width: 200px; display: inline; margin-bottom: 5px;" border="1"/>
+</div>
+<!-- /#wrapper -->
+
+<!-- 户型模板 -->
+<div class="form-group" style="display: none;" id="unitTemplate">
+    <label class="col-sm-1 control-label">户型：</label>
+    <div class="col-sm-2">
+        <img src="" style="height: 200px; width: 200px; display: inline; margin-bottom: 5px;" border="1"/>
+    </div>
+    <div class="col-sm-2">
+        <div class="form-group">
+            户型名称：
         </div>
-        <div class="col-sm-2">
-            <div class="form-group">
-                户型名称：
-            </div>
-            <div class="form-group">
-                建筑面积：
-            </div>
-            <div class="form-group">
-                参考总价：
-            </div>
+        <div class="form-group">
+            建筑面积：
         </div>
-        <div class="col-sm-2">
-            <button type="button" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> 编辑</button>
-            <button type="button" onclick="" class="btn btn-primary"><i class="fa fa-minus"></i> 删除</button>
+        <div class="form-group">
+            参考总价：
         </div>
     </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="pwdModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">新增户型</h4>
-                </div>
-                <div class="modal-body">
-                    <form class="cmxform form-horizontal adminex-form" id="unitForm" enctype="multipart/form-data">
-                        <input type="hidden" name="id" value="">
-                        <input type="hidden" name="houseId" value="${houseId}">
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" ><span style="color: red;">* </span>户型名称：</label>
-                            <div class="col-sm-6">
-                                <input type="text" name="name" value="" class="form-control" required maxlength="30"/>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" ><span style="color: red;">* </span>户型类型：</label>
-                            <div class="col-sm-6">
-                                <%--<input type="text" name="typeName" value="" class="form-control" required/>--%>
-                                <select class="form-control input-sm" name="typeName" required>
-                                    <option value="">---请选择---</option>
-                                    <option value="一室一厅一卫">一室一厅一卫</option>
-                                    <option value="两室一厅一卫">两室一厅一卫</option>
-                                    <option value="三室两厅一卫">三室两厅一卫</option>
-                                    <option value="三室两厅两卫">三室两厅两卫</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" ><span style="color: red;">* </span>面积：</label>
-                            <div class="col-sm-6">
-                                <input type="text" name="totalArea" value="" class="form-control" number-2="true" required/>
-                            </div>
-                            <label class="col-sm-3 control-label" style="text-align: left">平方</label>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" >朝向：</label>
-                            <div class="col-sm-6">
-                                <%--<input type="text" name="towards" value="" class="form-control"/>--%>
-                                <select class="form-control input-sm" name="towards">
-                                    <option value="">---请选择---</option>
-                                    <option value="正南">正南</option>
-                                    <option value="东南">东南</option>
-                                    <option value="东">东</option>
-                                    <option value="西南">西南</option>
-                                    <option value="北">北</option>
-                                    <option value="西">西</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" >参考总价：</label>
-                            <div class="col-sm-6">
-                                <input type="text" name="totalPrice" value="" class="form-control" number-2="true"/>
-                            </div>
-                            <label class="col-sm-3 control-label" style="text-align: left">万</label>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label"><span style="color: red;">* </span>户型图上传：</label>
-                            <div class="col-sm-5">
-                                <input type="file" name="planeFile" id="planeFile" style="display:none;"/>
-                                <a href="javascript:void(0);" onclick="$('#planeFile').click();">
-                                    <img id="planeImg" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">3d户型图上传：</label>
-                            <div class="col-sm-5">
-                                <input type="file" name="d3File" id="d3File" style="display:none;"/>
-                                <a href="javascript:void(0);" onclick="$('#d3File').click();">
-                                    <img id="d3Img" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" >360全景：</label>
-                            <div class="col-sm-6">
-                                <input type="text" name="fullView" value="" class="form-control"/>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" >3D模型识别图：</label>
-                            <div class="col-sm-6">
-                                <input type="file" name="d3ModelRecogFile" class="default" />
-                            </div>
-                            <div class="col-sm-3">
-                                <a id="d3ModelRecogFileUrl" style="display: none;">下载模型</a>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" >3D模型：</label>
-                            <div class="col-sm-6">
-                                <input type="file" name="d3ModelFile" class="default"/>
-                            </div>
-                            <div class="col-sm-3">
-                                <a id="d3ModelFileUrl" style="display: none;">下载模型</a>
-                            </div>
-                        </div>
-
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                    <button type="button" onclick="$houseUnit.fn.save()" class="btn btn-primary">保存</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
+    <div class="col-sm-2">
+        <button type="button" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> 编辑</button>
+        <button type="button" onclick="" class="btn btn-primary"><i class="fa fa-minus"></i> 删除</button>
     </div>
+</div>
 
-</section>
-<%@ include file="../inc/new2/foot.jsp" %>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="lotteryModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="lotteryModalLabel">新增户型</h4>
+            </div>
+            <div class="modal-body" >
+                <form id="unitForm" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="">
+                    <input type="hidden" name="houseId" value="${houseId}">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" ><span style="color: red;">* </span>户型名称：</label>
+                        <div class="col-sm-6">
+                            <input type="text" name="name" value="" class="form-control"  data-rule="required" maxlength="30"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" ><span style="color: red;">* </span>户型类型：</label>
+                        <div class="col-sm-6">
+                            <select class="form-control input-sm" name="typeName" data-rule="required">
+                                <option value="">---请选择---</option>
+                                <option value="一室一厅一卫">一室一厅一卫</option>
+                                <option value="两室一厅一卫">两室一厅一卫</option>
+                                <option value="三室两厅一卫">三室两厅一卫</option>
+                                <option value="三室两厅两卫">三室两厅两卫</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" ><span style="color: red;">* </span>面积：</label>
+                        <div class="col-sm-6">
+                            <input type="text" name="totalArea" value="" class="form-control"
+                                   data-rule="required; price" data-rule-price="[/^\d{0,8}\.{0,1}(\d{1,2})?$/, '请输入正确的面积']"/>
+                        </div>
+                        <label class="col-sm-3 control-label" style="text-align: left">平方</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" >朝向：</label>
+                        <div class="col-sm-6">
+                            <select class="form-control input-sm" name="towards">
+                                <option value="">---请选择---</option>
+                                <option value="正南">正南</option>
+                                <option value="东南">东南</option>
+                                <option value="东">东</option>
+                                <option value="西南">西南</option>
+                                <option value="北">北</option>
+                                <option value="西">西</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" >参考总价：</label>
+                        <div class="col-sm-6">
+                            <input type="text" name="totalPrice" value="" class="form-control"
+                                   data-rule="price" data-rule-price="[/^\d{0,8}\.{0,1}(\d{1,2})?$/, '请输入正确的参考总价']"/>
+                        </div>
+                        <label class="col-sm-3 control-label" style="text-align: left">万</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label"><span style="color: red;">* </span>户型图上传：</label>
+                        <div class="col-sm-5">
+                            <input type="file" name="planeFile" id="planeFile" style="display:none;"/>
+                            <a href="javascript:void(0);" onclick="$('#planeFile').click();">
+                                <img id="planeImg" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">3d户型图上传：</label>
+                        <div class="col-sm-5">
+                            <input type="file" name="d3File" id="d3File" style="display:none;"/>
+                            <a href="javascript:void(0);" onclick="$('#d3File').click();">
+                                <img id="d3Img" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" >360全景：</label>
+                        <div class="col-sm-6">
+                            <input type="text" name="fullView" value="" class="form-control"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" >3D模型识别图：</label>
+                        <div class="col-sm-6">
+                            <input type="file" name="d3ModelRecogFile" class="default" />
+                        </div>
+                        <div class="col-sm-3">
+                            <a id="d3ModelRecogFileUrl" style="display: none;">下载模型</a>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" >3D模型：</label>
+                        <div class="col-sm-6">
+                            <input type="file" name="d3ModelFile" class="default"/>
+                        </div>
+                        <div class="col-sm-3">
+                            <a id="d3ModelFileUrl" style="display: none;">下载模型</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" onclick="$houseUnit.fn.save()" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- Modal end -->
+
+<%@ include file="../inc/footer.jsp" %>
+<!-- 配置文件 -->
+
+</body>
+
 <script>
     $houseUnit = {
         v: {
@@ -254,7 +268,6 @@
                             $("#unitForm").find("[name=typeName]").val(obj.typeName);
                             $("#unitForm").find("[name=totalArea]").val(obj.totalArea);
                             $("#unitForm").find("[name=totalPrice]").val(obj.totalPrice);
-//                            $("#unitForm").find("[name=towards]").val(obj.towards);
                             if(obj.planeImage != null){
                                 $("#unitForm").find("#planeImg").attr("src", obj.planeImage.uploadUrl);
                             }
@@ -280,20 +293,23 @@
                         }
                     });
                 }else{
-                    $("#unitForm").find("input:not(:hidden), select").val("");
+                    $("#unitForm").find("input, select").val("");
+                    $("#unitForm").find("img").attr("src","static/images/add.jpg");
+                    $("#unitForm").find("[name=houseId]").val("${houseId}");
                     $("#myModal").modal("show");
                 }
 
             },
             //保存弹出的新增户型
             save : function (){
-                if(!$("#unitForm").valid()) return;
+                if(!$("#unitForm").isValid()) return;
 
-                if($("#planeImg").attr("src") == ''){
+                if($("#planeImg").attr("src") == '' ||  $("#planeImg").attr("src").indexOf('static/images/add.jpg') > -1){
                     $leoman.alertMsg("户型图不能为空");
                     return ;
                 }
 
+                $leoman.showLoading();
                 $("#unitForm").ajaxSubmit({
                     url : "${contextPath}/admin/house/unit/save",
                     type : "POST",
@@ -302,6 +318,7 @@
                             window.location.reload();
                         }
                         else {
+                            $leoman.hideLoading();
                             $leoman.alertMsg(result.msg);
                         }
                     }
@@ -330,5 +347,6 @@
         $houseUnit.fn.init();
     });
 </script>
-</body>
+
+
 </html>

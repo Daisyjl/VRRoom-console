@@ -35,6 +35,9 @@ public class Module extends BaseEntity{
     @Column(name = "description")
     private String description;
 
+    @Column(name = "status")
+    private Integer status;
+
 //    public List<Module> getSubModuleList() {
 //        return subModuleList;
 //    }
@@ -89,5 +92,13 @@ public class Module extends BaseEntity{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

@@ -1,106 +1,124 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: wangbin
+  Date: 2015/3/3
+  Time: 9:33
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../inc/taglibs.jsp" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <%@ include file="../inc/meta.jsp" %>
     <meta name="description" content="">
-    <meta name="author" content="ThemeBucket">
-    <link rel="shortcut icon" href="#" type="image/png">
-    <title>新增企业</title>
-    <%@ include file="../inc/new2/css.jsp" %>
+    <meta name="author" content="">
+    <title>新增/编辑企业</title>
+    <%@ include file="../inc/css.jsp" %>
+
 </head>
+<body>
 
-<body class="sticky-header">
+<div id="posts" class="wrapper">
 
-<section>
-    <%@ include file="../inc/new2/menu.jsp" %>
-    <!-- main content start-->
-    <div class="main-content">
-        <%@ include file="../inc/new2/header.jsp" %>
-        <!--body wrapper start-->
-        <section class="wrapper">
-            <!-- page start-->
+    <%@ include file="../inc/nav.jsp" %>
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <section class="panel">
-                        <header class="panel-heading">
-                            企业
-                        </header>
-                        <div class="panel-body">
-                            <form class="cmxform form-horizontal adminex-form" id="formId" method="post" >
-                                <input id="id" name="id" type="hidden" value="${enterprise.id}">
-                                <input type="hidden" id="provinceId" value="${enterprise.city.province.id}">
-                                <input type="hidden" id="cityId" value="${enterprise.city.id}">
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >企业名称</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" name="name" value="${enterprise.name}" class="form-control" required/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >企业账号</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" name="username" value="${enterprise.username}" class="form-control" required/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >企业密码</label>
-                                    <div class="col-sm-6">
-                                        <input type="password" id="password" name="password" value="" class="form-control" required/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >确认密码</label>
-                                    <div class="col-sm-6">
-                                        <input type="password" id="repassword" name="" value="" class="form-control" equalTo="#password" required/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label">省:</label>
-
-                                    <div class="col-sm-1">
-                                        <select id="provinceSelect" style="width: 150px;" class="form-control"></select>
-                                    </div>
-
-                                    <label class="col-sm-1 control-label">市:</label>
-                                    <div class="col-sm-1">
-                                        <select id="citySelect" style="width: 150px;" class="form-control" name="city.id"></select>
-                                    </div>
-                                </div>
-
-                                <span style="display: none;" id="intro">${enterprise.intro}</span>
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label" >企业简介</label>
-                                    <div class="col-sm-6">
-                                        <script type="text/plain" id="myEditor" name="intro" style="width:1000px;height:240px;"></script>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label"></label>
-                                    <div class="col-sm-6">
-                                        <button type="button" onclick="$enterprise.fn.save()" class="btn btn-primary">保存</button>
-                                        <button type="button" class="btn btn-primary" onclick="$enterprise.fn.back()">返回</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </section>
-                </div>
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">新增/编辑企业</h1>
             </div>
-        </section>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <form id="formId" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
+
+                            <input id="id" name="id" type="hidden" value="${enterprise.id}">
+                            <input type="hidden" id="provinceId" value="${enterprise.city.province.id}">
+                            <input type="hidden" id="cityId" value="${enterprise.city.id}">
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" >企业名称</label>
+                                <div class="col-sm-6">
+                                    <input type="text" name="name" value="${enterprise.name}" class="form-control" required/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" >企业账号</label>
+                                <div class="col-sm-6">
+                                    <input type="text" name="username" value="${enterprise.username}" class="form-control" required/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" >企业密码</label>
+                                <div class="col-sm-6">
+                                    <input type="password" id="password" name="password" value="" class="form-control" required/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" >确认密码</label>
+                                <div class="col-sm-6">
+                                    <input type="password" id="repassword" name="" value="" class="form-control" equalTo="#password" required/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">省:</label>
+
+                                <div class="col-sm-1">
+                                    <select id="provinceSelect" style="width: 150px;" class="form-control"></select>
+                                </div>
+
+                                <label class="col-sm-1 control-label">市:</label>
+                                <div class="col-sm-1">
+                                    <select id="citySelect" style="width: 150px;" class="form-control" name="city.id"></select>
+                                </div>
+                            </div>
+
+                            <span style="display: none;" id="intro">${enterprise.intro}</span>
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" >企业简介</label>
+                                <div class="col-sm-6">
+                                    <script type="text/plain" id="myEditor" name="intro" style="width:1000px;height:240px;"></script>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label"></label>
+                                <div class="col-sm-6">
+                                    <button type="button" onclick="$enterprise.fn.save()" class="btn btn-primary">保存</button>
+                                    <button type="button" class="btn btn-primary" onclick="$enterprise.fn.back()">返回</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                    <!-- /.panel-body -->
+
+                </div>
+                <!-- /.panel -->
+            </div>
+        </div>
+
     </div>
-    <!-- main content end-->
-</section>
-<%@ include file="../inc/new2/foot.jsp" %>
+    <!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- 配置文件 -->
+
+</body>
+
+<%@ include file="../inc/footer.jsp" %>
+<script src="http://api.map.baidu.com/api?v=2.0&ak=pcExWaLfoopv7vZ5hO1B8ej8"></script>
 <script>
     $enterprise = {
         v: {
@@ -205,5 +223,5 @@
         $enterprise.fn.init();
     })
 </script>
-</body>
+
 </html>

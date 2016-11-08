@@ -1,6 +1,6 @@
 package com.leoman.enterprise.entity;
 
-import com.leoman.city.entity.City;
+import com.leoman.area.city.entity.City;
 import com.leoman.entity.BaseEntity;
 
 import javax.persistence.*;

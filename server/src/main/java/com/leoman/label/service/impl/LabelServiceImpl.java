@@ -23,7 +23,7 @@ public class LabelServiceImpl  extends GenericManagerImpl<Label,LabelDao> implem
 
     @Override
     public List<Label> findListByParams(Integer objectId) {
-        List<Label> list = labelDao.findListByParams(objectId);
+        List<Label> list = labelDao.findListByObjectId(objectId);
 
         return list;
     }

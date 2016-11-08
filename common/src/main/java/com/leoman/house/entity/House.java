@@ -1,5 +1,6 @@
 package com.leoman.house.entity;
 
+import com.leoman.area.region.entity.Region;
 import com.leoman.enterprise.entity.Enterprise;
 import com.leoman.entity.BaseEntity;
 import com.leoman.image.entity.Image;
@@ -71,6 +72,10 @@ public class House extends BaseEntity{
     private Image image;//封面图
 
     @ManyToOne
+    @JoinColumn(name = "big_image_id")
+    private Image bigImage;//高清沙盘图，标图用
+
+    @ManyToOne
     @JoinColumn(name = "enterprise_id")
     private Enterprise enterprise;//企业
 
@@ -82,6 +87,10 @@ public class House extends BaseEntity{
 
     @Column(name = "status")
     private Integer status;//0-新增，1-删除
+
+    @ManyToOne
+    @JoinColumn(name = "region_id")
+    private Region region;//区
 
     @Transient
     private Integer roomNum;//房间数
@@ -279,5 +288,21 @@ public class House extends BaseEntity{
 
     public void setAddressDetail(String addressDetail) {
         this.addressDetail = addressDetail;
+    }
+
+    public Image getBigImage() {
+        return bigImage;
+    }
+
+    public void setBigImage(Image bigImage) {
+        this.bigImage = bigImage;
+    }
+
+    public Region getRegion() {
+        return region;
+    }
+
+    public void setRegion(Region region) {
+        this.region = region;
     }
 }

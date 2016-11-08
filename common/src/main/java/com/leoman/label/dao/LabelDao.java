@@ -12,7 +12,7 @@ import java.util.List;
 public interface LabelDao extends IBaseJpaRepository<Label> {
 
     @Query("select a from Label a where a.objectId = ?1")
-    public List<Label> findListByParams(Integer objectId);
+    public List<Label> findListByObjectId(Integer objectId);
 
     @Query("select a from Label a where a.objectId = ?1 and a.labelId = ?2")
     public Label findOneByObjectIdAndLabelId(Integer objectId, String labelId);

@@ -14,4 +14,6 @@ public interface HouseService extends GenericManager<House> {
 
     public void setHouse(House house);
 
+    public Result saveBigImage(Long houseId, MultipartRequest multipartRequest);
+
 }

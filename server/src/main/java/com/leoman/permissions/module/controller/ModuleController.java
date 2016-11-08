@@ -49,6 +49,7 @@ public class ModuleController extends GenericEntityController<Module, Module, Mo
         Query query = Query.forClass(Module.class, moduleService);
         query.setPagenum(pagenum);
         query.setPagesize(length);
+        query.eq("status", 0);
         query.like("name", name);
         query.addOrder("code","asc");
         Page<Module> page = moduleService.queryPage(query);

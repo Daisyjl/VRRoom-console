@@ -50,7 +50,7 @@ public class HouseFloorController extends GenericEntityController<HouseFloorType
     @RequestMapping(value = "/editType/{id}")
     public String editAlbum(@PathVariable("id") Long id, Model model){
         model.addAttribute("houseId", id);
-        return "house/house_edit_floor_type_copy";
+        return "house/house_edit_floor_type";
     }
 
     /**

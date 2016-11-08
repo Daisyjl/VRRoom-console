@@ -2,6 +2,8 @@ package com.leoman.house.controller;
 
 import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
+import com.leoman.direction.entity.Direction;
+import com.leoman.direction.service.DirectionService;
 import com.leoman.entity.Configue;
 import com.leoman.house.entity.House;
 import com.leoman.house.entity.HouseDynamic;
@@ -10,6 +12,7 @@ import com.leoman.house.entity.HouseRidgepoleFloorRoom;
 import com.leoman.house.service.HouseRidgepoleService;
 import com.leoman.house.service.HouseService;
 import com.leoman.house.service.impl.HouseDynamicServiceImpl;
+import com.leoman.image.entity.Image;
 import com.leoman.label.entity.Label;
 import com.leoman.label.service.LabelService;
 import com.leoman.utils.JsonUtil;
@@ -21,7 +24,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
+import javax.servlet.ServletRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +39,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping(value = "admin/house/ridgepole")
-public class HouseRidgepoleController extends GenericEntityController<HouseDynamic,HouseDynamic,HouseDynamicServiceImpl> {
+public class HouseRidgepoleController extends GenericEntityController<HouseRidgepole,HouseDynamic,HouseDynamicServiceImpl> {
 
     @Autowired
     private HouseService houseService;
@@ -41,6 +49,9 @@ public class HouseRidgepoleController extends GenericEntityController<HouseDynam
 
     @Autowired
     private HouseRidgepoleService houseRidgepoleService;
+
+    @Autowired
+    private DirectionService directionService;
 
     /**
      * 跳转编辑楼盘的栋首页
@@ -52,13 +63,12 @@ public class HouseRidgepoleController extends GenericEntityController<HouseDynam
     public String edit(@PathVariable("id") Long id, Model model){
         House house = houseService.queryByPK(id);
 
-        if(house.getImage() != null){
-            house.getImage().setPath(Configue.getUploadUrl()+house.getImage().getPath());
-            List<Label> labelList = labelService.findListByParams(house.getImage().getId());
+        if(house.getBigImage() != null){
+            List<Label> labelList = labelService.findListByParams(house.getBigImage().getId());
             model.addAttribute("labelList", JSONArray.fromObject(labelList));
         }
         model.addAttribute("house", house);
-        return "house/house_edit_ridgepole_copy";
+        return "house/house_edit_ridgepole";
     }
 
     /**
@@ -71,14 +81,20 @@ public class HouseRidgepoleController extends GenericEntityController<HouseDynam
     public String editFloor(@PathVariable("houseId") Long houseId,@PathVariable("labelId") String labelId, Model model){
         Label label = labelService.searchByLabelId(labelId);
 
+        //楼信息
         if(label.getRidgepoleId() != null){
             HouseRidgepole ridgepole = houseRidgepoleService.queryByPK(label.getRidgepoleId());
             model.addAttribute("ridgepole", ridgepole);
         }
 
+        //方位列表
+        List<Direction> directionList = directionService.queryAll();
+
         model.addAttribute("label", label);
         model.addAttribute("houseId", houseId);
-        return "house/house_edit_ridgepole_floor_copy";
+        model.addAttribute("directionList", directionList);
+
+        return "house/house_edit_ridgepole_floor";
     }
 
     /**
@@ -121,7 +137,7 @@ public class HouseRidgepoleController extends GenericEntityController<HouseDynam
         List<HouseRidgepole> list = houseRidgepoleService.findRoomList(id);
         model.addAttribute("list", list);
 
-        return "house/house_edit_room_copy";
+        return "house/house_edit_room";
     }
 
     /**

@@ -215,7 +215,7 @@
                     Label.fn.mouseout($(this));
                 });
 
-                Label.fn.addLabelEdit(name, labelId);
+//                Label.fn.addLabelEdit(name, labelId);
 
             },
             dragMove: function (self, e) {
@@ -264,10 +264,13 @@
                         $("#top").val(parseInt($(self).css("top")));
                         $("#name").val($(self).children(":first").html());
 
+                        var newLeft = parseInt($(self).offset().left) - parseInt($("#mainImg").offset().left);
+                        var newTop = parseInt($(self).offset().top) - parseInt($("#mainImg").offset().top)
+
                         //将标签位置信息保存在数据库
                         if (x != z) {
                             z = x;
-                            Label.fn.saveLabelInfo();
+                            Label.fn.saveLabelInfo(self, newLeft, newTop);
                         }
                     }
 
@@ -275,7 +278,7 @@
                     $(self).fadeTo("fast", 1);//松开鼠标后停止移动并恢复成不透明
                 });
             },
-            saveLabelInfo: function () {
+            saveLabelInfo: function (self, newLeft, newTop) {
                 $.ajax({
                     type: "post",
                     async: false,
@@ -295,11 +298,16 @@
                         width: $("#width").val() * 2,
                         leftPoint: $("#left").val(),
                         topPoint: $("#top").val(),
+                        newLeft: newLeft,
+                        newTop: newTop,
                     },
                     dataType: "json",
                     success: function (result) {
                         if (result != 1) {
                             $leoman.alertMsg("操作失败!");
+                        }else{
+                            var name = $(self).find("div").text();
+                            var labelId = $(self).attr("id");
                         }
                     }
                 });

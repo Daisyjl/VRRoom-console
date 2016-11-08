@@ -1,71 +1,96 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: wangbin
+  Date: 2015/3/3
+  Time: 9:33
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../inc/taglibs.jsp" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <%@ include file="../inc/meta.jsp" %>
     <meta name="description" content="">
-    <meta name="author" content="ThemeBucket">
-    <link rel="shortcut icon" href="#" type="image/png">
-    <title>Dynamic Table</title>
-    <%@ include file="../inc/new2/css.jsp" %>
+    <meta name="author" content="">
+    <title>企业列表</title>
+    <%@ include file="../inc/css.jsp" %>
+
 </head>
-<body class="sticky-header">
-<section>
-    <%@ include file="../inc/new2/menu.jsp" %>
-    <!-- main content start-->
-    <div class="main-content">
-        <%@ include file="../inc/new2/header.jsp" %>
-        <!--body wrapper start-->
-        <div class="wrapper">
-            <div class="row">
-                <div class="col-sm-12">
-                    <section class="panel">
-                        <div class="panel-body">
-                            <div class="form-group col-sm-2">
-                                <input type="text" id="username" name="username" class="form-control"
-                                       id="exampleInputEmail2" placeholder="姓名">
-                            </div>
-                            <button id="c_search" class="btn btn-info">搜索</button>
-                        </div>
-                    </section>
-                </div>
+
+<body>
+
+<div id="posts" class="wrapper">
+
+    <%@ include file="../inc/nav.jsp" %>
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">企业列表</h1>
             </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <section class="panel">
-                        <header class="panel-heading">
-                            企业列表
-                            <span class="tools pull-right" style="margin-right: 10px;margin-left: 10px">
-                               <button class="btn btn-info" type="button" onclick="$enterprise.fn.del();" id="deleteBatch" style="display: none">删除</button>
-                            </span>
-                            <span class="tools pull-right">
-                               <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i>刷新</button>
-                               <button class="btn btn-info" type="button" onclick="$enterprise.fn.add();">新增企业</button>
-                            </span>
-                        </header>
-                        <div class="panel-body">
-                            <div class="adv-table">
-                                <table class="display table table-bordered table-striped" id="dataTables" width="100%">
-                                    <thead>
-                                    <tr>
-                                        <th style="width: 10%;!important;"><input type="checkbox" class="list-parent-check"
-                                                   onclick="$leoman.checkAll(this);"/></th>
-                                        <th style="width: 60%;!important;">企业名称</th>
-                                        <th>操作</th>
-                                    </tr>
-                                    </thead>
-                                </table>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+
+                        <a href="admin/enterprise/add" class="btn btn-outline btn-primary btn-lg"
+                           role="button">新增企业</a>
+
+                        <form class="navbar-form navbar-right" role="search">
+                            <div class="form-group">
+                                <label>企业名称：</label>
+                                <input type="text" id="name" name="username" class="form-control" placeholder="企业名称">
                             </div>
+                            <button type="button" id="c_search" class="btn btn-default btn-sm">查询</button>
+                        </form>
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+
+                        <div class="table-responsive">
+
+                            <table class="table table-striped table-bordered table-hover" id="dataTables">
+                                <colgroup>
+                                    <col class="gradeA even"/>
+                                    <col class="gradeA odd"/>
+                                    <col class="gradeA even"/>
+                                    <col class="gradeA odd"/>
+                                    <col class="gradeA even"/>
+                                    <col class="gradeA odd"/>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" onclick="$leoman.checkAll(this)" class="checkall"/></th>
+                                    <th style="width: 60%;!important;">企业名称</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                         </div>
-                    </section>
+
+                    </div>
+                    <!-- /.panel-body -->
+
                 </div>
+                <!-- /.panel -->
             </div>
         </div>
+
     </div>
-</section>
-<%@ include file="../inc/new2/foot.jsp" %>
+    <!-- /#page-wrapper -->
+
+
+</div>
+<!-- /#wrapper -->
+
+<%@ include file="../inc/footer.jsp" %>
+</body>
+
 <script>
     $enterprise = {
         v: {
@@ -105,13 +130,13 @@
                             "data": "id",
                             "render": function (data, type, row, meta) {
 
-                                    var edit = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$enterprise.fn.add(\'" + data + "\')\">" +
-                                            "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
+                                var edit = "<button title='编辑' class='btn btn-primary edit' onclick=\"$enterprise.fn.add(\'" + data + "\')\">" +
+                                        "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
 
-                                    var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$enterprise.fn.del(\'" + data + "\')\">" +
-                                            "<i class='fa fa-trash-o'></i> 删除</button>";
+                                var del = "<button title='删除' class='btn btn-primary edit' onclick=\"$enterprise.fn.del(\'" + data + "\')\">" +
+                                        "<i class='fa fa-trash-o'></i> 删除</button>";
 
-                                    return edit  + "&nbsp;" + del;
+                                return edit  + "&nbsp;" + del;
 
                             }
                         }
@@ -130,30 +155,29 @@
             },
             del: function (id) {
                 var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');
-                var ids = checkBox.getInputId();
-                $("#confirm").modal("show");
-                $('#showText').html('您确定要彻底删除所选的企业吗？');
-                $("#determine").off("click");
-                $("#determine").on("click",function(){
+                var ids = [];
+                if(id != null){
+                    ids.push(id);
+                }else{
+                    ids = checkBox.getInputId();
+                }
+                $leoman.alertConfirm("您确定要彻底删除所选的企业吗？",function(){
                     $.ajax({
                         "url": "${contextPath}/admin/enterprise/del",
                         "data": {
-                            id:id,
                             ids:JSON.stringify(ids)
                         },
                         "dataType": "json",
                         "type": "POST",
                         success: function (result) {
-                            if (result==1) {
-                                $('#showText').html('删除错误');
-                            }else {
-                                $("#deleteBatch").css('display','none');
-                                $enterprise.v.dTable.ajax.reload(null,false);
+                            if(result.status == 0){
+                                window.location.reload();
+                            }else{
+                                $leoman.alertMsg(result.msg);
                             }
-                            $("#confirm").modal("hide");
                         }
                     });
-                })
+                });
             },
             responseComplete: function (result, action) {
                 if (result.status == "0") {
@@ -173,5 +197,4 @@
         $enterprise.fn.init();
     })
 </script>
-</body>
 </html>

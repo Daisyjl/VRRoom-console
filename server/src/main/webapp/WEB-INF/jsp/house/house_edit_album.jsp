@@ -1,68 +1,83 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: wangbin
+  Date: 2015/3/3
+  Time: 9:33
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../inc/taglibs.jsp" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <%@ include file="../inc/meta.jsp" %>
     <meta name="description" content="">
-    <meta name="author" content="ThemeBucket">
-    <link rel="shortcut icon" href="#" type="image/png">
-    <title>新增/编辑楼盘相册</title>
-    <%@ include file="../inc/new2/css.jsp" %>
+    <meta name="author" content="">
+    <title>楼盘相册</title>
+    <%@ include file="../inc/css.jsp" %>
+
 </head>
+<body>
 
-<body class="sticky-header">
+<div id="posts" class="wrapper">
 
-<section>
-    <%@ include file="../inc/new2/menu.jsp" %>
-    <!-- main content start-->
-    <div class="main-content">
-        <%@ include file="../inc/new2/header.jsp" %>
-        <!--body wrapper start-->
-        <section class="wrapper">
-            <!-- page start-->
+    <%@ include file="../inc/nav.jsp" %>
 
-            <!-- 户型信息 -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <section class="panel">
-                        <header class="panel-heading">
-                            楼盘相册
-                        </header>
-                        <div class="panel-body">
-                            <form class="cmxform form-horizontal adminex-form">
-                                <input name="id" type="hidden" value="${enterprise.id}">
-
-                                <div class="form-group">
-                                    <div class="col-sm-6">
-                                        <button type="button" onclick="$houseAlbum.fn.back()" class="btn btn-primary"><i class="fa fa-reply"></i> 返回</button>
-                                    </div>
-                                </div>
-
-                                <div class="form-group" id="albumDiv">
-
-                                </div>
-
-
-                            </form>
-                        </div>
-                    </section>
-                </div>
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">楼盘相册</h1>
             </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <!-- /.panel-heading -->
+                    <div class="panel-heading">
+                        <a href="admin/house/index" class="btn btn-outline btn-primary btn-lg"
+                           role="button"><i class='fa fa-reply'></i> 返回</a>
 
-        </section>
+
+                    </div>
+                    <div class="panel-body">
+                        <form id="productForm" method="post" class="form-horizontal" role="form">
+                            <input type="hidden" id="id" name="id" value="${product.id}">
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" style="text-align: left">操作提示：点击相册编辑该相册的图片</label>
+                            </div>
+
+                            <div class="form-group" id="albumDiv">
+
+                            </div>
+
+                        </form>
+                    </div>
+                    <!-- /.panel-body -->
+
+                </div>
+                <!-- /.panel -->
+            </div>
+        </div>
+
     </div>
-    <!-- main content end-->
+    <!-- /#page-wrapper -->
 
-    <!-- 模板 -->
-    <div class="col-sm-2" style="display: none;margin-bottom: 10px;" id="albumTemplate">
-        <img src="" style="height: 200px; width: 200px; display: inline; margin-bottom: 5px;cursor: pointer;" border="1" onclick=""/>
-        <label class="col-sm-6 control-label">样板间(2张)</label>
-    </div>
+</div>
+<!-- /#wrapper -->
 
-</section>
-<%@ include file="../inc/new2/foot.jsp" %>
+<!-- 模板 -->
+<div class="col-sm-2" style="display: none;margin-bottom: 10px;" id="albumTemplate">
+    <img src="" style="height: 200px; width: 200px; display: inline; margin-bottom: 5px;cursor: pointer;" border="1" onclick=""/>
+    <label class="col-sm-6 control-label">样板间(2张)</label>
+</div>
+
+<%@ include file="../inc/footer.jsp" %>
+<!-- 配置文件 -->
+
+</body>
+
 <script>
     $houseAlbum = {
         v: {
@@ -93,51 +108,6 @@
             editImage : function(id){
                 window.location.href = "${contextPath}/admin/house/album/editImage/${houseId}_"+id;
             },
-            openModal : function (){
-                $("#myModal").modal("show");
-            },
-            //保存弹出的新增户型
-            saveAddUnit : function (){
-                $("#unitForm").ajaxSubmit({
-                    url : "${contextPath}/admin/house/unit/saveAdd",
-                    type : "POST",
-                    success : function(result) {
-                        if(result.status == 0) {
-                            window.location.reload();
-                        }
-                        else {
-                            $leoman.alertMsg(result.msg);
-                        }
-                    }
-                });
-            },
-            save : function() {
-                if(!$("#formId").valid()) return;
-                $("#intro").val($houseAlbum.v.um.getContent());
-                $("#formId").ajaxSubmit({
-                    url : "${contextPath}/admin/house/unit/saveAdd",
-                    type : "POST",
-                    success : function(result) {
-                        if(result.status == 0) {
-                            $("#myModal").modal("hide");
-                        }
-                        else {
-                            $leoman.alertMsg(result.msg);
-                        }
-                    }
-                });
-            },
-            delete : function (id){
-                $leoman.alertConfirm("您确定要删除该户型吗？",function(){
-                    $.post("${contextPath}/admin/house/unit/delete",{'id':id},function(result){
-                        if(result.status != 0){
-                            window.location.reload();
-                        }else{
-                            $leoman.alertMsg(result.msg);
-                        }
-                    });
-                });
-            },
             back : function(){
                 window.location.href = "${contextPath}/admin/house/index";
             }
@@ -147,5 +117,6 @@
         $houseAlbum.fn.init();
     })
 </script>
-</body>
+
+
 </html>

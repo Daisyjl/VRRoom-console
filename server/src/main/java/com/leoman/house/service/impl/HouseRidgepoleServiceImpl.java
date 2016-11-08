@@ -3,6 +3,7 @@ package com.leoman.house.service.impl;
 import com.leoman.common.core.ErrorType;
 import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
+import com.leoman.direction.entity.Direction;
 import com.leoman.house.dao.*;
 import com.leoman.house.entity.*;
 import com.leoman.house.service.HouseRidgepoleService;
@@ -73,7 +74,6 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
 
         String sql = "SELECT \n" +
                 "  t.`floor_type_id` AS floorTypeId,\n" +
-                "  t.`direction_image_id` AS directionImageId,\n" +
                 "  GROUP_CONCAT(t.`floor_no` ORDER BY t.`floor_no` ASC) AS floorNos \n" +
                 "FROM\n" +
                 "  t_house_ridgepole_floor t \n" +
@@ -89,13 +89,13 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
             }
             map.put("floorNos", floorNos);
             BigInteger floorTypeId = (BigInteger) map.get("floorTypeId");
-            BigInteger directionImageId = (BigInteger) map.get("directionImageId");
+            /*BigInteger directionImageId = (BigInteger) map.get("directionImageId");
 
             if(directionImageId != null){
                 Image directionImage = imageDao.findOne(directionImageId.intValue());
                 map.put("directionImage",directionImage);
             }
-
+*/
             List<HouseFloorTypeUnit> typeUnitList = houseFloorTypeUnitDao.findByFloorTypeId(floorTypeId.longValue());
             HouseFloorTypeUnit typeUnit = (typeUnitList==null || typeUnitList.size()==0)?null:typeUnitList.get(0);
             map.put("typeUnit", typeUnit);
@@ -117,7 +117,7 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
         String name = (String)map.get("name");
         String floorNum = (String)map.get("floorNum");
         String minSpace = (String)map.get("minSpace");
-        String directionImageId = (String)map.get("directionImageId");
+        String directionId = (String)map.get("directionId");
 
         HouseRidgepole houseRidgepole;
 
@@ -156,9 +156,10 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
         houseRidgepole.setFloorNum(Long.valueOf(floorNum));
         houseRidgepole.setMinSpace(minSpace);
         houseRidgepole.setName(name);
-        if(!StringUtils.isEmpty(directionImageId)){
-            houseRidgepole.setDirectionImage(new Image(Integer.valueOf(directionImageId)));
+        if(!StringUtils.isEmpty(directionId)){
+            houseRidgepole.setDirection(new Direction(Long.valueOf(directionId)));
         }
+
         houseRidgepoleDao.save(houseRidgepole);
 
         //设置该label的关联哪一栋
@@ -170,7 +171,6 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
         //楼层信息
         List<Map> list = (List)map.get("floorArr");
         for (Map floor:list) {
-//            String imageId = (String)floor.get("imageId");
             String floorTypeId = (String)floor.get("floorTypeId");
             String floorNos = (String)floor.get("floorNos");
 
@@ -179,9 +179,6 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
 
                 //保存栋的层信息
                 HouseRidgepoleFloor houseRidgepoleFloor = new HouseRidgepoleFloor();
-//                if(!StringUtils.isEmpty(imageId)){
-//                    houseRidgepoleFloor.setDirectionImage(new Image(Integer.valueOf(imageId)));
-//                }
                 houseRidgepoleFloor.setFloorNo(Long.valueOf(floorNo));
                 houseRidgepoleFloor.setFloorType(new HouseFloorType(Long.valueOf(floorTypeId)));
                 houseRidgepoleFloor.setRidgepole(houseRidgepole);
@@ -209,6 +206,11 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
         return Result.success();
     }
 
+    /**
+     * 修改房间状态
+     * @param list
+     * @return
+     */
     @Override
     @Transactional
     public Result saveRoom(List<Map> list){

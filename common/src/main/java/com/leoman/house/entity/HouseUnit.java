@@ -5,6 +5,7 @@ import com.leoman.image.entity.Image;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 楼盘户型
@@ -32,9 +33,6 @@ public class HouseUnit extends BaseEntity {
     @Column(name = "full_view")
     private String fullView;//360全景
 
-    @Column(name = "towards")
-    private String towards;//朝向
-
     @Column(name = "d3_model_recog_url")
     private String d3ModelRecogUrl;//3D模型识别图
 
@@ -45,9 +43,9 @@ public class HouseUnit extends BaseEntity {
     @JoinColumn(name = "plane_image_id")
     private Image planeImage;//平面图
 
-    @ManyToOne
-    @JoinColumn(name = "d3_image_id")
-    private Image d3Image;//3d图
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "unit_id")
+    private List<HouseUnitImage> d3ImageList;//3d户型图列表
 
     public String getName() {
         return name;
@@ -113,12 +111,12 @@ public class HouseUnit extends BaseEntity {
         this.planeImage = planeImage;
     }
 
-    public Image getD3Image() {
-        return d3Image;
+    public List<HouseUnitImage> getD3ImageList() {
+        return d3ImageList;
     }
 
-    public void setD3Image(Image d3Image) {
-        this.d3Image = d3Image;
+    public void setD3ImageList(List<HouseUnitImage> d3ImageList) {
+        this.d3ImageList = d3ImageList;
     }
 
     public Long getHouseId() {
@@ -135,13 +133,6 @@ public class HouseUnit extends BaseEntity {
         super.setId(id);
     }
 
-    public String getTowards() {
-        return towards;
-    }
-
-    public void setTowards(String towards) {
-        this.towards = towards;
-    }
 }
 
 

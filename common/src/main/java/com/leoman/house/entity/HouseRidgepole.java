@@ -1,5 +1,6 @@
 package com.leoman.house.entity;
 
+import com.leoman.direction.entity.Direction;
 import com.leoman.entity.BaseEntity;
 import com.leoman.image.entity.Image;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +29,8 @@ public class HouseRidgepole extends BaseEntity{
     private String minSpace;//最小楼间距
 
     @ManyToOne
-    @JoinColumn(name = "direction_image_id")
-    private Image directionImage;//方位图
+    @JoinColumn(name = "direction_id")
+    private Direction direction;//方位
 
     @Transient
     private List<HouseRidgepoleFloor> floorList;
@@ -74,11 +75,11 @@ public class HouseRidgepole extends BaseEntity{
         this.floorList = floorList;
     }
 
-    public Image getDirectionImage() {
-        return directionImage;
+    public Direction getDirection() {
+        return direction;
     }
 
-    public void setDirectionImage(Image directionImage) {
-        this.directionImage = directionImage;
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 }

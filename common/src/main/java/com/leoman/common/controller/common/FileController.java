@@ -20,6 +20,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -32,8 +33,11 @@ public class FileController extends CommonController {
 
     @Autowired
     private UploadImageService uploadImageService;
+
     @Autowired
     private ImageService imageService;
+
+    private String [] allowedArr = {".jpg", ".jpeg", ".png", ".gif", "bmp"};
 
     @RequestMapping(value = "index")
     public void index(HttpServletRequest request,
@@ -86,41 +90,7 @@ public class FileController extends CommonController {
         Image image = new Image();
 
         try {
-            MultipartFile file = multipartRequest.getFile("tempImage");
-
-
-            // 验证图片格式
-            String originalFileName = file.getOriginalFilename().toLowerCase();
-            String fileType = originalFileName.substring(originalFileName.lastIndexOf("."));
-
-            List<String> list = new ArrayList<String>();
-            list.add(".jpg");
-            list.add(".gif");
-            list.add(".jpeg");
-            list.add(".png");
-            list.add(".bmp");
-
-            if (!list.contains(fileType)) {
-                return image;
-            }
-
-            image = uploadImageService.uploadImage(file);
-            imageService.create(image);
-            image.setPath(Configue.getUploadUrl()+image.getPath());
-
-
-            /* 以下是上传到其他服务器的做法，先保留 */
-            /*String url = uploadImageService.uploadFile(multipartFile);
-            image.setPath(url);
-
-            imageService.create(image);
-            image.setPath(Configue.getUploadUrl()+url);*/
-
-                // 使用线程更新图片的宽高信息
-            /*GetImageInfo getImageInfo = new GetImageInfo();
-            getImageInfo.setImage(image);
-            getImageInfo.setKey(url);
-            getImageInfo.run();*/
+            this.uploadImage(multipartRequest);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -185,6 +155,74 @@ public class FileController extends CommonController {
         }
 
         return imageList;
+    }
+
+    /**
+     * 上传楼的沙盘图
+     * @param request
+     * @param multipartRequest
+     * @return
+     */
+    @RequestMapping("/addRidgepoleTempImage")
+    @ResponseBody
+    public Image addRidgepoleTempImage(ServletRequest request, MultipartRequest multipartRequest) {
+        Image image = new Image();
+
+        try {
+            this.uploadImage(multipartRequest);
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return image;
+    }
+
+    private Image uploadImage(MultipartRequest multipartRequest){
+        Image image = new Image();
+        try {
+            MultipartFile file = multipartRequest.getFile("tempImage");
+
+
+            // 验证图片格式
+            String originalFileName = file.getOriginalFilename().toLowerCase();
+            String fileType = originalFileName.substring(originalFileName.lastIndexOf("."));
+
+//            List<String> list = new ArrayList<String>();
+//            list.add(".jpg");
+//            list.add(".gif");
+//            list.add(".jpeg");
+//            list.add(".png");
+//            list.add(".bmp");
+
+            if (!Arrays.asList(allowedArr).contains(fileType.toLowerCase())) {
+                return image;
+            }
+
+            image = uploadImageService.uploadImage(file);
+            imageService.create(image);
+            image.setPath(Configue.getUploadUrl()+image.getPath());
+
+
+            /* 以下是上传到其他服务器的做法，先保留 */
+            /*String url = uploadImageService.uploadFile(multipartFile);
+            image.setPath(url);
+
+            imageService.create(image);
+            image.setPath(Configue.getUploadUrl()+url);*/
+
+            // 使用线程更新图片的宽高信息
+            /*GetImageInfo getImageInfo = new GetImageInfo();
+            getImageInfo.setImage(image);
+            getImageInfo.setKey(url);
+            getImageInfo.run();*/
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return image;
     }
 
 

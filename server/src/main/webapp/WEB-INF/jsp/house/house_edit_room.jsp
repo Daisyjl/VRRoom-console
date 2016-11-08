@@ -1,45 +1,66 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: wangbin
+  Date: 2015/3/3
+  Time: 9:33
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../inc/taglibs.jsp" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <%@ include file="../inc/meta.jsp" %>
     <meta name="description" content="">
-    <meta name="author" content="ThemeBucket">
-    <link rel="shortcut icon" href="#" type="image/png">
+    <meta name="author" content="">
     <title>编辑房间状态</title>
-    <%@ include file="../inc/new2/css.jsp" %>
+    <%@ include file="../inc/css.jsp" %>
+
+    <style type="text/css">
+        .radio label, .checkbox label {
+            padding-left: 0px;
+            margin-bottom: 0;
+            font-weight: 400;
+            cursor: pointer
+        }
+        div.checkbox{
+            margin-right: 50px;
+        }
+    </style>
 </head>
+<body>
 
-<body class="sticky-header">
+<div id="posts" class="wrapper">
 
-<section>
-    <%@ include file="../inc/new2/menu.jsp" %>
-    <!-- main content start-->
-    <div class="main-content">
-        <%@ include file="../inc/new2/header.jsp" %>
-        <!--body wrapper start-->
-        <section class="wrapper">
-            <!-- page start-->
+    <%@ include file="../inc/nav.jsp" %>
 
-            <div class="row">
-                <div class="col-lg-12">
-                    <section class="panel">
-                        <header class="panel-heading">
-                            编辑房间状态
-                        </header>
-                        <div class="panel-body">
-                            <form class="cmxform form-horizontal adminex-form" id="formId" enctype="multipart/form-data">
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">编辑房间状态</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <form method="post" class="form-horizontal" role="form">
 
-                                <c:forEach items="${list}" var="ridgepole">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" ><span style="color: red;">* </span>
+                                    操作提示：选中房间号前的复选框，则表示已售罄</label>
+                            </div>
 
-                                    <div class="form-group">
-                                        <label class="col-sm-1 control-label">${ridgepole.name}</label>
+                            <c:forEach items="${list}" var="ridgepole">
 
-                                        <div class="col-sm-9 icheck minimal">
-                                            <c:forEach items="${ridgepole.floorList}" var="floor">
-                                                <c:forEach items="${floor.roomList}" var="room">
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label">${ridgepole.name}</label>
+
+                                    <div class="col-sm-9 icheck minimal">
+                                        <c:forEach items="${ridgepole.floorList}" var="floor">
+                                            <c:forEach items="${floor.roomList}" var="room">
 
                                                 <div class="checkbox">
                                                     <c:if test="${room.isSale == 0}"><input type="checkbox" val="${room.id}"></c:if>
@@ -47,32 +68,42 @@
                                                     <label>${room.roomNo}</label>
                                                 </div>
 
-                                                </c:forEach>
                                             </c:forEach>
-                                        </div>
-                                    </div>
-
-                                </c:forEach>
-
-                                <div class="form-group">
-                                    <div class="col-sm-6">
-                                        <button type="button" onclick="$houseRoom.fn.save()" class="btn btn-primary"><i class="fa fa-check"></i> 保存</button>
-                                        <button type="button" onclick="$houseRoom.fn.back()" class="btn btn-primary"><i class="fa fa-reply"></i> 返回</button>
+                                        </c:forEach>
                                     </div>
                                 </div>
 
-                            </form>
-                        </div>
-                    </section>
+                            </c:forEach>
+
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <button type="button" onclick="$houseRoom.fn.save()" class="btn btn-primary"><i class="fa fa-check"></i> 保存</button>
+                                    <button type="button" onclick="$houseRoom.fn.back()" class="btn btn-primary"><i class="fa fa-reply"></i> 返回</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                    <!-- /.panel-body -->
+
                 </div>
+                <!-- /.panel -->
             </div>
+        </div>
 
-        </section>
     </div>
-    <!-- main content end-->
+    <!-- /#page-wrapper -->
 
-</section>
-<%@ include file="../inc/new2/foot.jsp" %>
+</div>
+<!-- /#wrapper -->
+
+
+
+<%@ include file="../inc/footer.jsp" %>
+<!-- 配置文件 -->
+
+</body>
+
 <script>
     $houseRoom = {
         v: {
@@ -100,10 +131,12 @@
                     arr.push(data);
                 });
 
+                $leoman.showLoading();
                 $.post("${contextPath}/admin/house/ridgepole/saveRoom", {data:JSON.stringify(arr)}, function(result){
                     if(result.status == 0){
                         $houseRoom.fn.back();
                     }else{
+                        $leoman.hideLoading();
                         $leoman.alertMsg(result.msg);
                     }
                 });
@@ -117,5 +150,6 @@
         $houseRoom.fn.init();
     })
 </script>
-</body>
+
+
 </html>

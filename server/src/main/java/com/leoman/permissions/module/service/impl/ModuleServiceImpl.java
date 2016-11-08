@@ -102,10 +102,13 @@ public class ModuleServiceImpl extends GenericManagerImpl<Module, ModuleDao> imp
         if(moduleIds != null && !moduleIds.isEmpty()) {
             com.leoman.common.service.Query query = com.leoman.common.service.Query.forClass(Module.class, this);
             query.in("id", moduleIds);
+            query.eq("status", 0);
             moduleList = this.queryAll(query);
         }
         else {
-            moduleList = this.queryAll();
+            com.leoman.common.service.Query query = com.leoman.common.service.Query.forClass(Module.class, this);
+            query.eq("status", 0);
+            moduleList = this.queryAll(query);
         }
 
         List<ModuleVo> allModule = new ArrayList<ModuleVo>();
@@ -167,6 +170,7 @@ public class ModuleServiceImpl extends GenericManagerImpl<Module, ModuleDao> imp
             code = findLastCodeByCheckId(checkId);
         }
         module.setCode(code);
+        module.setStatus(0);
         this.save(module);
     }
 

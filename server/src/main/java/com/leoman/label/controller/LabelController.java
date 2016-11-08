@@ -54,7 +54,7 @@ public class LabelController extends GenericEntityController<HouseDynamic,HouseD
         model.addAttribute("labelList", JSONArray.fromObject(labelList));
         model.addAttribute("image", image);
         model.addAttribute("houseId", houseId);
-        return "label";
+        return "label/label";
     }
 
     /**
