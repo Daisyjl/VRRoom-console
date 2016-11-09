@@ -89,13 +89,7 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
             }
             map.put("floorNos", floorNos);
             BigInteger floorTypeId = (BigInteger) map.get("floorTypeId");
-            /*BigInteger directionImageId = (BigInteger) map.get("directionImageId");
 
-            if(directionImageId != null){
-                Image directionImage = imageDao.findOne(directionImageId.intValue());
-                map.put("directionImage",directionImage);
-            }
-*/
             List<HouseFloorTypeUnit> typeUnitList = houseFloorTypeUnitDao.findByFloorTypeId(floorTypeId.longValue());
             HouseFloorTypeUnit typeUnit = (typeUnitList==null || typeUnitList.size()==0)?null:typeUnitList.get(0);
             map.put("typeUnit", typeUnit);

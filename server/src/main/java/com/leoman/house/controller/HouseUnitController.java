@@ -2,12 +2,15 @@ package com.leoman.house.controller;
 
 import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
+import com.leoman.direction.entity.Direction;
+import com.leoman.direction.service.DirectionService;
 import com.leoman.entity.Configue;
 import com.leoman.house.entity.House;
 import com.leoman.house.entity.HouseUnit;
-import com.leoman.house.service.HouseService;
 import com.leoman.house.service.HouseUnitService;
 import com.leoman.house.service.impl.HouseServiceImpl;
+import com.leoman.utils.ImageUtil;
+import net.sf.json.JSONArray;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,16 +34,19 @@ public class HouseUnitController extends GenericEntityController<House,House,Hou
     @Autowired
     private HouseUnitService houseUnitService;
 
+    @Autowired
+    private DirectionService directionService;
+
     /**
      * 跳转编辑楼盘户型页面
      * @param houseId
      * @param model
      * @return
      */
-    @RequestMapping(value = "/edit/{houseId}")
+    @RequestMapping(value = "/index/{houseId}")
     public String index(@PathVariable("houseId") Long houseId, Model model){
         model.addAttribute("houseId", houseId);
-        return "house/house_edit_unit";
+        return "house/house_unit_list";
     }
 
     /**
@@ -60,17 +66,31 @@ public class HouseUnitController extends GenericEntityController<House,House,Hou
      * @param model
      * @return
      */
-    @RequestMapping(value = "/detail/{id}", method = RequestMethod.POST)
-    @ResponseBody
-    public Result detail(@PathVariable("id") Long id, Model model){
-        HouseUnit unit = houseUnitService.queryByPK(id);
-        if(StringUtils.isNotBlank(unit.getD3ModelRecogUrl())){
-            unit.setD3ModelRecogUrl(Configue.getUploadUrl() + unit.getD3ModelRecogUrl());
+    @RequestMapping(value = "/edit")
+    public String edit(Long id, Model model) throws Exception {
+        if(id != null){
+            HouseUnit unit = houseUnitService.queryByPK(id);
+            if(StringUtils.isNotBlank(unit.getPlaneImage().getPath())){
+                unit.getPlaneImage().setUploadUrl(Configue.getUploadUrl() + unit.getPlaneImage().getPath());
+            }
+            if(StringUtils.isNotBlank(unit.getD3ModelUrl())){
+                unit.setD3ModelUrl(Configue.getUploadUrl() + unit.getD3ModelUrl());
+            }
+            if(StringUtils.isNotBlank(unit.getD3ModelRecogUrl())){
+                unit.setD3ModelRecogUrl(Configue.getUploadUrl() + unit.getD3ModelRecogUrl());
+            }
+            if(StringUtils.isNotBlank(unit.getD3ModelUrl())){
+                unit.setD3ModelUrl(Configue.getUploadUrl() + unit.getD3ModelUrl());
+            }
+
+            ImageUtil.setImagePath(unit.getD3ImageList());
+
+            List<Direction> directionList = directionService.queryAll();
+            model.addAttribute("unit", unit);
+            model.addAttribute("directionList", directionList);
+            model.addAttribute("d3ImageList", JSONArray.fromObject(unit.getD3ImageList()));
         }
-        if(StringUtils.isNotBlank(unit.getD3ModelUrl())){
-            unit.setD3ModelUrl(Configue.getUploadUrl() + unit.getD3ModelUrl());
-        }
-        return new Result().success(unit);
+        return "house/house_unit_edit";
     }
 
     /**
@@ -80,9 +100,9 @@ public class HouseUnitController extends GenericEntityController<House,House,Hou
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public Result saveUnit(HouseUnit houseUnit, MultipartRequest multipartRequest) {
+    public Result saveUnit(HouseUnit houseUnit, MultipartRequest multipartRequest, String d3ImageId) {
 
-        Result result = houseUnitService.saveUnit(houseUnit, multipartRequest);
+        Result result = houseUnitService.saveUnit(houseUnit, multipartRequest, d3ImageId);
         return result;
     }
 

@@ -92,6 +92,9 @@ public class House extends BaseEntity{
     @JoinColumn(name = "region_id")
     private Region region;//区
 
+    @Column(name = "is_door")
+    private Integer isDoor;//是否上门（1-是，0-否）
+
     @Transient
     private Integer roomNum;//房间数
 
@@ -304,5 +307,13 @@ public class House extends BaseEntity{
 
     public void setRegion(Region region) {
         this.region = region;
+    }
+
+    public Integer getIsDoor() {
+        return isDoor;
+    }
+
+    public void setIsDoor(Integer isDoor) {
+        this.isDoor = isDoor;
     }
 }

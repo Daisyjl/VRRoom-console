@@ -185,6 +185,18 @@
                             </div>
 
                             <div class="form-group">
+                                <label class="col-sm-1 control-label" >是否上门：</label>
+                                <%--<div class="col-sm-2">
+                                    <input type="text" name="isDoor" value="${enterprise.username}" class="form-control"/>
+                                </div>--%>
+
+                                <div class="col-sm-1 icheck minimal" name="checkDiv">
+                                    <div class="checkbox"><input type="checkbox" id="isDoor"></div>
+                                    <input type="hidden" value="" name="isDoor">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label class="col-sm-1 control-label" >购房优惠：</label>
                                 <div class="col-sm-2">
                                     <input type="text" name="privil" value="" class="form-control"/>
@@ -325,6 +337,9 @@
                 $("select").eq(1).find("option[value=${house.decorateType}]").attr("selected",true);
                 $("[name=isOpenWait][value=${house.isOpenWait}]").iCheck('check');
                 $("[name=isDealWait][value=${house.isDealWait}]").iCheck('check');
+                if("${house.isDoor}" == 1){
+                    $("#isDoor").parent().addClass("checked");
+                }
 
                 if("${house.openTime}" != ''){
                     var date = new Date(parseInt("${house.openTime}"));
@@ -399,6 +414,10 @@
                 });
 
                 $("[name=privilege]").val(privilArr.join("|"));
+
+                var isDoor = $("#isDoor").parent().hasClass("checked")==true?1:0;
+                $("[name=isDoor]").val(isDoor);
+                console.info(isDoor);
 
                 $leoman.showLoading();
                 $("#formId").ajaxSubmit({

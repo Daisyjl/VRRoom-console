@@ -184,6 +184,17 @@
                             </div>
 
                             <div class="form-group">
+                                <label class="col-sm-1 control-label" >是否上门：</label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="isDoor" value="${enterprise.username}" class="form-control"/>
+                                </div>
+
+                                <div class="col-sm-1 icheck minimal" name="checkDiv">
+                                    <div class="radio"><input type="radio" name="unitRadio"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label class="col-sm-1 control-label" >购房优惠：</label>
                                 <div class="col-sm-2">
                                     <input type="text" name="privil" value="" class="form-control"/>
@@ -486,11 +497,12 @@
         var pt = e.point;
         geoc.getLocation(pt, function(rs){
             var addComp = rs.addressComponents;
-            address =addComp.province  + addComp.city  + addComp.district  + addComp.street  + addComp.streetNumber
+            address = addComp.province  + addComp.city  + addComp.district  + addComp.street  + addComp.streetNumber
                     + (rs.surroundingPois.length > 0 ? rs.surroundingPois[0].title : '');
             $("[name=address]").val(address);
             $("#longitude").val(rs.point.lng);
             $("#latitude").val(rs.point.lat);
+            console.info(addComp.province  + addComp.city  + addComp.district);
 
         });
     });

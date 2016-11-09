@@ -260,6 +260,10 @@
             },
             openModal : function (id){
                 if(id != '' && id != undefined){
+                    id = "?id="+id;
+                }
+                window.location.href = "admin/house/unit/edit"+id;
+                /*if(id != '' && id != undefined){
                     $.post("${contextPath}/admin/house/unit/detail/"+id, function(result){
                         if(result.status == 0){
                             var obj = result.data.houseUnit;
@@ -297,7 +301,7 @@
                     $("#unitForm").find("img").attr("src","static/images/add.jpg");
                     $("#unitForm").find("[name=houseId]").val("${houseId}");
                     $("#myModal").modal("show");
-                }
+                }*/
 
             },
             //保存弹出的新增户型

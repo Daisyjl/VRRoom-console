@@ -15,6 +15,6 @@ public interface HouseUnitService extends GenericManager<HouseUnit> {
 
     public List<HouseUnit> findByHouseId(Long houseId);
 
-    public Result saveUnit(HouseUnit houseUnit, MultipartRequest multipartRequest);
+    public Result saveUnit(HouseUnit houseUnit, MultipartRequest multipartRequest, String d3ImageId);
 
 }

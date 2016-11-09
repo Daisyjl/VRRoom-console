@@ -213,7 +213,7 @@
             },
             //编辑户型信息
             editUnit : function (id){
-                location.href = "${contextPath}/admin/house/unit/edit/"+id;
+                location.href = "${contextPath}/admin/house/unit/index/"+id;
             },
             //编辑楼层信息
             editFloor : function (id){

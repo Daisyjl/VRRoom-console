@@ -3,7 +3,9 @@ package com.leoman.house.service.impl;
 import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
 import com.leoman.house.dao.HouseUnitDao;
+import com.leoman.house.dao.HouseUnitImageDao;
 import com.leoman.house.entity.HouseUnit;
+import com.leoman.house.entity.HouseUnitImage;
 import com.leoman.house.service.HouseUnitService;
 import com.leoman.image.entity.Image;
 import com.leoman.image.service.UploadImageService;
@@ -11,6 +13,7 @@ import com.leoman.utils.ClassUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
@@ -25,6 +28,9 @@ public class HouseUnitServiceImpl extends GenericManagerImpl<HouseUnit,HouseUnit
 
     @Autowired
     protected HouseUnitDao houseUnitDao;
+
+    @Autowired
+    protected HouseUnitImageDao houseUnitImageDao;
 
     @Autowired
     protected UploadImageService uploadImageService;
@@ -42,7 +48,7 @@ public class HouseUnitServiceImpl extends GenericManagerImpl<HouseUnit,HouseUnit
      */
     @Override
     @Transactional
-    public Result saveUnit(HouseUnit houseUnit, MultipartRequest multipartRequest){
+    public Result saveUnit(HouseUnit houseUnit, MultipartRequest multipartRequest, String d3ImageId){
 
         MultipartFile planeFile = multipartRequest.getFile("planeFile");
         if (null != planeFile) {
@@ -76,6 +82,26 @@ public class HouseUnitServiceImpl extends GenericManagerImpl<HouseUnit,HouseUnit
             HouseUnit unit = houseUnitDao.findOne(unitId);
             ClassUtil.copyProperties(unit, houseUnit);
             houseUnitDao.save(unit);
+
+            //删除已存在的多张3d户型图
+            List<HouseUnitImage> houseUnitImageList = houseUnitImageDao.findByUnitId(unitId);
+            for (HouseUnitImage hui:houseUnitImageList) {
+                if(hui != null){
+                    houseUnitImageDao.delete(hui);
+                }
+            }
+
+        }
+
+        //新增多张3d户型图
+        String [] d3ImageIdArr = d3ImageId.split("\\,");
+        for (String id:d3ImageIdArr) {
+            if(!StringUtils.isEmpty(id)){
+                HouseUnitImage hui = new HouseUnitImage();
+                hui.setUnitId(unitId);
+                hui.setD3Image(new Image(Integer.valueOf(id)));
+                houseUnitImageDao.save(hui);
+            }
         }
 
         return new Result().success();

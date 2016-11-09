@@ -65,12 +65,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-1 control-label" >选择方位图：</label>
+                                <label class="col-sm-1 control-label" >选择方位：</label>
                                 <div class="col-sm-2">
-                                    <%--<input type="hidden" id="directionImageId" value="${ridgepole.directionImage.id}">
-                                    <a href="javascript:void(0);" onclick="$ridgepoleFloor.fn.AddTempImg(this)">
-                                        <img src="static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
-                                    </a>--%>
                                     <select class="form-control input-sm" id="directionId">
                                         <c:forEach items="${directionList}" var="direction">
                                             <option value="${direction.id}">${direction.name}</option>
@@ -138,14 +134,6 @@
             <img name="tranImg" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
         </a>
     </div>
-
-    <%--<label class="col-sm-1 control-label">选择方位图：</label>
-    <div class="col-sm-2">
-        <input type="hidden" name="directionImageId" value="">
-        <a href="javascript:void(0);" onclick="$ridgepoleFloor.fn.AddTempImg(this)">
-            <img src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
-        </a>
-    </div>--%>
 
     <div class="col-sm-3">
         <input type="hidden" name="selectedFloorValue" value="">

@@ -346,14 +346,26 @@
     </dependencies>
 
     <profiles>
+
         <profile>
-            <id>dev-test</id>
+            <id>dev-localhost</id>
             <properties>
                 <pro.jdbc.url>jdbc:mysql://112.74.197.62:3306/leoman_vrroom_test?characterEncoding=UTF-8</pro.jdbc.url>
                 <pro.jdbc.username>root</pro.jdbc.username>
                 <pro.jdbc.password>root</pro.jdbc.password>
                 <pro.upload.url>http://localhost:8080/files/upload/</pro.upload.url>
                 <pro.upload.path>D:/devsoftware/apache-tomcat-7.0.67/webapps/files/upload/</pro.upload.path>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>dev-test</id>
+            <properties>
+                <pro.jdbc.url>jdbc:mysql://112.74.197.62:3306/leoman_vrroom_test?characterEncoding=UTF-8</pro.jdbc.url>
+                <pro.jdbc.username>root</pro.jdbc.username>
+                <pro.jdbc.password>root</pro.jdbc.password>
+                <pro.upload.url>http://112.74.197.62:8083/files/upload/</pro.upload.url>
+                <pro.upload.path>/var/local/tomcat/tomcat8083/webapps/files/upload/</pro.upload.path>
             </properties>
         </profile>
 

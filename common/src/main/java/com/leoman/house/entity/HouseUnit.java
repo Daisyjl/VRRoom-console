@@ -1,6 +1,9 @@
 package com.leoman.house.entity;
 
+import com.alibaba.druid.util.StringUtils;
+import com.leoman.direction.entity.Direction;
 import com.leoman.entity.BaseEntity;
+import com.leoman.entity.Configue;
 import com.leoman.image.entity.Image;
 
 import javax.persistence.*;
@@ -32,6 +35,10 @@ public class HouseUnit extends BaseEntity {
 
     @Column(name = "full_view")
     private String fullView;//360全景
+
+    @ManyToOne
+    @JoinColumn(name = "direction_id")
+    private Direction direction;//平面图
 
     @Column(name = "d3_model_recog_url")
     private String d3ModelRecogUrl;//3D模型识别图
@@ -88,6 +95,9 @@ public class HouseUnit extends BaseEntity {
     }
 
     public String getD3ModelRecogUrl() {
+        if(!StringUtils.isEmpty(this.d3ModelRecogUrl)){
+            return Configue.getUploadUrl() + d3ModelRecogUrl;
+        }
         return d3ModelRecogUrl;
     }
 
@@ -96,6 +106,9 @@ public class HouseUnit extends BaseEntity {
     }
 
     public String getD3ModelUrl() {
+        if(!StringUtils.isEmpty(this.d3ModelUrl)){
+            return Configue.getUploadUrl() + d3ModelUrl;
+        }
         return d3ModelUrl;
     }
 
@@ -133,6 +146,13 @@ public class HouseUnit extends BaseEntity {
         super.setId(id);
     }
 
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
 }
 
 

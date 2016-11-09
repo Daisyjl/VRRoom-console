@@ -143,6 +143,10 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
         if (null != coverFile) {
             Image image = uploadImageService.uploadImage(coverFile);
             house.setImage(image);
+            //如果是新增，则默认把封面图作为沙盘图
+            if(houseId == null){
+                house.setBigImage(image);
+            }
         }
 
         if(house.getImage() == null){
