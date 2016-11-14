@@ -90,7 +90,7 @@ public class FileController extends CommonController {
         Image image = new Image();
 
         try {
-            this.uploadImage(multipartRequest);
+            image = this.uploadImage(multipartRequest);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -169,9 +169,7 @@ public class FileController extends CommonController {
         Image image = new Image();
 
         try {
-            this.uploadImage(multipartRequest);
-
-
+            image = this.uploadImage(multipartRequest);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -180,6 +178,11 @@ public class FileController extends CommonController {
         return image;
     }
 
+    /**
+     * 上传图片
+     * @param multipartRequest
+     * @return
+     */
     private Image uploadImage(MultipartRequest multipartRequest){
         Image image = new Image();
         try {
@@ -189,13 +192,6 @@ public class FileController extends CommonController {
             // 验证图片格式
             String originalFileName = file.getOriginalFilename().toLowerCase();
             String fileType = originalFileName.substring(originalFileName.lastIndexOf("."));
-
-//            List<String> list = new ArrayList<String>();
-//            list.add(".jpg");
-//            list.add(".gif");
-//            list.add(".jpeg");
-//            list.add(".png");
-//            list.add(".bmp");
 
             if (!Arrays.asList(allowedArr).contains(fileType.toLowerCase())) {
                 return image;
