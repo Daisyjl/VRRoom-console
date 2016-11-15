@@ -86,7 +86,7 @@ public class House extends BaseEntity{
     private Double lat;//纬度
 
     @Column(name = "status")
-    private Integer status;//0-新增，1-删除
+    private Integer status;//数据状态：0-审核中，1-删除，2-审核通过，3-上架，4-下架
 
     @ManyToOne
     @JoinColumn(name = "region_id")

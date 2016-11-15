@@ -20,6 +20,10 @@ public enum ErrorType {
     ERROR_CODE_00013("该横切面信息不能为空", 13),
     ERROR_CODE_00014("上传文件格式错误", 14),
     ERROR_CODE_00015("此方位已存在", 15),
+    ERROR_CODE_00016("此面积范围已存在", 16),
+    ERROR_CODE_00017("此特色已存在", 17),
+    ERROR_CODE_00018("此居室已存在", 18),
+    ERROR_CODE_00019("此装修类型已存在", 19),
 
     ErrorType;
 

@@ -102,12 +102,12 @@ public class ModuleServiceImpl extends GenericManagerImpl<Module, ModuleDao> imp
         if(moduleIds != null && !moduleIds.isEmpty()) {
             com.leoman.common.service.Query query = com.leoman.common.service.Query.forClass(Module.class, this);
             query.in("id", moduleIds);
-            query.eq("status", 0);
+//            query.eq("status", 0);
             moduleList = this.queryAll(query);
         }
         else {
             com.leoman.common.service.Query query = com.leoman.common.service.Query.forClass(Module.class, this);
-            query.eq("status", 0);
+//            query.eq("status", 0);
             moduleList = this.queryAll(query);
         }
 

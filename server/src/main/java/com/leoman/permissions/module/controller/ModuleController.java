@@ -34,7 +34,7 @@ public class ModuleController extends GenericEntityController<Module, Module, Mo
      */
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String index() {
-        return "/permissions/module/list_copy";
+        return "/permissions/module/list";
     }
 
     /**
@@ -82,7 +82,7 @@ public class ModuleController extends GenericEntityController<Module, Module, Mo
             model.addAttribute("fModuleName",fModuleName);
         }
         model.addAttribute("pid", checkId);
-        return "/permissions/module/add_copy";
+        return "/permissions/module/add";
     }
 
     /**
