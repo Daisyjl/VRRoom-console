@@ -1,5 +1,7 @@
 package com.leoman.house.service.impl;
 
+import com.leoman.area.region.dao.RegionDao;
+import com.leoman.area.region.entity.Region;
 import com.leoman.common.core.ErrorType;
 import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
@@ -11,10 +13,10 @@ import com.leoman.image.entity.Image;
 import com.leoman.image.service.UploadImageService;
 import com.leoman.label.dao.LabelDao;
 import com.leoman.label.entity.Label;
-import com.leoman.utils.ClassUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
@@ -52,7 +54,14 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
     private UploadImageService uploadImageService;
 
     @Autowired
+    private HouseImageDao houseImageDao;
+
+    @Autowired
     private LabelDao labelDao;
+
+    @Autowired
+    private RegionDao regionDao;
+
 
     private String [] allowedArr = {".jpg", ".jpeg", ".png", ".gif", "bmp"};
 
@@ -116,9 +125,14 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
      */
     @Override
     @Transactional
-    public Result saveHouse(House house, MultipartRequest multipartRequest){
+    public Result saveHouse(House house, String imageIds, String district){
 
         Long houseId = house.getId();
+
+        if(!StringUtils.isEmpty(district)){
+            Region reg = regionDao.findByName(district);
+            house.setRegion(reg);
+        }
 
         //新增
         if(houseId == null){
@@ -126,6 +140,7 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
             if(h != null){
                 return new Result().failure(ErrorType.ERROR_CODE_00010);//楼盘名称已存在
             }
+            house.setStatus(0);
         }
         //修改
         else{
@@ -134,28 +149,36 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
                 return new Result().failure(ErrorType.ERROR_CODE_00010);//楼盘名称已存在
             }
 
-            House orgHouse = houseDao.findOne(houseId);
-            house.setImage(orgHouse.getImage());
-            house.setStatus(orgHouse.getStatus());
+            //删除楼盘的封面图
+            List<HouseImage> imageList = houseImageDao.findListByHouseId(houseId);
+            if(imageList != null){
+                for (HouseImage hi:imageList) {
+                    if(hi != null){
+                        houseImageDao.delete(hi);
+                    }
+                }
+            }
+
         }
 
-        MultipartFile coverFile = multipartRequest.getFile("coverFile");
-        if (null != coverFile) {
-            Image image = uploadImageService.uploadImage(coverFile);
-            house.setImage(image);
+        //保存
+        houseDao.save(house);
+
+        //新增封面图列表
+        if(!StringUtils.isEmpty(imageIds)){
+            String [] imageIdArr = imageIds.split("\\,");
+            for (int i =0; i<imageIdArr.length; i++) {
+                HouseImage houseImage = new HouseImage();
+                houseImage.setHouseId(house.getId());
+                houseImage.setImage(new Image(Integer.valueOf(imageIdArr[i])));
+                houseImage.setSeq((long)i);
+            }
+
             //如果是新增，则默认把封面图作为沙盘图
-            if(houseId == null){
-                house.setBigImage(image);
+            if(imageIdArr.length > 0){
+                house.setBigImage(new Image(Integer.valueOf(imageIdArr[0])));
             }
         }
-
-        if(house.getImage() == null){
-            return new Result().failure(ErrorType.ERROR_CODE_00012);//楼盘封面图不能为空
-        }
-
-        //基本信息
-        house.setStatus(0);
-        houseDao.save(house);
 
         return new Result().success();
     }

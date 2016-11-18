@@ -37,12 +37,12 @@
                     <div class="panel-body">
                         <form id="formId" method="post" class="form-horizontal" role="form">
 
-                            <input id="id" name="id" type="hidden" value="${direction.id}">
+                            <input id="id" name="id" type="hidden" value="${areaRange.id}">
 
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >面积范围从：</label>
                                 <div class="col-sm-2">
-                                    <input type="text" name="areaFrom" value="${direction.name}" class="form-control"
+                                    <input type="text" name="areaFrom" value="${areaRange.areaFrom}" class="form-control"
                                            data-rule="price"  data-rule-price="[/^\d{0,8}\.{0,1}(\d{1,2})?$/, '请输入正确的面积大小']" maxlength="30"/>
                                 </div>
                                 <label class="col-sm-2 control-label" style="text-align: left;">(提示：不填写则表示以下)</label>
@@ -51,7 +51,7 @@
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >面积范围至：</label>
                                 <div class="col-sm-2">
-                                    <input type="text" name="areaTo" value="${direction.name}" class="form-control"
+                                    <input type="text" name="areaTo" value="${areaRange.areaTo}" class="form-control"
                                            data-rule="price"  data-rule-price="[/^\d{0,8}\.{0,1}(\d{1,2})?$/, '请输入正确的面积大小']" maxlength="30"/>
                                 </div>
                                 <label class="col-sm-2 control-label" style="text-align: left;">(提示：不填写则表示以上)</label>
@@ -60,8 +60,8 @@
                             <div class="form-group">
                                 <label class="col-sm-1 control-label"></label>
                                 <div class="col-sm-6">
-                                    <button type="button" onclick="$direction.fn.save()" class="btn btn-primary">保存</button>
-                                    <button type="button" class="btn btn-primary" onclick="$direction.fn.back()">返回</button>
+                                    <button type="button" onclick="$areaRange.fn.save()" class="btn btn-primary">保存</button>
+                                    <button type="button" class="btn btn-primary" onclick="$areaRange.fn.back()">返回</button>
                                 </div>
                             </div>
 
@@ -85,7 +85,7 @@
 
 <%@ include file="../inc/footer.jsp" %>
 <script>
-    $direction = {
+    $areaRange = {
         v: {
             list: [],
             chart: null,
@@ -105,11 +105,11 @@
 
                 $leoman.showLoading();
                 $("#formId").ajaxSubmit({
-                    url : "${contextPath}/admin/direction/save",
+                    url : "${contextPath}/admin/areaRange/save",
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            $direction.fn.back();
+                            $areaRange.fn.back();
                         }
                         else {
                             $leoman.hideLoading();
@@ -119,12 +119,12 @@
                 });
             },
             back : function(){
-                window.location.href = "${contextPath}/admin/direction/index";
+                window.location.href = "${contextPath}/admin/areaRange/index";
             }
         }
     }
     $(function () {
-        $direction.fn.init();
+        $areaRange.fn.init();
     })
 </script>
 

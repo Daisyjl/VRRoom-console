@@ -67,7 +67,7 @@
 
 <script type="text/javascript">
 
-    $health.ajax("gen/weather",null,function(result){
+    $leoman.ajax("gen/weather",null,function(result){
         var data = result["HeWeather data service 3.0"][0];
         $("#weather").show();
         $("#basic_city").text(data.basic.city);

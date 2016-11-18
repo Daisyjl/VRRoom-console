@@ -32,12 +32,12 @@ public class AreaRangeServiceImpl extends GenericManagerImpl<AreaRange,AreaRange
 
         String str;
         //如果起始范围为空
-        if(areaRange.getAreaFrom() == null || StringUtils.isEmpty(areaRange.getAreaFrom())){
+        if(areaRange.getAreaFrom() == null || StringUtils.isEmpty(areaRange.getAreaFrom()) || areaRange.getAreaFrom().equals(0)){
             str = areaRange.getAreaTo() + "㎡以下";
         }else if(areaRange.getAreaTo() == null || StringUtils.isEmpty(areaRange.getAreaTo())){
             str = areaRange.getAreaFrom() + "㎡以上";
         }else{
-            str = areaRange.getAreaFrom().floatValue() + areaRange.getAreaTo().floatValue() + "㎡";
+            str = areaRange.getAreaFrom().floatValue() +"-"+ areaRange.getAreaTo().floatValue() + "㎡";
         }
         areaRange.setName(str);
 

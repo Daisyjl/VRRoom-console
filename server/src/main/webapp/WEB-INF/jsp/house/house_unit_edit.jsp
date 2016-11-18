@@ -55,14 +55,12 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-1 control-label" ><span style="color: red;">* </span>户型类型：</label>
-                                <div class="col-sm-6">
-                                    <select class="form-control input-sm" name="typeName" data-rule="required">
-                                        <option value="">---请选择---</option>
-                                        <option value="一室一厅一卫">一室一厅一卫</option>
-                                        <option value="两室一厅一卫">两室一厅一卫</option>
-                                        <option value="三室两厅一卫">三室两厅一卫</option>
-                                        <option value="三室两厅两卫">三室两厅两卫</option>
+                                <label class="col-sm-1 control-label" ><span style="color: red;">* </span>居室：</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control input-sm" name="bedroom.id" data-rule="required">
+                                        <c:forEach items="${bedroomList}" var="bedroom">
+                                            <option value="${bedroom.id}">${bedroom.name}</option>
+                                        </c:forEach>
                                     </select>
                                 </div>
                             </div>
@@ -78,7 +76,7 @@
 
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >朝向：</label>
-                                <div class="col-sm-6">
+                                <div class="col-sm-2">
                                     <select class="form-control input-sm" id="directionSelect" name="direction.id">
                                         <option value="">---请选择---</option>
                                         <c:forEach items="${directionList}" var="direction">
@@ -121,16 +119,6 @@
                                 </div>
 
                             </div>
-
-                            <%--<div class="form-group">
-                                <label class="col-sm-1 control-label">3d户型图上传：</label>
-                                <div class="col-sm-5">
-                                    <input type="file" name="d3File" id="d3File" style="display:none;"/>
-                                    <a href="javascript:void(0);" onclick="$('#d3File').click();">
-                                        <img id="d3Img" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
-                                    </a>
-                                </div>
-                            </div>--%>
 
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >360全景：</label>
@@ -211,7 +199,6 @@
 
 <input type="hidden" id="curImageId" value="">
 <div class="col-sm-2" style="display: none;" id="imageTemplate">
-    <%--<input type="file" name="file" style="display:none;"/>--%>
     <input type="hidden" name="d3ImageId" value="">
     <a href="javascript:void(0);">
         <img id="" name="path" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 10px;" border="1"/>
@@ -245,9 +232,6 @@
                 }
 
                 //初始化值
-                if("${unit.typeName}" != ''){
-                    $("[name=typeName] option[value="+"${unit.typeName}"+"]").attr("selected", true);
-                }
 
                 if("${unit.direction}" != ''){
                     $("#directionSelect option[value="+"${unit.direction.id}"+"]").attr("selected", true);

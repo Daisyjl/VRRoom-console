@@ -1,5 +1,7 @@
 package com.leoman.house.controller;
 
+import com.leoman.bedroom.entity.Bedroom;
+import com.leoman.bedroom.service.BedroomService;
 import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.direction.entity.Direction;
@@ -36,6 +38,9 @@ public class HouseUnitController extends GenericEntityController<House,House,Hou
 
     @Autowired
     private DirectionService directionService;
+
+    @Autowired
+    private BedroomService bedroomService;
 
     /**
      * 跳转编辑楼盘户型页面
@@ -90,6 +95,8 @@ public class HouseUnitController extends GenericEntityController<House,House,Hou
             model.addAttribute("directionList", directionList);
             model.addAttribute("d3ImageList", JSONArray.fromObject(unit.getD3ImageList()));
         }
+        List<Bedroom> bedroomList = bedroomService.queryAll();
+        model.addAttribute("bedroomList", bedroomList);
         return "house/house_unit_edit";
     }
 

@@ -14,4 +14,7 @@ public interface RegionDao extends IBaseJpaRepository<Region> {
 
     @Query("select a from Region a where a.city.id = ?1")
     public List<Region> findListByCityId(Long cityId);
+
+    @Query("select a from Region a where a.name = ?1")
+    public Region findByName(String name);
 }

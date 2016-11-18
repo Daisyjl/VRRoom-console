@@ -17,6 +17,15 @@
     <%@ include file="../inc/css.jsp" %>
     <style type="text/css">
         #allmap {width: 600px;height: 400px;overflow: hidden;margin:0;font-family:"微软雅黑";}
+        .radio label, .checkbox label {
+            padding-left: 0px;
+            margin-bottom: 0;
+            font-weight: 400;
+            cursor: pointer
+        }
+        div.checkbox{
+            margin-right: 50px;
+        }
     </style>
 </head>
 <body>
@@ -40,16 +49,31 @@
                         <form id="formId" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
 
                             <input type="hidden" name="id" value="${house.id}">
+                            <input type="hidden" name="status" value="${house.status}">
                             <input type="hidden" name="openTime" value="">
                             <input type="hidden" name="dealTime" value="">
                             <input type="hidden" name="privilege" value="">
 
-                            <div class="form-group">
+                            <%--<div class="form-group">
                                 <label class="col-sm-1 control-label"><span style="color: red;">* </span>楼盘封面：</label>
                                 <div class="col-sm-5">
                                     <input type="file" name="coverFile" id="coverFile" style="display:none;"/>
                                     <a href="javascript:void(0);" onclick="$('#coverFile').click();">
                                         <img id="coverImg" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
+                                    </a>
+                                </div>
+                            </div>--%>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label"><span style="color: red;">* </span>楼盘封面：</label>
+                                <div id="imageDiv">
+
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <input type="file" style="display:none;"/>
+                                    <a href="javascript:void(0);" onclick="$house.fn.AddTempImg(this)">
+                                        <img id="addImg" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
                                     </a>
                                 </div>
                             </div>
@@ -74,17 +98,33 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-1 control-label">楼盘标签：</label>
-                                <div class="col-sm-3">
+                                <label class="col-sm-1 control-label">楼盘特色：</label>
+                                <%--<div class="col-sm-3">
                                     <input id="tags_1" type="text" name="label" class="tags" value="${house.label}" />
                                 </div>
-                                <label class="col-sm-2 control-label" style="text-align: left">(每输入一个标签，按回车键即可)</label>
+                                <label class="col-sm-2 control-label" style="text-align: left">(每输入一个标签，按回车键即可)</label>--%>
+
+                                <div class="col-sm-2">
+                                    <button type="button" onclick="$house.fn.openFeature()" class="btn btn-primary">选择特色</button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label"></label>
+                                <%--<div class="col-sm-3">
+                                    <input id="tags_1" type="text" name="label" class="tags" value="${house.label}" />
+                                </div>
+                                <label class="col-sm-2 control-label" style="text-align: left">(每输入一个标签，按回车键即可)</label>--%>
+                                <div class="col-sm-6" id="featureDiv">
+
+                                </div>
+
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >开盘时间：</label>
 
-                                <div class="col-sm-2 icheck minimal">
+                                <%--<div class="col-sm-2 icheck minimal">
                                     <div class="radio" val="0">
                                         <input type="radio" name="isOpenWait" value="0">
                                         <label>待定</label>
@@ -94,7 +134,7 @@
                                         <input type="radio" name="isOpenWait" value="1">
                                         <label>指定开盘时间</label>
                                     </div>
-                                </div>
+                                </div>--%>
 
                                 <div class="col-sm-2">
                                     <input type="text" id="openTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="">
@@ -111,7 +151,7 @@
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >交房时间：</label>
 
-                                <div class="col-sm-2 icheck minimal">
+                                <%--<div class="col-sm-2 icheck minimal">
                                     <div class="radio" val="0">
                                         <input type="radio" name="isDealWait" value="0">
                                         <label>待定</label>
@@ -121,7 +161,7 @@
                                         <input type="radio" name="isDealWait" value="1">
                                         <label>指定交房时间</label>
                                     </div>
-                                </div>
+                                </div>--%>
 
                                 <div class="col-sm-2">
                                     <input type="text" id="dealTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="">
@@ -141,11 +181,9 @@
                                 <label class="col-sm-1 control-label" >装修类型：</label>
                                 <div class="col-sm-2">
                                     <select class="form-control input-sm" name="decorateType">
-                                        <option value="">---请选择---</option>
-                                        <option value="1">毛胚</option>
-                                        <option value="2">简装</option>
-                                        <option value="3">精装</option>
-                                        <option value="4">豪华装修</option>
+                                        <c:forEach items="${decorateTypeList}" var="decorateType">
+                                        <option value="${decorateType.id}">${decorateType.name}</option>
+                                        </c:forEach>
                                     </select>
                                 </div>
                             </div>
@@ -186,9 +224,6 @@
 
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >是否上门：</label>
-                                <%--<div class="col-sm-2">
-                                    <input type="text" name="isDoor" value="${enterprise.username}" class="form-control"/>
-                                </div>--%>
 
                                 <div class="col-sm-1 icheck minimal" name="checkDiv">
                                     <div class="checkbox"><input type="checkbox" id="isDoor"></div>
@@ -239,9 +274,10 @@
                                 <label class="col-sm-1 control-label" ></label>
                                 <label class="col-sm-1 control-label" >楼盘地址：</label>
                                 <div class="col-sm-3">
-                                    <input type="text" name="address" value="${house.address}" class="form-control" required readonly/>
+                                    <input type="text" name="address" value="${house.address}" class="form-control" data-rule="required" readonly/>
                                     <input type="hidden" id="longitude" name="lng" value="${house.lng}">
                                     <input type="hidden" id="latitude" name="lat" value="${house.lat}">
+                                    <input type="hidden" id="district" name="district" value="${house.region.name}" data-rule="required">
                                 </div>
                                 <label class="col-sm-1 control-label" >详细地址：</label>
                                 <div class="col-sm-3">
@@ -283,8 +319,60 @@
     </div>
 </div>
 
-</body>
+<form id="tempImageForm" method="post" action="${contextPath}/common/file/addMultiTempImage" enctype="multipart/form-data" class="form-horizontal" role="form">
+    <input type="file" multiple name="tempImage" id="tempImage" data-rule="required" style="display:none;" onchange="$house.fn.saveTempImage()"/>
+</form>
 
+<!-- 图片模板 -->
+<input type="hidden" id="curImageId" value="">
+<div class="col-sm-2" style="display: none;" id="imageTemplate">
+    <%--<input type="file" name="file" style="display:none;"/>--%>
+    <input type="hidden" name="imageIds" value="">
+    <a href="javascript:void(0);">
+        <img id="" name="path" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 10px;" border="1"/>
+    </a>
+    <a href="javascript:void(0);" style="z-index: 10; position: relative; bottom: 70px; left: -23px;" class="axx" onclick="$house.fn.deleteImage(this)">
+        <img src="${contextPath}/static/images/xx.png" style="height: 16px; width: 16px; display: inline;" border="1"/>
+    </a>
+</div>
+
+<!-- 选择特色弹出框 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="pwdModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">选择特色</h4>
+            </div>
+            <div class="modal-body">
+                <form class="cmxform form-horizontal adminex-form" enctype="multipart/form-data">
+
+                    <div class="form-group">
+                        <div class="col-sm-9 icheck minimal" id="selectAllChk">
+                            <div class="checkbox"><input type="checkbox"><label>全选</label></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-9 icheck minimal" id="allFeatureDiv">
+
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" onclick="$ridgepoleFloor.fn.selectFloor()" class="btn btn-primary">确定</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+</body>
 <%@ include file="../inc/footer.jsp" %>
 <script src="http://api.map.baidu.com/api?v=2.0&ak=pcExWaLfoopv7vZ5hO1B8ej8"></script>
 <script>
@@ -294,13 +382,12 @@
             chart: null,
             dTable: null,
             um : null,
+            tempImageId:null
         },
         fn: {
             init: function () {
 
-                $("#coverFile").uploadPreview({
-                    Img: "coverImg",//楼盘封面图
-                });
+                $house.v.tempImageId = 0;
 
                 $('.form_datetime').datetimepicker({
                     language: 'zh-CN',
@@ -331,36 +418,138 @@
                     }
                 });
 
+                $house.fn.initFeatureList();
+
                 //初始化值
-                $("#coverImg").attr("src","${house.image.uploadUrl}");
-                $("select").eq(0).find("option[value=${house.enterprise.id}]").attr("selected",true);
-                $("select").eq(1).find("option[value=${house.decorateType}]").attr("selected",true);
-                $("[name=isOpenWait][value=${house.isOpenWait}]").iCheck('check');
-                $("[name=isDealWait][value=${house.isDealWait}]").iCheck('check');
-                if("${house.isDoor}" == 1){
-                    $("#isDoor").parent().addClass("checked");
-                }
+                if("${house.id}" != ''){
+                    $("select").eq(0).find("option[value=${house.enterprise.id}]").attr("selected",true);
+                    $("select").eq(1).find("option[value=${house.decorateTypeId}]").attr("selected",true);
+                    <%--$("[name=isOpenWait][value=${house.isOpenWait}]").iCheck('check');--%>
+                    <%--$("[name=isDealWait][value=${house.isDealWait}]").iCheck('check');--%>
 
-                if("${house.openTime}" != ''){
-                    var date = new Date(parseInt("${house.openTime}"));
-                    $("#openTime").val(date.format("yyyy-MM-dd"));
-                }
-
-                if("${house.dealTime}" != ''){
-                    var date = new Date(parseInt("${house.dealTime}"));
-                    $("#dealTime").val(date.format("yyyy-MM-dd"));
-                }
-
-                if("${house.privilege}" != ''){
-                    var arr = "${house.privilege}".split("|");
-                    if(arr.length > 0){
-                        $("#privilegeDiv").prev().find("input").val(arr[0]);
+                    if("${house.isDoor}" == 1){
+                        $("#isDoor").parent().addClass("checked");
                     }
-                    for(var i=1; i<arr.length; i++){
-                        $house.fn.addRow(arr[i]);
+
+                    if("${house.openTime}" != ''){
+                        var date = new Date(parseInt("${house.openTime}"));
+                        $("#openTime").val(date.format("yyyy-MM-dd"));
                     }
+
+                    if("${house.dealTime}" != ''){
+                        var date = new Date(parseInt("${house.dealTime}"));
+                        $("#dealTime").val(date.format("yyyy-MM-dd"));
+                    }
+
+                    if("${house.privilege}" != ''){
+                        var arr = "${house.privilege}".split("|");
+                        if(arr.length > 0){
+                            $("#privilegeDiv").prev().find("input").val(arr[0]);
+                        }
+                        for(var i=1; i<arr.length; i++){
+                            $house.fn.addRow(arr[i]);
+                        }
+                    }
+
+                    $house.fn.initImageList();//初始化所有图片
+                    $house.fn.initSelectedFeatureList();
                 }
             },
+            //初始化弹出框里的所有特色列表
+            initFeatureList:function(){
+                $("#allFeatureDiv").empty();
+                var list = ${featureList};
+                for(var i=0; i < list.length; i++){
+                    $("#allFeatureDiv").append('<div class="checkbox" val='+list[i].id+'><input type="checkbox"><label>'+list[i].name+'</label></div>');
+                }
+
+                $('.minimal input').iCheck({
+                    checkboxClass: 'icheckbox_minimal',
+                    radioClass: 'iradio_minimal',
+                    increaseArea: '20%' // optional
+                });
+            },
+            //初始化封面图列表
+            initImageList:function(){
+                $("#imageDiv").empty();
+                $.post("${contextPath}/admin/house/imageList",{'houseId':"${house.id}"},function(result){
+                    if(result.status == 0){
+                        var list = result.data.list;
+                        for(var i=0; i < list.length; i++){
+                            $house.fn.addImgTemplate(list[i].uploadUrl, list[i].id);
+                        }
+                    }
+                });
+            },
+            //初始化该楼盘的特色
+            initSelectedFeatureList:function(){
+                $("#featureDiv").empty();
+                var list = ${selectedFeatureList};
+                for(var i=0; i < list.length; i++){
+                    $("#featureDiv").append('<span><input type="hidden" name="feature" value="'+list[i].id+'">' +
+                            '<button type="button" class="btn btn-info">'+list[i].name+' <i class="fa fa-close" onclick="$house.fn.removeFeature(this)"></i></button> </span>');
+                }
+            },
+            //打开选择楼盘特色
+            openFeature : function(){
+                var ids = [];
+                $("[name=feature]").each(function(){
+                    ids.push($(this).val());
+                });
+
+                $("#allFeatureDiv .icheckbox_minimal").each(function(){
+                    if(ids.indexOf($(this).parent().attr("val")) > -1){
+                        $(this).addClass("checked");
+                    }else{
+                        $(this).removeClass("checked");
+                    }
+                });
+                $("#myModal").modal("show");
+            },
+            //删除标签
+            removeFeature:function(self){
+                $(self).parents("span").remove();
+            },
+            //新增一个图片模板
+            addImgTemplate : function(path, id){
+                var template = $("#imageTemplate").clone().removeAttr("id");
+                if(path != "" && path != undefined){
+                    template.find("img").eq(0).attr("src",path);
+                }
+                template.find("img").eq(0).attr("id","albumImg_"+$house.v.tempImageId);
+                template.find("input[name=imageIds]").val(id);
+                template.show();
+                $("#imageDiv").append(template);
+
+                $house.v.tempImageId++;
+            },
+            //删除图片
+            deleteImage: function (self) {
+                $(self).parents(".col-sm-2").remove();
+            },
+            /* 图片 */
+            AddTempImg: function (self) {
+                $('#tempImage').click();
+                $("#curImageId").val($(self).find("img").attr("id"));
+            },
+            //上传图片
+            saveTempImage: function () {
+                $("#tempImageForm").ajaxSubmit({
+                    dataType: "json",
+                    success: function (data) {
+                        if (null != data && data.length > 0) {
+
+                            for(var i=0; i<data.length; i++){
+                                var image = data[i];
+                                $house.fn.addImgTemplate(image.path, image.id);
+                            }
+                        } else {
+                            $leoman.alertMsg("上传错误");
+                        }
+                    }
+                });
+            },
+
             //添加购房优惠
             addRow:function(value){
                 var template = $("#privilegeTempalte").clone().removeAttr("id");
@@ -378,7 +567,12 @@
             save : function() {
                 if(!$("#formId").isValid()) return;
 
-                if($("[name=isOpenWait][value='1']").parent().hasClass("checked") && $("#openTime").val() == ''){
+                if($("[name=imageIds]").length == 0){
+                    $leoman.alertMsg("请至少上传一张封面图");
+                    return ;
+                }
+
+                /*if($("[name=isOpenWait][value='1']").parent().hasClass("checked") && $("#openTime").val() == ''){
                     $leoman.alertMsg("请指定开盘时间");
                     return ;
                 }
@@ -386,14 +580,15 @@
                 if($("[name=isDealWait][value='1']").parent().hasClass("checked") && $("#dealTime").val() == ''){
                     $leoman.alertMsg("请指定交房时间");
                     return ;
-                }
+                }*/
 
-                var lableArr = [];
+                //标签
+                /*var lableArr = [];
                 $("#tags_1_tagsinput .tag span").each(function(){
                     lableArr.push($(this).text());
                 });
 
-                $("#tags_1").val(lableArr.join(","));
+                $("#tags_1").val(lableArr.join(","));*/
 
                 var openTime = $("#openTime").val();
                 var dealTime = $("#dealTime").val();
@@ -417,7 +612,6 @@
 
                 var isDoor = $("#isDoor").parent().hasClass("checked")==true?1:0;
                 $("[name=isDoor]").val(isDoor);
-                console.info(isDoor);
 
                 $leoman.showLoading();
                 $("#formId").ajaxSubmit({
@@ -530,6 +724,7 @@
             $("[name=address]").val(address);
             $("#longitude").val(rs.point.lng);
             $("#latitude").val(rs.point.lat);
+            $("#district").val(addComp.district);
 
         });
     });

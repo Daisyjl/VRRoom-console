@@ -39,7 +39,7 @@ public class EnterpriseController extends GenericEntityController<Enterprise,Ent
 
     @RequestMapping(value = "/index")
     public String index(){
-        return "enterprise/enterprise_list_copy";
+        return "enterprise/enterprise_list";
     }
 
     /**
@@ -74,7 +74,7 @@ public class EnterpriseController extends GenericEntityController<Enterprise,Ent
         }
         List<Province> provinceList = provinceService.iFindList();
         model.addAttribute("provinceList",provinceList);
-        return "enterprise/enterprise_add_copy";
+        return "enterprise/enterprise_add";
 
     }
 

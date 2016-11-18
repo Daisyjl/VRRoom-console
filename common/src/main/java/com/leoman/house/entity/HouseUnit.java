@@ -1,6 +1,7 @@
 package com.leoman.house.entity;
 
 import com.alibaba.druid.util.StringUtils;
+import com.leoman.bedroom.entity.Bedroom;
 import com.leoman.direction.entity.Direction;
 import com.leoman.entity.BaseEntity;
 import com.leoman.entity.Configue;
@@ -24,8 +25,8 @@ public class HouseUnit extends BaseEntity {
     @Column(name = "name")
     private String name;//户型名称
 
-    @Column(name = "type_name")
-    private String typeName;//户型名称
+    @Column(name = "bedroom_id")
+    private Long bedroomId;//居室
 
     @Column(name = "total_price")
     private BigDecimal totalPrice;//参考总价
@@ -62,12 +63,12 @@ public class HouseUnit extends BaseEntity {
         this.name = name;
     }
 
-    public String getTypeName() {
-        return typeName;
+    public Long getBedroomId() {
+        return bedroomId;
     }
 
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
+    public void setBedroomId(Long bedroomId) {
+        this.bedroomId = bedroomId;
     }
 
     public BigDecimal getTotalPrice() {

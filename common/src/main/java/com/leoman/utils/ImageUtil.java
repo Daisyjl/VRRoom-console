@@ -91,12 +91,5 @@ public class ImageUtil {
 
     }
 
-    public static void main(String [] args) throws Exception{
-        House house = new House();
-        Image image = new Image();
-        image.setPath("images/2016/10/1476346047078.jpg");
-        house.setImage(image);
-        ImageUtil.setImagePath(image);
-    }
 
 }

@@ -1,6 +1,7 @@
 package com.leoman.house.entity;
 
 import com.leoman.area.region.entity.Region;
+import com.leoman.decorateType.entity.DecorateType;
 import com.leoman.enterprise.entity.Enterprise;
 import com.leoman.entity.BaseEntity;
 import com.leoman.image.entity.Image;
@@ -40,8 +41,8 @@ public class House extends BaseEntity{
     @Column(name = "property_limit")
     private Integer propertyLimit;//产权年限
 
-    @Column(name = "decorate_type")
-    private Integer decorateType;//装修类型：1-毛胚，2-简装，3-精装，4-豪华装修
+    @Column(name = "decorate_type_id")
+    private Long decorateTypeId;//装修类型
 
     @Column(name = "plot_ratio")
     private BigDecimal plotTatio;//容积率
@@ -68,10 +69,6 @@ public class House extends BaseEntity{
     private String addressDetail;//详细地址
 
     @ManyToOne
-    @JoinColumn(name = "image_id")
-    private Image image;//封面图
-
-    @ManyToOne
     @JoinColumn(name = "big_image_id")
     private Image bigImage;//高清沙盘图，标图用
 
@@ -94,6 +91,9 @@ public class House extends BaseEntity{
 
     @Column(name = "is_door")
     private Integer isDoor;//是否上门（1-是，0-否）
+
+    @Column(name = "feature")
+    private String feature;//特色ids
 
     @Transient
     private Integer roomNum;//房间数
@@ -165,12 +165,12 @@ public class House extends BaseEntity{
         this.propertyLimit = propertyLimit;
     }
 
-    public Integer getDecorateType() {
-        return decorateType;
+    public Long getDecorateTypeId() {
+        return decorateTypeId;
     }
 
-    public void setDecorateType(Integer decorateType) {
-        this.decorateType = decorateType;
+    public void setDecorateTypeId(Long decorateTypeId) {
+        this.decorateTypeId = decorateTypeId;
     }
 
     public BigDecimal getPlotTatio() {
@@ -227,14 +227,6 @@ public class House extends BaseEntity{
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public Image getImage() {
-        return image;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
     }
 
     public Enterprise getEnterprise() {
@@ -315,5 +307,13 @@ public class House extends BaseEntity{
 
     public void setIsDoor(Integer isDoor) {
         this.isDoor = isDoor;
+    }
+
+    public String getFeature() {
+        return feature;
+    }
+
+    public void setFeature(String feature) {
+        this.feature = feature;
     }
 }

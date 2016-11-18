@@ -352,7 +352,7 @@
             <properties>
                 <pro.jdbc.url>jdbc:mysql://112.74.197.62:3306/leoman_vrroom_test?characterEncoding=UTF-8</pro.jdbc.url>
                 <pro.jdbc.username>root</pro.jdbc.username>
-                <pro.jdbc.password>root</pro.jdbc.password>
+                <pro.jdbc.password>vrroom881177</pro.jdbc.password>
                 <pro.upload.url>http://localhost:8080/files/upload/</pro.upload.url>
                 <pro.upload.path>D:/devsoftware/apache-tomcat-7.0.72/webapps/files/upload/</pro.upload.path>
             </properties>
@@ -363,7 +363,7 @@
             <properties>
                 <pro.jdbc.url>jdbc:mysql://112.74.197.62:3306/leoman_vrroom_test?characterEncoding=UTF-8</pro.jdbc.url>
                 <pro.jdbc.username>root</pro.jdbc.username>
-                <pro.jdbc.password>root</pro.jdbc.password>
+                <pro.jdbc.password>vrroom881177</pro.jdbc.password>
                 <pro.upload.url>http://112.74.197.62:8083/files/upload/</pro.upload.url>
                 <pro.upload.path>/var/local/tomcat/tomcat8083/webapps/files/upload/</pro.upload.path>
             </properties>
@@ -387,7 +387,7 @@
             <properties>
                 <pro.jdbc.url>jdbc:mysql://112.74.197.62:3306/leoman_vrroom?characterEncoding=UTF-8</pro.jdbc.url>
                 <pro.jdbc.username>root</pro.jdbc.username>
-                <pro.jdbc.password>root</pro.jdbc.password>
+                <pro.jdbc.password>vrroom881177</pro.jdbc.password>
                 <pro.upload.url>http://112.74.197.62:8081/files/upload/</pro.upload.url>
                 <pro.upload.path>/var/local/tomcat/tomcat8081/webapps/files/upload/</pro.upload.path>
             </properties>

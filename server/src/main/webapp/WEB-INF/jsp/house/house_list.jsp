@@ -36,10 +36,10 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
 
-                        <a href="admin/house/add" class="btn btn-outline btn-primary btn-lg"
+                        <a href="admin/house/edit" class="btn btn-outline btn-primary btn-lg"
                            role="button"><i class='fa fa-plus'></i> 新增楼盘</a>
 
-                        <a href="javascript:;" onclick="$house.fn.del()" class="btn btn-outline btn-danger btn-lg"
+                        <a href="javascript:;" onclick="$house.fn.updateStatus(0)" class="btn btn-outline btn-danger btn-lg"
                            role="button"><i class='fa fa-trash-o'></i> 删除</a>
 
                         <form class="navbar-form navbar-right" role="search">
@@ -75,6 +75,7 @@
                                     <th>房间数</th>
                                     <th>资料完善度</th>
                                     <th>添加时间</th>
+                                    <th>状态</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
@@ -163,6 +164,22 @@
                             }
                         },
                         {
+                            "data": "status",
+                            "render": function (data) {
+                                var str = "";
+                                if(data == 0){
+                                    str = "审核中";
+                                }else if(data == 2){
+                                    str = "审核通过";
+                                }else if(data == 3){
+                                    str = "上架";
+                                }else if(data == 4){
+                                    str = "下架";
+                                }
+                                return str;
+                            }
+                        },
+                        {
                             "data": "id",
                             "render": function (data, type, row, meta) {
 
@@ -187,10 +204,23 @@
                                 var editRoom = "<button title='编辑房间状态' style='margin-bottom: 10px;' class='btn btn-primary edit' onclick=\"$house.fn.editRoom(\'" + data + "\')\">" +
                                         "<i class='fa fa-pencil-square-o'></i> 编辑房间状态</button>";
 
-                                var del = "<button title='删除' style='margin-bottom: 10px;' class='btn btn-primary edit' onclick=\"$house.fn.del(\'" + data + "\')\">" +
+                                //根据状态显示按钮
+                                var statusBtn = "";
+                                if(row.status == 0){
+                                    statusBtn = "<button title='审核通过' style='margin-bottom: 10px;' class='btn btn-primary edit' onclick=\"$house.fn.updateStatus(2,\'" + data + "\')\">" +
+                                            "<i class='fa fa-check'></i> 审核通过</button>";
+                                }else if(row.status == 2 || row.status == 4){
+                                    statusBtn = "<button title='上架' style='margin-bottom: 10px;' class='btn btn-primary edit' onclick=\"$house.fn.updateStatus(3,\'" + data + "\')\">" +
+                                            "<i class='fa fa-arrow-up'></i> 上架</button>";
+                                }else if(row.status == 3){
+                                    statusBtn = "<button title='下架' style='margin-bottom: 10px;' class='btn btn-primary edit' onclick=\"$house.fn.updateStatus(4,\'" + data + "\')\">" +
+                                            "<i class='fa fa-arrow-down'></i> 下架</button>";
+                                }
+                                var del = "<button title='删除' style='margin-bottom: 10px;' class='btn btn-primary edit' onclick=\"$house.fn.updateStatus(0,\'" + data + "\')\">" +
                                         "<i class='fa fa-trash-o'></i></button>";
 
-                                return editBasic + "&nbsp;" + editUnit + "&nbsp;" + editFloor + "&nbsp;" + editRidgepole+ "&nbsp;" + editAlbum+ "&nbsp;" + editDynamic+ "&nbsp;" + editRoom  + "&nbsp;" + del;
+                                return editBasic + "&nbsp;" + editUnit + "&nbsp;" + editFloor + "&nbsp;" + editRidgepole+ "&nbsp;"
+                                        + editAlbum+ "&nbsp;" + editDynamic+ "&nbsp;" + editRoom+ "&nbsp;" + statusBtn  + "&nbsp;" + del;
 
                             }
                         }
@@ -200,16 +230,20 @@
                     }
                 });
             },
-            add: function (id) {
+            /*add: function (id) {
                 var params = "";
                 if (id != null && id != '') {
                     params = "?id=" + id;
                 }
-                window.location.href = "${contextPath}/admin/house/add" + params;
-            },
+                window.location.href = "${contextPath}/admin/house/edit" + params;
+            },*/
             //编辑基本信息
             editBasic : function (id){
-                location.href = "${contextPath}/admin/house/edit/"+id;
+                var params = "";
+                if (id != null && id != '') {
+                    params = "?id=" + id;
+                }
+                location.href = "${contextPath}/admin/house/edit"+params;
             },
             //编辑户型信息
             editUnit : function (id){
@@ -235,7 +269,7 @@
             editRoom : function (id){
                 location.href = "${contextPath}/admin/house/ridgepole/editRoom/"+id;
             },
-            del: function (id) {
+            updateStatus: function (status, id) {
                 var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');
                 var ids = [];
                 if(id != null){
@@ -247,11 +281,12 @@
                     $leoman.alertMsg("请至少选择一条数据");
                     return ;
                 }
-                $leoman.alertConfirm("确定要删除吗？",function(){
+                $leoman.alertConfirm("确定要执行此操作吗？",function(){
                     $.ajax({
-                        "url": "${contextPath}/admin/house/del",
+                        "url": "${contextPath}/admin/house/updateStatus",
                         "data": {
-                            ids:JSON.stringify(ids)
+                            ids:JSON.stringify(ids),
+                            status : status
                         },
                         "dataType": "json",
                         "type": "POST",
