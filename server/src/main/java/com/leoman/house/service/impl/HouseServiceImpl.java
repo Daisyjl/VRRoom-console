@@ -172,6 +172,7 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
                 houseImage.setHouseId(house.getId());
                 houseImage.setImage(new Image(Integer.valueOf(imageIdArr[i])));
                 houseImage.setSeq((long)i);
+                houseImageDao.save(houseImage);
             }
 
             //如果是新增，则默认把封面图作为沙盘图
