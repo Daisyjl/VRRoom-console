@@ -81,7 +81,7 @@
 
 <!-- 图片上传form -->
 <form id="tempImageForm" method="post" action="${contextPath}/common/file/addTempImage" enctype="multipart/form-data" class="form-horizontal" role="form">
-    <input type="file" name="tempImage" id="tempImage" data-rule="required" style="display:none;" onchange="$ridgepoleFloor.fn.saveTempImage()"/>
+    <input type="file" name="tempImage" id="tempImage" data-rule="required" style="display:none;" onchange="$direction.fn.saveTempImage()"/>
 </form>
 
 </body>

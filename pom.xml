@@ -350,7 +350,7 @@
         <profile>
             <id>dev-localhost</id>
             <properties>
-                <pro.jdbc.url>jdbc:mysql://112.74.197.62:3306/leoman_vrroom_test?characterEncoding=UTF-8</pro.jdbc.url>
+                <pro.jdbc.url>jdbc:mysql://120.132.6.151:3306/leoman_vrroom_test?characterEncoding=UTF-8</pro.jdbc.url>
                 <pro.jdbc.username>root</pro.jdbc.username>
                 <pro.jdbc.password>vrroom881177</pro.jdbc.password>
                 <pro.upload.url>http://localhost:8080/files/upload/</pro.upload.url>
@@ -361,35 +361,22 @@
         <profile>
             <id>dev-test</id>
             <properties>
-                <pro.jdbc.url>jdbc:mysql://112.74.197.62:3306/leoman_vrroom_test?characterEncoding=UTF-8</pro.jdbc.url>
+                <pro.jdbc.url>jdbc:mysql://120.132.6.151:3306/leoman_vrroom_test?characterEncoding=UTF-8</pro.jdbc.url>
                 <pro.jdbc.username>root</pro.jdbc.username>
                 <pro.jdbc.password>vrroom881177</pro.jdbc.password>
-                <pro.upload.url>http://112.74.197.62:8083/files/upload/</pro.upload.url>
-                <pro.upload.path>/var/local/tomcat/tomcat8083/webapps/files/upload/</pro.upload.path>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>dev-tangxh</id>
-            <properties>
-                <pro.jdbc.url>jdbc:mysql://121.42.176.21:3306/leoman_vrroom?characterEncoding=UTF-8</pro.jdbc.url>
-                <pro.jdbc.username>root</pro.jdbc.username>
-                <pro.jdbc.password>tangxh</pro.jdbc.password>
-                <!--<pro.upload.url>http://121.42.176.21:8083/files/upload/</pro.upload.url>-->
-                <!--<pro.upload.path>/tangxh/tomcat8083/webapps/files/upload/</pro.upload.path>-->
-                <pro.upload.url>http://localhost:8080/files/upload/</pro.upload.url>
-                <pro.upload.path>D:/devsoftware/apache-tomcat-7.0.67/webapps/files/upload/</pro.upload.path>
+                <pro.upload.url>http://120.132.6.151:8082/files/upload/</pro.upload.url>
+                <pro.upload.path>/usr/local/tomcat/tomcat8082/webapps/files/upload/</pro.upload.path>
             </properties>
         </profile>
 
         <profile>
             <id>dev-pro</id>
             <properties>
-                <pro.jdbc.url>jdbc:mysql://112.74.197.62:3306/leoman_vrroom?characterEncoding=UTF-8</pro.jdbc.url>
+                <pro.jdbc.url>jdbc:mysql://120.132.6.151:3306/leoman_vrroom?characterEncoding=UTF-8</pro.jdbc.url>
                 <pro.jdbc.username>root</pro.jdbc.username>
                 <pro.jdbc.password>vrroom881177</pro.jdbc.password>
-                <pro.upload.url>http://112.74.197.62:8081/files/upload/</pro.upload.url>
-                <pro.upload.path>/var/local/tomcat/tomcat8081/webapps/files/upload/</pro.upload.path>
+                <pro.upload.url>http://120.132.6.151:8081/files/upload/</pro.upload.url>
+                <pro.upload.path>/usr/local/tomcat/tomcat8081/webapps/files/upload/</pro.upload.path>
             </properties>
         </profile>
     </profiles>

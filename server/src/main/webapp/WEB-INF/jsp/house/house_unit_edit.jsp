@@ -57,7 +57,7 @@
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" ><span style="color: red;">* </span>居室：</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control input-sm" name="bedroom.id" data-rule="required">
+                                    <select class="form-control input-sm" name="bedroomId" data-rule="required">
                                         <c:forEach items="${bedroomList}" var="bedroom">
                                             <option value="${bedroom.id}">${bedroom.name}</option>
                                         </c:forEach>
@@ -77,8 +77,7 @@
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >朝向：</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control input-sm" id="directionSelect" name="direction.id">
-                                        <option value="">---请选择---</option>
+                                    <select class="form-control input-sm" id="directionSelect" name="direction.id" data-rule="required">
                                         <c:forEach items="${directionList}" var="direction">
                                             <option value="${direction.id}">${direction.name}</option>
                                         </c:forEach>
@@ -123,7 +122,7 @@
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >360全景：</label>
                                 <div class="col-sm-6">
-                                    <input type="text" name="fullView" value="${unit.totalPrice}" class="form-control"/>
+                                    <input type="text" name="fullView" value="${unit.fullView}" class="form-control"/>
                                 </div>
                             </div>
 

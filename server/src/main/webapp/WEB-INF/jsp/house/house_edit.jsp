@@ -50,6 +50,7 @@
 
                             <input type="hidden" name="id" value="${house.id}">
                             <input type="hidden" name="status" value="${house.status}">
+                            <input type="hidden" name="bigImage.id" value="${house.bigImage.id}">
                             <input type="hidden" name="openTime" value="">
                             <input type="hidden" name="dealTime" value="">
                             <input type="hidden" name="privilege" value="">
@@ -180,7 +181,7 @@
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >装修类型：</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control input-sm" name="decorateType">
+                                    <select class="form-control input-sm" name="decorateTypeId">
                                         <c:forEach items="${decorateTypeList}" var="decorateType">
                                         <option value="${decorateType.id}">${decorateType.name}</option>
                                         </c:forEach>
@@ -363,7 +364,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" onclick="$ridgepoleFloor.fn.selectFloor()" class="btn btn-primary">确定</button>
+                <button type="button" onclick="$house.fn.saveFeature()" class="btn btn-primary">确定</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -468,6 +469,17 @@
                     radioClass: 'iradio_minimal',
                     increaseArea: '20%' // optional
                 });
+
+                $('#selectAllChk input').on('ifClicked', function(){
+                    //如果点击之前是选中的，则点击全选为取消全选
+                    if($(this).is(":checked")){
+                        $("#allFeatureDiv .icheckbox_minimal").removeClass("checked");
+                    }
+                    //如果点击之前不是选中的，则点击全选为全选
+                    else{
+                        $("#allFeatureDiv .icheckbox_minimal").addClass("checked");
+                    }
+                });
             },
             //初始化封面图列表
             initImageList:function(){
@@ -505,6 +517,19 @@
                     }
                 });
                 $("#myModal").modal("show");
+            },
+            //保存特色
+            saveFeature:function(){
+                var arr = [];
+                $("#featureDiv").empty();
+                $("#allFeatureDiv .checked").each(function(){
+                    arr.push($(this).parent().attr("val"));
+                    var id = $(this).parent().attr("val");
+                    var name = $(this).parent().find("label").text();
+                    $("#featureDiv").append('<span><input type="hidden" name="feature" value="'+id+'">' +
+                            '<button type="button" class="btn btn-info">'+name+' <i class="fa fa-close" onclick="$house.fn.removeFeature(this)"></i></button> </span>');
+                });
+                $("#myModal").modal("hide");
             },
             //删除标签
             removeFeature:function(self){

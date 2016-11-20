@@ -259,9 +259,7 @@
                 });
             },
             openModal : function (id){
-                if(id != '' && id != undefined){
-                    id = "?id="+id;
-                }
+                id = (id != '' && id != undefined)?("?id="+id):"";
                 window.location.href = "admin/house/unit/edit"+id;
                 /*if(id != '' && id != undefined){
                     $.post("${contextPath}/admin/house/unit/detail/"+id, function(result){

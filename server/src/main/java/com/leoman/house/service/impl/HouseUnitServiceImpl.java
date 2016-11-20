@@ -94,13 +94,15 @@ public class HouseUnitServiceImpl extends GenericManagerImpl<HouseUnit,HouseUnit
         }
 
         //新增多张3d户型图
-        String [] d3ImageIdArr = d3ImageId.split("\\,");
-        for (String id:d3ImageIdArr) {
-            if(!StringUtils.isEmpty(id)){
-                HouseUnitImage hui = new HouseUnitImage();
-                hui.setUnitId(unitId);
-                hui.setD3Image(new Image(Integer.valueOf(id)));
-                houseUnitImageDao.save(hui);
+        if(!StringUtils.isEmpty(d3ImageId)){
+            String [] d3ImageIdArr = d3ImageId.split("\\,");
+            for (String id:d3ImageIdArr) {
+                if(!StringUtils.isEmpty(id)){
+                    HouseUnitImage hui = new HouseUnitImage();
+                    hui.setUnitId(unitId);
+                    hui.setD3Image(new Image(Integer.valueOf(id)));
+                    houseUnitImageDao.save(hui);
+                }
             }
         }
 
