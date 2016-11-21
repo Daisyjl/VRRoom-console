@@ -76,7 +76,7 @@
                                     <th>资料完善度</th>
                                     <th>添加时间</th>
                                     <th>状态</th>
-                                    <th>操作</th>
+                                    <th width="50%">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -140,7 +140,7 @@
                         },
                         {"data": "name"},
                         {"data": "enterprise.name"},
-                        {"data": "enterprise.city.name"},
+                        {"data": "region.city.name"},
                         {
                             "data": "isOpenWait",
                             "render": function (data) {
@@ -263,7 +263,7 @@
             },
             //编辑楼层动态
             editDynamic : function (id){
-                location.href = "${contextPath}/admin/house/dynamic/edit/"+id;
+                location.href = "${contextPath}/admin/house/dynamic/index/"+id;
             },
             //编辑房间状态
             editRoom : function (id){

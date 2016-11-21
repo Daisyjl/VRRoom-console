@@ -129,9 +129,18 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
 
         Long houseId = house.getId();
 
+        //设置省市区
         if(!StringUtils.isEmpty(district)){
             Region reg = regionDao.findByName(district);
             house.setRegion(reg);
+        }
+
+        //富文本
+        String content = house.getIntro();
+        if(org.apache.commons.lang.StringUtils.isNotBlank(content)){
+            content = content.replace("&lt", "<").replace("&gt", ">");
+            house.setIntro(content);
+
         }
 
         //新增

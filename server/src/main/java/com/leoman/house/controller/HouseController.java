@@ -93,7 +93,7 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
      * @param model
      * @return
      */
-    @RequestMapping(value = "/add")
+    /*@RequestMapping(value = "/add")
     public String add(Long id, Model model){
         if(id != null){
             House house = houseService.queryByPK(id);
@@ -108,7 +108,7 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
         model.addAttribute("enterpriseList", enterpriseList);
         model.addAttribute("decorateTypeList", decorateTypeList);
         return "house/house_add";
-    }
+    }*/
 
     /**
      * 跳转编辑基本信息页面

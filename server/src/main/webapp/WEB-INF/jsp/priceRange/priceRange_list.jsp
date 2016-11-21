@@ -13,7 +13,7 @@
     <%@ include file="../inc/meta.jsp" %>
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>楼盘动态</title>
+    <title>价格列表</title>
     <%@ include file="../inc/css.jsp" %>
 
 </head>
@@ -27,42 +27,25 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">楼盘动态</h1>
+                <h1 class="page-header">价格列表</h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
-
                     <div class="panel-heading">
-                        <a href="admin/house/index" class="btn btn-outline btn-primary btn-lg"
-                           role="button"><i class='fa fa-reply'></i> 返回</a>
 
-                        <a href="admin/house/dynamic/editDetail?houseId=${houseId}" class="btn btn-outline btn-primary btn-lg"
-                           role="button"><i class='fa fa-plus'></i> 新增动态</a>
-
-                        <a href="javascript:;" onclick="$houseDynamic.fn.del()" class="btn btn-outline btn-danger btn-lg"
-                           role="button"><i class='fa fa-trash-o'></i> 删除</a>
+                        <a href="admin/priceRange/edit" class="btn btn-outline btn-primary btn-lg"
+                           role="button">新增价格</a>
 
                         <form class="navbar-form navbar-right" role="search">
                             <div class="form-group">
-                                <label>动态标题：</label>
-                                <input type="text" class="form-control" value="" id="title"  name="title" maxlength="20" placeholder="请输入动态标题">
+                                <label>价格名称：</label>
+                                <input type="text" id="name" name="username" class="form-control" placeholder="价格名称">
                             </div>
-                            <div class="form-group">
-                                <label>从：</label>
-                                <input type="text" id="startDate" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="" placeholder="请选择起始时间">
-                            </div>
-                            <div class="form-group">
-                                <label>至：</label>
-                                <input type="text" id="endDate" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="" placeholder="请选择结束时间">
-                            </div>
-                            <button type="button" id="searchBtn" class="btn btn-primary btn-sm"><i class='fa fa-search'></i> 查询</button>
-                            <button type="button" id="clearBtn" class="btn btn-primary btn-sm"><i class='fa fa-refresh'></i> 清空</button>
+                            <button type="button" id="c_search" class="btn btn-default btn-sm">查询</button>
                         </form>
-
-                        <div class="clearfix"></div>
                     </div>
                     <!-- /.panel-heading -->
                     <div class="panel-body">
@@ -81,8 +64,7 @@
                                 <thead>
                                 <tr>
                                     <th><input type="checkbox" onclick="$leoman.checkAll(this)" class="checkall"/></th>
-                                    <th>动态标题</th>
-                                    <th>发布时间</th>
+                                    <th style="width: 60%;!important;">价格名称</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
@@ -110,45 +92,26 @@
 </body>
 
 <script>
-    $houseDynamic = {
+    $priceRange = {
         v: {
             list: [],
-            dTable: null,
-            um : null
+            dTable: null
         },
         fn: {
             init: function () {
-                $houseDynamic.fn.dataTableInit();
-
-                $('.form_datetime').datetimepicker({
-                    language: 'zh-CN',
-                    weekStart: 1,
-                    todayBtn: 1,
-                    autoclose: 1,
-                    todayHighlight: 1,
-                    startView: 'month',
-                    minView: "month",
-                    forceParse: 0,
-                    showMeridian: false,
-                    format: 'yyyy-mm-dd hh:ii'
-                });
-
-                $("#searchBtn").click(function () {
-                    $houseDynamic.v.dTable.ajax.reload();
-                });
-
-                $("#clearBtn").click(function () {
-                    $("form").find("input, select").val("");
+                $priceRange.fn.dataTableInit();
+                $("#c_search").click(function () {
+                    $priceRange.v.dTable.ajax.reload();
                 });
             },
             dataTableInit: function () {
-                $houseDynamic.v.dTable = $leoman.dataTable($('#dataTables'), {
+                $priceRange.v.dTable = $leoman.dataTable($('#dataTables'), {
                     "processing": true,
                     "serverSide": true,
                     "searching": false,
                     "bSort": false,
                     "ajax": {
-                        "url": "${contextPath}/admin/house/dynamic/list",
+                        "url": "${contextPath}/admin/priceRange/list",
                         "type": "POST"
                     },
                     "columns": [
@@ -159,41 +122,36 @@
                                 return checkbox;
                             }
                         },
-                        {"data": "title"},
                         {
-                            "data": "createDate",
-                            "render": function (data) {
-                                var date = new Date(data);
-                                return date.format('yyyy-MM-dd h:m:s');
-                            }
+                            "data": "name",
+                            "sDefaultContent" : ""
                         },
                         {
                             "data": "id",
                             "render": function (data, type, row, meta) {
 
-                                var edit = "<button title='编辑' class='btn btn-primary edit' onclick=\"$houseDynamic.fn.add(\'" + data + "\')\">" +
+                                var edit = "<button title='编辑' class='btn btn-primary edit' onclick=\"$priceRange.fn.add(\'" + data + "\')\">" +
                                         "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
 
-                                var del = "<button title='删除' class='btn btn-primary edit' onclick=\"$houseDynamic.fn.del(\'" + data + "\')\">" +
+                                var del = "<button title='删除' class='btn btn-primary edit' onclick=\"$priceRange.fn.del(\'" + data + "\')\">" +
                                         "<i class='fa fa-trash-o'></i> 删除</button>";
 
-                                return edit + "&nbsp;" + del;
+                                return edit  + "&nbsp;" + del;
 
                             }
                         }
                     ],
                     "fnServerParams": function (aoData) {
-                        aoData.title = $("#title").val();
-                        aoData.houseId = "${houseId}";
-                        aoData.startDate = $("#startDate").val();
-                        aoData.endDate = $("#endDate").val();
+                        aoData.username = $("#username").val();
                     }
                 });
             },
-            //新增/编辑
             add: function (id) {
-                id = (id==undefined?"":("&id="+id));
-                window.location.href = "${contextPath}/admin/house/dynamic/editDetail?houseId=${houseId}"+id;
+                var params = "";
+                if (id != null && id != '') {
+                    params = "?id=" + id;
+                }
+                window.location.href = "${contextPath}/admin/priceRange/edit" + params;
             },
             del: function (id) {
                 var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');
@@ -203,13 +161,9 @@
                 }else{
                     ids = checkBox.getInputId();
                 }
-                if(ids.length == 0 || ids == false){
-                    $leoman.alertMsg("请至少选择一条数据");
-                    return ;
-                }
-                $leoman.alertConfirm("确定要删除吗？",function(){
+                $leoman.alertConfirm("您确定要彻底删除所选的价格吗？",function(){
                     $.ajax({
-                        "url": "${contextPath}/admin/house/dynamic/delete",
+                        "url": "${contextPath}/admin/priceRange/del",
                         "data": {
                             ids:JSON.stringify(ids)
                         },
@@ -225,14 +179,22 @@
                     });
                 });
             },
-            back : function(){
-                window.location.href = "${contextPath}/admin/house/index";
+            responseComplete: function (result, action) {
+                if (result.status == "0") {
+                    if (action) {
+                        $priceRange.v.dTable.ajax.reload(null, false);
+                    } else {
+                        $priceRange.v.dTable.ajax.reload();
+                    }
+                    $leoman.notify(result.msg, "success");
+                } else {
+                    $leoman.notify(result.msg, "error");
+                }
             }
         }
     }
     $(function () {
-        $houseDynamic.fn.init();
+        $priceRange.fn.init();
     })
 </script>
-
 </html>

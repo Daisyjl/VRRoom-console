@@ -37,7 +37,7 @@ public class AreaRangeServiceImpl extends GenericManagerImpl<AreaRange,AreaRange
         }else if(areaRange.getAreaTo() == null || StringUtils.isEmpty(areaRange.getAreaTo())){
             str = areaRange.getAreaFrom() + "㎡以上";
         }else{
-            str = areaRange.getAreaFrom().floatValue() +"-"+ areaRange.getAreaTo().floatValue() + "㎡";
+            str = areaRange.getAreaFrom() +"-"+ areaRange.getAreaTo() + "㎡";
         }
         areaRange.setName(str);
 

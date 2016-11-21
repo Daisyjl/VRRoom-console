@@ -37,31 +37,38 @@
                     <div class="panel-body">
                         <form id="formId" method="post" class="form-horizontal" role="form">
 
-                            <input id="id" name="id" type="hidden" value="${areaRange.id}">
+                            <input id="id" name="id" type="hidden" value="${timeRange.id}">
 
                             <div class="form-group">
-                                <label class="col-sm-1 control-label" >时间范围从：</label>
+                                <label class="col-sm-1 control-label" ><span style="color: red;">* </span>类型：</label>
                                 <div class="col-sm-2">
-                                    <input type="text" name="areaFrom" value="${areaRange.areaFrom}" class="form-control"
-                                           data-rule="price"  data-rule-price="[/^\d{0,8}\.{0,1}(\d{1,2})?$/, '请输入正确的时间大小']" maxlength="30"/>
+                                    <select class="form-control input-sm" name="type"  data-rule="required">
+                                        <option value="1">月</option>
+                                    </select>
                                 </div>
-                                <label class="col-sm-2 control-label" style="text-align: left;">(提示：不填写则表示以下)</label>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-1 control-label" >时间范围至：</label>
+                                <label class="col-sm-1 control-label" ><span style="color: red;">* </span>名称：</label>
                                 <div class="col-sm-2">
-                                    <input type="text" name="areaTo" value="${areaRange.areaTo}" class="form-control"
-                                           data-rule="price"  data-rule-price="[/^\d{0,8}\.{0,1}(\d{1,2})?$/, '请输入正确的时间大小']" maxlength="30"/>
+                                    <input type="text" name="name" value="${timeRange.name}" class="form-control" data-rule="required" maxlength="30"/>
                                 </div>
-                                <label class="col-sm-2 control-label" style="text-align: left;">(提示：不填写则表示以上)</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label" ><span style="color: red;">* </span>时间长度：</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control input-sm" name="timeNum"  data-rule="required">
+
+                                    </select>
+                                </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-1 control-label"></label>
                                 <div class="col-sm-6">
-                                    <button type="button" onclick="$areaRange.fn.save()" class="btn btn-primary">保存</button>
-                                    <button type="button" class="btn btn-primary" onclick="$areaRange.fn.back()">返回</button>
+                                    <button type="button" onclick="$timeRange.fn.save()" class="btn btn-primary">保存</button>
+                                    <button type="button" class="btn btn-primary" onclick="$timeRange.fn.back()">返回</button>
                                 </div>
                             </div>
 
@@ -85,7 +92,7 @@
 
 <%@ include file="../inc/footer.jsp" %>
 <script>
-    $areaRange = {
+    $timeRange = {
         v: {
             list: [],
             chart: null,
@@ -93,7 +100,17 @@
             um : null,
         },
         fn: {
-
+            init: function () {
+                //初始化时间长度
+                for(var i=1; i<=12; i++){
+                    $("[name=timeNum]").append('<option value="'+i+'">'+i+'</option>');
+                }
+                if("${timeRange.timeNum}" != ''){
+                    $("[name=timeNum] option[value="+"${timeRange.timeNum}"+"]").attr("selected", true);
+                }else{
+                    $("[name=timeNum] option").first().attr("selected", true);
+                }
+            },
             //保存
             save : function() {
                 if(!$("#formId").isValid()) return;
@@ -105,11 +122,11 @@
 
                 $leoman.showLoading();
                 $("#formId").ajaxSubmit({
-                    url : "${contextPath}/admin/areaRange/save",
+                    url : "${contextPath}/admin/timeRange/save",
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            $areaRange.fn.back();
+                            $timeRange.fn.back();
                         }
                         else {
                             $leoman.hideLoading();
@@ -119,12 +136,12 @@
                 });
             },
             back : function(){
-                window.location.href = "${contextPath}/admin/areaRange/index";
+                window.location.href = "${contextPath}/admin/timeRange/index";
             }
         }
     }
     $(function () {
-        $areaRange.fn.init();
+        $timeRange.fn.init();
     })
 </script>
 

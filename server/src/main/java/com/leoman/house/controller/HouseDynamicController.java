@@ -45,10 +45,10 @@ public class HouseDynamicController extends GenericEntityController<HouseDynamic
      * @param model
      * @return
      */
-    @RequestMapping(value = "/edit/{houseId}")
+    @RequestMapping(value = "/index/{houseId}")
     public String editDynamic(@PathVariable("houseId") Long houseId, Model model){
         model.addAttribute("houseId", houseId);
-        return "house/house_edit_dynamic";
+        return "house/house_dynamic_list";
     }
 
     /**
@@ -85,14 +85,14 @@ public class HouseDynamicController extends GenericEntityController<HouseDynamic
      * @param model
      * @return
      */
-    @RequestMapping(value = "/editDetail")
+    @RequestMapping(value = "/edit")
     public String editDetail(Long id, Long houseId, Model model){
         if(id != null){
             HouseDynamic dynamic = houseDynamicService.queryByPK(id);
             model.addAttribute("dynamic", dynamic);
         }
         model.addAttribute("houseId", houseId);
-        return "house/house_edit_dynamic_detail";
+        return "house/house_dynamic_edit";
     }
 
     /**

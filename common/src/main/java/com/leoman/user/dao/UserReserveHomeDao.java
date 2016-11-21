@@ -9,7 +9,5 @@ import org.springframework.data.jpa.repository.Query;
  */
 public interface UserReserveHomeDao extends IBaseJpaRepository<UserReserveHome> {
 
-    @Query("select a from UserReserveHome a where a.userId = ?1 and a.houseId = ?2")
-    public UserReserveHome findByUserIdAndHouseId(Long userId, Long houseId);
 
 }

@@ -95,6 +95,9 @@ public class House extends BaseEntity{
     @Column(name = "feature")
     private String feature;//特色ids
 
+    @Column(name = "intro")
+    private String intro;//简介
+
     @Transient
     private Integer roomNum;//房间数
 
@@ -315,5 +318,13 @@ public class House extends BaseEntity{
 
     public void setFeature(String feature) {
         this.feature = feature;
+    }
+
+    public String getIntro() {
+        return intro;
+    }
+
+    public void setIntro(String intro) {
+        this.intro = intro;
     }
 }

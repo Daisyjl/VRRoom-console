@@ -4,44 +4,29 @@ import com.leoman.entity.BaseEntity;
 import com.leoman.house.entity.House;
 import com.leoman.saleman.entity.Saleman;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 /**
  * Created by Daisy on 2016/11/7.
  */
-@Table(name = "t_user_reserve")
+@Table(name = "t_user_reserve_home")
 @Entity
 public class UserReserveHome extends BaseEntity{
 
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;//用户
 
-    @Column(name = "saleman_id")
-    private Long salemanId;
+    @ManyToOne
+    @JoinColumn(name = "house_id")
+    private House house;//楼盘
 
-    @Transient
-    private House house;//预约楼盘
-
-    @Transient
-    private Saleman saleman;//预约的销售顾问
-
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getSalemanId() {
-        return salemanId;
-    }
-
-    public void setSalemanId(Long salemanId) {
-        this.salemanId = salemanId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public House getHouse() {
@@ -50,13 +35,5 @@ public class UserReserveHome extends BaseEntity{
 
     public void setHouse(House house) {
         this.house = house;
-    }
-
-    public Saleman getSaleman() {
-        return saleman;
-    }
-
-    public void setSaleman(Saleman saleman) {
-        this.saleman = saleman;
     }
 }

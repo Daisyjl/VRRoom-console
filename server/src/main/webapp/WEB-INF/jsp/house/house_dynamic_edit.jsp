@@ -126,7 +126,7 @@
                 });
             },
             back : function(){
-                window.location.href = "${contextPath}/admin/house/dynamic/edit/${houseId}";
+                window.location.href = "${contextPath}/admin/house/dynamic/index/${houseId}";
             }
         }
     };

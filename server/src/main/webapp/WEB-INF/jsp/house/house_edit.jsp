@@ -55,16 +55,6 @@
                             <input type="hidden" name="dealTime" value="">
                             <input type="hidden" name="privilege" value="">
 
-                            <%--<div class="form-group">
-                                <label class="col-sm-1 control-label"><span style="color: red;">* </span>楼盘封面：</label>
-                                <div class="col-sm-5">
-                                    <input type="file" name="coverFile" id="coverFile" style="display:none;"/>
-                                    <a href="javascript:void(0);" onclick="$('#coverFile').click();">
-                                        <img id="coverImg" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
-                                    </a>
-                                </div>
-                            </div>--%>
-
                             <div class="form-group">
                                 <label class="col-sm-1 control-label"><span style="color: red;">* </span>楼盘封面：</label>
                                 <div id="imageDiv">
@@ -281,8 +271,15 @@
                                     <input type="hidden" id="district" name="district" value="${house.region.name}" data-rule="required">
                                 </div>
                                 <label class="col-sm-1 control-label" >详细地址：</label>
-                                <div class="col-sm-3">
+                                <div class="col-sm-2">
                                     <input type="text" name="addressDetail" value="${house.addressDetail}" class="form-control" placeholder="详细地址：如xx层xx号"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">简介：</label>
+                                <div class="col-sm-6">
+                                    <script type="text/plain" id="myEditor" name="intro" style="width:650px;height:350px;">${house.intro}</script>
                                 </div>
                             </div>
 
@@ -390,6 +387,8 @@
 
                 $house.v.tempImageId = 0;
 
+                UM.getEditor('myEditor');
+
                 $('.form_datetime').datetimepicker({
                     language: 'zh-CN',
                     weekStart: 1,
@@ -453,7 +452,7 @@
                     }
 
                     $house.fn.initImageList();//初始化所有图片
-                    $house.fn.initSelectedFeatureList();
+                    $house.fn.initSelectedFeatureList();//初始化已选择的特色
                 }
             },
             //初始化弹出框里的所有特色列表

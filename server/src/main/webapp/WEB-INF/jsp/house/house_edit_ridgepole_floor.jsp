@@ -38,9 +38,9 @@
                         <form id="formId" method="post" class="form-horizontal" role="form">
 
                             <div class="form-group">
-                                <label class="col-sm-1 control-label" ><span style="color: red;">* </span>楼栋编号：</label>
+                                <label class="col-sm-1 control-label" >楼栋编号：</label>
                                 <div class="col-sm-2">
-                                    <input type="text" id="name" name="name" value="${ridgepole.name}" class="form-control" data-rule="required"/>
+                                    <input type="text" id="name" name="name" value="${label.name}" class="form-control" readonly data-rule="required"/>
                                 </div>
                             </div>
 
