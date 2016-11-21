@@ -8,7 +8,7 @@ import javax.persistence.Table;
 import java.math.BigDecimal;
 
 /**
- * 居室
+ * 面积范围
  * Created by Daisy on 2016/11/7.
  */
 @Entity

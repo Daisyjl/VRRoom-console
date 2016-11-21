@@ -12,14 +12,15 @@ import com.leoman.index.service.LoginService;
 import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.permissions.module.entity.vo.ModuleVo;
 import com.leoman.permissions.module.service.ModuleService;
-import com.leoman.utils.*;
-import com.sun.deploy.net.HttpUtils;
+import com.leoman.utils.CookiesUtils;
+import com.leoman.utils.HttpRequestUtil;
+import com.leoman.utils.Md5Util;
+import com.leoman.utils.WebUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
