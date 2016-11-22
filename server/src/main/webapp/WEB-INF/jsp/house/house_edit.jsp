@@ -223,6 +223,15 @@
                             </div>
 
                             <div class="form-group">
+                                <label class="col-sm-1 control-label" >是否直播：</label>
+
+                                <div class="col-sm-1 icheck minimal" name="checkDiv">
+                                    <div class="checkbox"><input type="checkbox" id="isLive"></div>
+                                    <input type="hidden" value="" name="isLive">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label class="col-sm-1 control-label" >购房优惠：</label>
                                 <div class="col-sm-2">
                                     <input type="text" name="privil" value="" class="form-control"/>
@@ -431,6 +440,10 @@
                         $("#isDoor").parent().addClass("checked");
                     }
 
+                    if("${house.isLive}" == 1){
+                        $("#isLive").parent().addClass("checked");
+                    }
+
                     if("${house.openTime}" != ''){
                         var date = new Date(parseInt("${house.openTime}"));
                         $("#openTime").val(date.format("yyyy-MM-dd"));
@@ -636,6 +649,9 @@
 
                 var isDoor = $("#isDoor").parent().hasClass("checked")==true?1:0;
                 $("[name=isDoor]").val(isDoor);
+
+                var isLive = $("#isLive").parent().hasClass("checked")==true?1:0;
+                $("[name=isLive]").val(isLive);
 
                 $leoman.showLoading();
                 $("#formId").ajaxSubmit({

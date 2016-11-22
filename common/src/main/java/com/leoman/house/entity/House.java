@@ -92,6 +92,9 @@ public class House extends BaseEntity{
     @Column(name = "is_door")
     private Integer isDoor;//是否上门（1-是，0-否）
 
+    @Column(name = "is_live")
+    private Integer isLive;//是否直播：1-是，0-否
+
     @Column(name = "feature")
     private String feature;//特色ids
 
@@ -326,5 +329,13 @@ public class House extends BaseEntity{
 
     public void setIntro(String intro) {
         this.intro = intro;
+    }
+
+    public Integer getIsLive() {
+        return isLive;
+    }
+
+    public void setIsLive(Integer isLive) {
+        this.isLive = isLive;
     }
 }
