@@ -77,7 +77,7 @@
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >朝向：</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control input-sm" id="directionSelect" name="direction.id" data-rule="required">
+                                    <select class="form-control input-sm" id="directionSelect" name="directionId" data-rule="required">
                                         <c:forEach items="${directionList}" var="direction">
                                             <option value="${direction.id}">${direction.name}</option>
                                         </c:forEach>

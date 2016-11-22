@@ -37,9 +37,8 @@ public class HouseUnit extends BaseEntity {
     @Column(name = "full_view")
     private String fullView;//360全景
 
-    @ManyToOne
-    @JoinColumn(name = "direction_id")
-    private Direction direction;//平面图
+    @Column(name = "direction_id")
+    private Long directionId;//方位id
 
     @Column(name = "d3_model_recog_url")
     private String d3ModelRecogUrl;//3D模型识别图
@@ -147,12 +146,12 @@ public class HouseUnit extends BaseEntity {
         super.setId(id);
     }
 
-    public Direction getDirection() {
-        return direction;
+    public Long getDirectionId() {
+        return directionId;
     }
 
-    public void setDirection(Direction direction) {
-        this.direction = direction;
+    public void setDirectionId(Long directionId) {
+        this.directionId = directionId;
     }
 }
 

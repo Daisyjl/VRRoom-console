@@ -301,8 +301,8 @@
                         $("#top").val(parseInt($(self).css("top")));
                         $("#name").val($(self).children(":first").html());
 
-                        var newLeft = parseInt($(self).offset().left) - parseInt($("#mainImg").offset().left);
-                        var newTop = parseInt($(self).offset().top) - parseInt($("#mainImg").offset().top)
+                        var newLeft = parseInt($(self).offset().left) - parseInt($("#mainImg").offset().left) + parseInt($(self).css("width"))/2;
+                        var newTop = parseInt($(self).offset().top) - parseInt($("#mainImg").offset().top) + parseInt($(self).css("height"));
 
                         //将标签位置信息保存在数据库
                         if (x != z) {

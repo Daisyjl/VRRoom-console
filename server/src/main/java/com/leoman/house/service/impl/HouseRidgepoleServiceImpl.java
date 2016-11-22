@@ -151,7 +151,7 @@ public class HouseRidgepoleServiceImpl extends GenericManagerImpl<HouseRidgepole
         houseRidgepole.setMinSpace(minSpace);
         houseRidgepole.setName(name);
         if(!StringUtils.isEmpty(directionId)){
-            houseRidgepole.setDirection(new Direction(Long.valueOf(directionId)));
+            houseRidgepole.setDirectionId(Long.valueOf(directionId));
         }
 
         houseRidgepoleDao.save(houseRidgepole);

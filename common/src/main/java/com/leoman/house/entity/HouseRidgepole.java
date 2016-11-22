@@ -28,9 +28,8 @@ public class HouseRidgepole extends BaseEntity{
     @Column(name = "min_space")
     private String minSpace;//最小楼间距
 
-    @ManyToOne
-    @JoinColumn(name = "direction_id")
-    private Direction direction;//方位
+    @Column(name = "direction_id")
+    private Long directionId;//方位id
 
     @Transient
     private List<HouseRidgepoleFloor> floorList;
@@ -75,11 +74,11 @@ public class HouseRidgepole extends BaseEntity{
         this.floorList = floorList;
     }
 
-    public Direction getDirection() {
-        return direction;
+    public Long getDirectionId() {
+        return directionId;
     }
 
-    public void setDirection(Direction direction) {
-        this.direction = direction;
+    public void setDirectionId(Long directionId) {
+        this.directionId = directionId;
     }
 }
