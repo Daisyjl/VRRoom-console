@@ -20,6 +20,14 @@ public class HouseFloorType extends BaseEntity{
     @Column(name = "name")
     private String name;//楼层类型名称
 
+    @ManyToOne
+    @JoinColumn(name = "big_image_id")
+    private Image bigImage;//楼层图
+
+    @ManyToOne
+    @JoinColumn(name = "small_image_id")
+    private Image smallImage;//楼层图锚点
+
     @Transient
     private List<HouseFloorTypeUnit> typeUnitList;
 
@@ -51,5 +59,21 @@ public class HouseFloorType extends BaseEntity{
 
     public void setTypeUnitList(List<HouseFloorTypeUnit> typeUnitList) {
         this.typeUnitList = typeUnitList;
+    }
+
+    public Image getBigImage() {
+        return bigImage;
+    }
+
+    public void setBigImage(Image bigImage) {
+        this.bigImage = bigImage;
+    }
+
+    public Image getSmallImage() {
+        return smallImage;
+    }
+
+    public void setSmallImage(Image smallImage) {
+        this.smallImage = smallImage;
     }
 }

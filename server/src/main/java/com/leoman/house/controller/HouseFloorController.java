@@ -7,7 +7,9 @@ import com.leoman.house.entity.*;
 import com.leoman.house.service.*;
 import com.leoman.house.service.impl.HouseAlbumServiceImpl;
 import com.leoman.house.service.impl.HouseFloorTypeServiceImpl;
+import com.leoman.house.util.ImageFindUtil;
 import com.leoman.image.entity.Image;
+import com.leoman.image.service.ImageService;
 import com.leoman.image.service.UploadImageService;
 import com.leoman.utils.HttpRequestUtil;
 import com.leoman.utils.JsonUtil;
@@ -41,6 +43,9 @@ public class HouseFloorController extends GenericEntityController<HouseFloorType
     @Autowired
     private HouseFloorTypeUnitService houseFloorTypeUnitService;
 
+    @Autowired
+    private ImageService imageService;
+
     /**
      * 跳转编辑楼层类型页面
      * @param id
@@ -48,9 +53,9 @@ public class HouseFloorController extends GenericEntityController<HouseFloorType
      * @return
      */
     @RequestMapping(value = "/editType/{id}")
-    public String editAlbum(@PathVariable("id") Long id, Model model){
+    public String editType(@PathVariable("id") Long id, Model model){
         model.addAttribute("houseId", id);
-        return "house/house_edit_floor_type";
+        return "house/house_edit_floor_type_label";
     }
 
     /**
@@ -115,6 +120,21 @@ public class HouseFloorController extends GenericEntityController<HouseFloorType
         }
 
         return Result.success();
+    }
+
+    /**
+     * 根据图片和点，生成点对应图片的坐标
+     * @return
+     */
+    @RequestMapping(value = "/findPoints", method = RequestMethod.POST)
+    @ResponseBody
+    public Result findPoints(Integer bigImageId, Integer smallImageId) {
+
+        Image bigImage = imageService.getById(bigImageId);
+        Image smallImage = imageService.getById(smallImageId);
+        List<Map> pointList = ImageFindUtil.findPoints(Configue.getUploadPath()+smallImage.getPath(), Configue.getUploadPath()+bigImage.getPath());
+
+        return Result.success(pointList);
     }
 
 }

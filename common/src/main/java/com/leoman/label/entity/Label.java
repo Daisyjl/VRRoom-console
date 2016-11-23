@@ -44,7 +44,6 @@ public class Label extends BaseEntity{
     @Column(name = "new_top_point")
     private Double newTopPoint;
 
-
     public String getName() {
         return name;
     }

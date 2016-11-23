@@ -8,9 +8,15 @@ package com.leoman.house.util;
 * History:
 */
 
+import com.leoman.utils.ImageUtil;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 /**
@@ -32,6 +38,8 @@ public class ImageFindUtil {
     
     int[][] screenShotImageRGBData;   //屏幕截图RGB数据
     int[][] keyImageRGBData;          //查找目标图片RGB数据
+
+    List<Map> pointList;
     
     
     
@@ -45,7 +53,14 @@ public class ImageFindUtil {
         keyImgWidth = keyImage.getWidth();
         keyImgHeight = keyImage.getHeight();
         //开始查找
-        this.findImage();
+//        this.findImage();
+        pointList = this.findImagePoints();
+    }
+
+    public static List<Map> findPoints(String keyImagePath,String bigImage){
+        ImageFindUtil imageUtil = new ImageFindUtil(keyImagePath, bigImage);
+        List<Map> pointList = imageUtil.getPointList();
+        return pointList;
     }
     
     /**
@@ -132,6 +147,52 @@ public class ImageFindUtil {
         }
         System.out.println("比较了多少次："+i);
     }
+
+    public List<Map> findImagePoints() {
+        List<Map> list = new ArrayList<>();
+        //遍历屏幕截图像素点数据
+        int i = 0;
+        int count = 1;
+
+        for(int y=0; y<scrShotImgHeight-keyImgHeight; y++) {
+            for(int x=0; x<scrShotImgWidth-keyImgWidth; x++) {
+                i ++;
+                //根据目标图的尺寸，得到目标图四个角映射到屏幕截图上的四个点，
+                //判断截图上对应的四个点与图B的四个角像素点的值是否相同，
+                //如果相同就将屏幕截图上映射范围内的所有的点与目标图的所有的点进行比较。
+//                if((keyImageRGBData[0][0]^screenShotImageRGBData[y][x])==0
+//                        && (keyImageRGBData[0][keyImgWidth-1]^screenShotImageRGBData[y][x+keyImgWidth-1])==0
+//                        && (keyImageRGBData[keyImgHeight-1][keyImgWidth-1]^screenShotImageRGBData[y+keyImgHeight-1][x+keyImgWidth-1])==0
+//                        && (keyImageRGBData[keyImgHeight-1][0]^screenShotImageRGBData[y+keyImgHeight-1][x])==0) {
+
+
+
+                boolean isFinded = isMatchAll(y, x);
+//                    System.out.println(isFinded);
+                //如果比较结果完全相同，则说明图片找到，填充查找到的位置坐标数据到查找结果数组。
+                if(isFinded) {
+                    Map map = new HashMap();
+                    map.put("left", (x+keyImgWidth));
+                    map.put("top", (y+keyImgHeight/2));
+                    list.add(map);
+                    System.out.println(count+" -- X坐标:"+(x+keyImgWidth)+","+"Y坐标:"+(y+keyImgHeight/2));
+                    count++;
+//                    	x= x+keyImgWidth;
+//                    	y = y +keyImgHeight;
+//                        for(int h=0; h<keyImgHeight; h++) {
+//                            for(int w=0; w<keyImgWidth; w++) {
+//                                findImgData[h][w][0] = y+h;
+//                                findImgData[h][w][1] = x+w;
+//                            }
+//                        }
+//                        return;
+//                    }
+                }
+            }
+        }
+        System.out.println("比较了多少次："+i);
+        return list;
+    }
     
     /**
      * 判断屏幕截图上目标图映射范围内的全部点是否全部和小图的点一一对应。
@@ -163,9 +224,17 @@ public class ImageFindUtil {
 
     
     public static void main(String[] args) {
-        String keyImagePath = "E:/项目/看房/findpic/assert/123.png";//小圆球
-        String bigImage = "E:/项目/看房/findpic/assert/Group 5.png";//大图
-       new ImageFindUtil(keyImagePath,bigImage);
+        String keyImagePath = "D:/devsoftware/apache-tomcat-7.0.72/webapps/files/upload/images/2016/11/1479893337235.png";//小圆球
+        String bigImage = "D:/devsoftware/apache-tomcat-7.0.72/webapps/files/upload/images/2016/11/1479893334702.png";//大图
+        List<Map> list = findPoints(keyImagePath,bigImage);
+        System.out.println(list);
     }
 
+    public List<Map> getPointList() {
+        return pointList;
+    }
+
+    public void setPointList(List<Map> pointList) {
+        this.pointList = pointList;
+    }
 }
