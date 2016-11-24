@@ -1,11 +1,13 @@
 package com.leoman.image.entity;
 
+import com.leoman.label.entity.Label;
 import com.leoman.utils.ConfigUtil;
 import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by gaoll on 2015/3/3.
@@ -32,6 +34,9 @@ public class Image implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date")
     private Date createDate;
+
+    @Transient
+    private List<Label> labelList;
 
     public Integer getId() {
         return id;
@@ -83,5 +88,19 @@ public class Image implements Serializable {
 
     public void setUploadUrl(String uploadUrl) {
         this.uploadUrl = uploadUrl;
+    }
+
+    public List<Label> getLabelList() {
+        return labelList;
+    }
+
+    public void setLabelList(List<Label> labelList) {
+        this.labelList = labelList;
+    }
+
+    public Image(){}
+
+    public Image(Integer id) {
+        this.id = id;
     }
 }

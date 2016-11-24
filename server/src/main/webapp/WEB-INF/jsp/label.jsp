@@ -256,7 +256,7 @@
                         $(self).css("opacity", "0.7");
                         //保存高度信息
                         var height = parseInt($(self).offset().top) - parseInt($("#mainImg").offset().top) + ($(self).height() + 12) / 2;
-                        $("#height").v
+                        $("#height").val(height);
                         //保存宽度信息al(height);
                         var width = parseInt($(self).offset().left) - parseInt($("#mainImg").offset().left) + ($(self).width() + 12) / 2;
                         $("#width").val(width);

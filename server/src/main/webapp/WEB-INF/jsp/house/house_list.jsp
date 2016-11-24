@@ -189,9 +189,6 @@
                                 var editUnit = "<button title='编辑户型' style='margin-bottom: 10px;' class='btn btn-primary edit' onclick=\"$house.fn.editUnit(\'" + data + "\')\">" +
                                         "<i class='fa fa-pencil-square-o'></i> 编辑户型</button>";
 
-                                var editFloorType = "<button title='编辑楼层类型锚点' style='margin-bottom: 10px;' class='btn btn-primary edit' onclick=\"$house.fn.editFloorType(\'" + data + "\')\">" +
-                                        "<i class='fa fa-pencil-square-o'></i> 编辑楼层类型锚点</button>";
-
                                 var editFloor = "<button title='编辑楼层信息' style='margin-bottom: 10px;' class='btn btn-primary edit' onclick=\"$house.fn.editFloor(\'" + data + "\')\">" +
                                         "<i class='fa fa-pencil-square-o'></i> 编辑楼层信息</button>";
 
@@ -222,7 +219,7 @@
                                 var del = "<button title='删除' style='margin-bottom: 10px;' class='btn btn-primary edit' onclick=\"$house.fn.updateStatus(0,\'" + data + "\')\">" +
                                         "<i class='fa fa-trash-o'></i></button>";
 
-                                return editBasic + "&nbsp;" + editUnit + "&nbsp;" + editFloorType + "&nbsp;" + editFloor + "&nbsp;" + editRidgepole+ "&nbsp;"
+                                return editBasic + "&nbsp;" + editUnit + "&nbsp;" + editFloor + "&nbsp;" + editRidgepole+ "&nbsp;"
                                         + editAlbum+ "&nbsp;" + editDynamic+ "&nbsp;" + editRoom+ "&nbsp;" + statusBtn  + "&nbsp;" + del;
 
                             }
@@ -251,10 +248,6 @@
             //编辑户型信息
             editUnit : function (id){
                 location.href = "${contextPath}/admin/house/unit/index/"+id;
-            },
-            //编辑楼层信息锚点
-            editFloorType : function (id){
-                location.href = "${contextPath}/admin/house/floor/typeLabel";
             },
             //编辑楼层信息
             editFloor : function (id){

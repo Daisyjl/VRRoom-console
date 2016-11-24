@@ -1,5 +1,6 @@
 package com.leoman.house.controller;
 
+import com.alibaba.fastjson.serializer.Labels;
 import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.entity.Configue;
@@ -11,6 +12,8 @@ import com.leoman.house.util.ImageFindUtil;
 import com.leoman.image.entity.Image;
 import com.leoman.image.service.ImageService;
 import com.leoman.image.service.UploadImageService;
+import com.leoman.label.entity.Label;
+import com.leoman.label.service.LabelService;
 import com.leoman.utils.HttpRequestUtil;
 import com.leoman.utils.JsonUtil;
 import org.apache.commons.lang.StringUtils;
@@ -46,6 +49,15 @@ public class HouseFloorController extends GenericEntityController<HouseFloorType
     @Autowired
     private ImageService imageService;
 
+    @Autowired
+    private LabelService labelService;
+
+    @RequestMapping(value = "/typeLabel")
+    public String typeLabel(Long id, Model model){
+        model.addAttribute("houseId", id);
+        return "house/house_edit_floor_type_label";
+    }
+
     /**
      * 跳转编辑楼层类型页面
      * @param id
@@ -69,6 +81,11 @@ public class HouseFloorController extends GenericEntityController<HouseFloorType
         for (HouseFloorType hft:list) {
             List<HouseFloorTypeUnit> typeUnitList = houseFloorTypeUnitService.findByFloorTypeId(hft.getId());
             hft.setTypeUnitList(typeUnitList);
+
+            if(hft.getBigImage() != null){
+                List<Label> labelList = labelService.findListByParams(hft.getBigImage().getId());
+                hft.getBigImage().setLabelList(labelList);
+            }
         }
 
         return new Result().success(list);
