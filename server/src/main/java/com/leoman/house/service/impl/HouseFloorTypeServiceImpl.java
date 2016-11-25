@@ -126,6 +126,7 @@ public class HouseFloorTypeServiceImpl extends GenericManagerImpl<HouseFloorType
                 //新增锚点部分
                 String bigImageId = (String)floorMap.get("bigImageId");
                 String smallImageId = (String)floorMap.get("smallImageId");
+                String roomNum = (String)floorMap.get("roomNum");
                 List<Map> labelList = (List)floorMap.get("labelArr");
 
                 HouseFloorType houseFloorType;
@@ -159,6 +160,7 @@ public class HouseFloorTypeServiceImpl extends GenericManagerImpl<HouseFloorType
                 houseFloorType.setName(name);
                 houseFloorType.setBigImage(new Image(Integer.valueOf(bigImageId)));
                 houseFloorType.setSmallImage(new Image(Integer.valueOf(smallImageId)));
+                houseFloorType.setRoomNum(Integer.valueOf(roomNum));
                 houseFloorTypeDao.save(houseFloorType);
 
                 //保存楼层类型和户型的关系

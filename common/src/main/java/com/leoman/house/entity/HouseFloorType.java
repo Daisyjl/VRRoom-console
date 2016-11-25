@@ -28,6 +28,9 @@ public class HouseFloorType extends BaseEntity{
     @JoinColumn(name = "small_image_id")
     private Image smallImage;//楼层图锚点
 
+    @Column(name = "room_num")
+    private Integer roomNum;//房间数
+
     @Transient
     private List<HouseFloorTypeUnit> typeUnitList;
 
@@ -75,5 +78,13 @@ public class HouseFloorType extends BaseEntity{
 
     public void setSmallImage(Image smallImage) {
         this.smallImage = smallImage;
+    }
+
+    public Integer getRoomNum() {
+        return roomNum;
+    }
+
+    public void setRoomNum(Integer roomNum) {
+        this.roomNum = roomNum;
     }
 }

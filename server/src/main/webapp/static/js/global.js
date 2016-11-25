@@ -334,6 +334,16 @@ var $leoman = {
             "target" : t,
             "id" : fid
         }).submit();
+    },
+    //获取指定位数的随机数
+    getRandomStr:function(len){
+        var str = "";
+        if(len != '' && len != undefined){
+            for(var i=0; i<len; i++){
+                str += parseInt(10*Math.random());
+            }
+        }
+        return str;
     }
 }
 

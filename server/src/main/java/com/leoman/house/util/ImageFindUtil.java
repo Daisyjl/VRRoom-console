@@ -224,10 +224,10 @@ public class ImageFindUtil {
 
     
     public static void main(String[] args) {
-        String keyImagePath = "D:/devsoftware/apache-tomcat-7.0.72/webapps/files/upload/images/2016/11/1479893337235.png";//小圆球
+        /*String keyImagePath = "D:/devsoftware/apache-tomcat-7.0.72/webapps/files/upload/images/2016/11/1479893337235.png";//小圆球
         String bigImage = "D:/devsoftware/apache-tomcat-7.0.72/webapps/files/upload/images/2016/11/1479893334702.png";//大图
         List<Map> list = findPoints(keyImagePath,bigImage);
-        System.out.println(list);
+        System.out.println(list);*/
     }
 
     public List<Map> getPointList() {
