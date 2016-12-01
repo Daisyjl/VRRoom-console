@@ -26,7 +26,7 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">新增/编辑时间</h1>
+                <h1 class="page-header">新增/编辑面积</h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
@@ -40,19 +40,19 @@
                             <input id="id" name="id" type="hidden" value="${areaRange.id}">
 
                             <div class="form-group">
-                                <label class="col-sm-1 control-label" >时间范围从：</label>
+                                <label class="col-sm-1 control-label" >面积范围从：</label>
                                 <div class="col-sm-2">
                                     <input type="text" name="areaFrom" value="${areaRange.areaFrom}" class="form-control"
-                                           data-rule="price"  data-rule-price="[/^\d{0,8}\.{0,1}(\d{1,2})?$/, '请输入正确的时间大小']" maxlength="30"/>
+                                           data-rule="price"  data-rule-price="[/^\d{0,8}\.{0,1}(\d{1,2})?$/, '请输入正确的面积大小']" maxlength="30"/>
                                 </div>
                                 <label class="col-sm-2 control-label" style="text-align: left;">(提示：不填写则表示以下)</label>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-1 control-label" >时间范围至：</label>
+                                <label class="col-sm-1 control-label" >面积范围至：</label>
                                 <div class="col-sm-2">
                                     <input type="text" name="areaTo" value="${areaRange.areaTo}" class="form-control"
-                                           data-rule="price"  data-rule-price="[/^\d{0,8}\.{0,1}(\d{1,2})?$/, '请输入正确的时间大小']" maxlength="30"/>
+                                           data-rule="price"  data-rule-price="[/^\d{0,8}\.{0,1}(\d{1,2})?$/, '请输入正确的面积大小']" maxlength="30"/>
                                 </div>
                                 <label class="col-sm-2 control-label" style="text-align: left;">(提示：不填写则表示以上)</label>
                             </div>

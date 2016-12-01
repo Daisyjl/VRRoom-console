@@ -9,6 +9,6 @@ import com.leoman.enterprise.entity.Enterprise;
  */
 public interface EnterpriseService extends GenericManager<Enterprise> {
 
-    public Result save(Enterprise enterprise, String password);
+    public Result saveEnterprise(Enterprise enterprise);
 
 }

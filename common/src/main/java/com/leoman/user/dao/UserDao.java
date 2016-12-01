@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
  */
 public interface UserDao extends IBaseJpaRepository<User> {
 
-    @Query("select a from User a where a.mobile = ?1")
+    @Query("select a from User a where a.mobile = ?1 and a.status != 1")
     public User findByMobile(String mobile);
 
 }

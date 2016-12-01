@@ -13,7 +13,7 @@ public enum ErrorType {
     ERROR_CODE_0006("用户已存在", 6),
     ERROR_CODE_0007("用户名或密码错误", 7),
     ERROR_CODE_0008("企业名称已存在", 8),
-    ERROR_CODE_0009("企业账号已存在", 9),
+    ERROR_CODE_0009("该企业城市账号已存在", 9),
     ERROR_CODE_00010("楼盘名称已存在", 10),
     ERROR_CODE_00011("楼信息不存在", 11),
     ERROR_CODE_00012("楼盘封面图不能为空", 12),

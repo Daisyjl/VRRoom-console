@@ -56,12 +56,6 @@ public class HouseUnitServiceImpl extends GenericManagerImpl<HouseUnit,HouseUnit
             houseUnit.setPlaneImage(planeImage);//平面图
         }
 
-        /*MultipartFile d3File = multipartRequest.getFile("d3File");
-        if (null != d3File) {
-            Image d3Image = uploadImageService.uploadImage(d3File);
-            houseUnit.setD3Image(d3Image);//3d图片
-        }*/
-
         MultipartFile d3ModelRecogFile = multipartRequest.getFile("d3ModelRecogFile");
         if (null != d3ModelRecogFile) {
             String d3ModelRecogUrl = uploadImageService.uploadFile(d3ModelRecogFile);
@@ -90,7 +84,6 @@ public class HouseUnitServiceImpl extends GenericManagerImpl<HouseUnit,HouseUnit
                     houseUnitImageDao.delete(hui);
                 }
             }
-
         }
 
         //新增多张3d户型图

@@ -13,7 +13,7 @@
     <%@ include file="../inc/meta.jsp" %>
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>预约列表</title>
+    <title>企业列表</title>
     <%@ include file="../inc/css.jsp" %>
 
 </head>
@@ -27,7 +27,7 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">预约列表</h1>
+                <h1 class="page-header">企业列表</h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
@@ -36,18 +36,15 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
 
+                        <a href="admin/enterprise/sub/add" class="btn btn-outline btn-primary btn-lg"
+                           role="button">新增企业账号</a>
+
                         <form class="navbar-form navbar-right" role="search">
                             <div class="form-group">
-                                <input type="text" id="searchContent" class="form-control" placeholder="请输入昵称，手机号，楼盘名称">
-                            </div>
-                            <div class="form-group">
-                                <input type="text" id="startDate" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="" placeholder="预约时间从">
-                            </div>
-                            <div class="form-group">
-                                <input type="text" id="endDate" class="form-control input-append date form_datetime" style="width: 180px;" readonly  value="" placeholder="至">
+                                <label>企业账号：</label>
+                                <input type="text" id="username" name="username" class="form-control" placeholder="企业名称">
                             </div>
                             <button type="button" id="c_search" class="btn btn-default btn-sm">查询</button>
-                            <button type="button" id="c_clear" class="btn btn-default btn-sm">清空</button>
                         </form>
                     </div>
                     <!-- /.panel-heading -->
@@ -67,10 +64,9 @@
                                 <thead>
                                 <tr>
                                     <th><input type="checkbox" onclick="$leoman.checkAll(this)" class="checkall"/></th>
-                                    <th>昵称</th>
-                                    <th>手机号</th>
-                                    <th>预约楼盘</th>
-                                    <th>预约时间</th>
+                                    <th>企业账号</th>
+                                    <th>所属集团</th>
+                                    <th>所在城市</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
@@ -98,43 +94,26 @@
 </body>
 
 <script>
-    $reserve = {
+    $enterprise = {
         v: {
             list: [],
             dTable: null
         },
         fn: {
             init: function () {
-                $reserve.fn.dataTableInit();
-
-                $('.form_datetime').datetimepicker({
-                    language: 'zh-CN',
-                    weekStart: 1,
-                    todayBtn: 1,
-                    autoclose: 1,
-                    todayHighlight: 1,
-                    minView: 'month',
-                    forceParse: 0,
-                    showMeridian: false,
-                    format: 'yyyy-mm-dd'
-                });
-
+                $enterprise.fn.dataTableInit();
                 $("#c_search").click(function () {
-                    $reserve.v.dTable.ajax.reload();
-                });
-
-                $("#c_clear").click(function () {
-                    $(this).parents("form").find("input, select").val("");
+                    $enterprise.v.dTable.ajax.reload();
                 });
             },
             dataTableInit: function () {
-                $reserve.v.dTable = $leoman.dataTable($('#dataTables'), {
+                $enterprise.v.dTable = $leoman.dataTable($('#dataTables'), {
                     "processing": true,
                     "serverSide": true,
                     "searching": false,
                     "bSort": false,
                     "ajax": {
-                        "url": "${contextPath}/admin/user/reserve/list",
+                        "url": "${contextPath}/admin/enterprise/sub/list",
                         "type": "POST"
                     },
                     "columns": [
@@ -145,32 +124,26 @@
                                 return checkbox;
                             }
                         },
-                        {"data": "user.nickname",},
-                        {"data": "user.mobile",},
-                        {"data": "house.name",},
-                        {
-                            "data": "createDate",
-                            "render": function (data) {
-                                var date = new Date(data);
-                                return date.format("yyyy-MM-dd hh:mm");
-                            }
-                        },
+                        {"data": "username"},
+                        {"data": "enterprise.name"},
+                        {"data": "city.name"},
                         {
                             "data": "id",
                             "render": function (data, type, row, meta) {
 
-                                var del = "<button title='删除' class='btn btn-primary edit' onclick=\"$reserve.fn.del(\'" + data + "\')\">" +
+                                var edit = "<button title='编辑' class='btn btn-primary edit' onclick=\"$enterprise.fn.add(\'" + data + "\')\">" +
+                                        "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
+
+                                var del = "<button title='删除' class='btn btn-primary edit' onclick=\"$enterprise.fn.del(\'" + data + "\')\">" +
                                         "<i class='fa fa-trash-o'></i> 删除</button>";
 
-                                return del;
+                                return edit  + "&nbsp;" + del;
 
                             }
                         }
                     ],
                     "fnServerParams": function (aoData) {
-                        aoData.searchContent = $("#searchContent").val();
-                        aoData.startDate = $("#startDate").val();
-                        aoData.endDate = $("#endDate").val();
+                        aoData.username = $("#username").val();
                     }
                 });
             },
@@ -179,7 +152,7 @@
                 if (id != null && id != '') {
                     params = "?id=" + id;
                 }
-                window.location.href = "${contextPath}/admin/reserve/add" + params;
+                window.location.href = "${contextPath}/admin/enterprise/sub/add" + params;
             },
             del: function (id) {
                 var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');
@@ -189,9 +162,9 @@
                 }else{
                     ids = checkBox.getInputId();
                 }
-                $leoman.alertConfirm("您确定要彻底删除所选的预约吗？",function(){
+                $leoman.alertConfirm("您确定要彻底删除所选的企业吗？",function(){
                     $.ajax({
-                        "url": "${contextPath}/admin/reserve/del",
+                        "url": "${contextPath}/admin/enterprise/del",
                         "data": {
                             ids:JSON.stringify(ids)
                         },
@@ -210,9 +183,9 @@
             responseComplete: function (result, action) {
                 if (result.status == "0") {
                     if (action) {
-                        $reserve.v.dTable.ajax.reload(null, false);
+                        $enterprise.v.dTable.ajax.reload(null, false);
                     } else {
-                        $reserve.v.dTable.ajax.reload();
+                        $enterprise.v.dTable.ajax.reload();
                     }
                     $leoman.notify(result.msg, "success");
                 } else {
@@ -222,7 +195,7 @@
         }
     }
     $(function () {
-        $reserve.fn.init();
+        $enterprise.fn.init();
     })
 </script>
 </html>

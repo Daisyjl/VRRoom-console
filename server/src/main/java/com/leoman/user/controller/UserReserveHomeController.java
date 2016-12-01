@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 /**
- * 预约管理
+ * 预约管理(在家看房预约)
  * Created by Daisy on 2016/10/11.
  */
 @Controller
@@ -46,13 +48,20 @@ public class UserReserveHomeController extends GenericEntityController<UserReser
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> list(String searchContent, Integer draw, Integer start, Integer length) {
+    public Map<String, Object> list(String searchContent, String startDate, String endDate, Integer draw, Integer start, Integer length) throws ParseException {
         int pagenum = getPageNum(start, length);
         Query query = Query.forClass(UserReserveHome.class, userReserveHomeService);
         query.setPagenum(pagenum);
         query.setPagesize(length);
         List<String> propertyName = Arrays.asList(new String[]{"user.nickname", "user.mobile", "house.name"});
         query.orLike(propertyName, searchContent);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        if(StringUtils.isNotBlank(startDate)){
+            query.ge("createDate", format.parse(startDate).getTime());
+        }
+        if(StringUtils.isNotBlank(endDate)){
+            query.le("endDate", format.parse(endDate).getTime());
+        }
         Page<UserReserveHome> page = userReserveHomeService.queryPage(query);
         return DataTableFactory.fitting(draw, page);
     }

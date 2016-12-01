@@ -5,11 +5,12 @@ import com.leoman.entity.BaseEntity;
 import javax.persistence.*;
 
 /**
+ * 子企业登录
  * Created by Daisy on 2016/10/11.
  */
 @Entity
-@Table(name = "t_enterprise_login")
-public class EnterpriseLogin extends BaseEntity{
+@Table(name = "t_enterprise_sub_login")
+public class EnterpriseSubLogin extends BaseEntity{
 
     @Column(name = "username")
     private String username;//账号
@@ -20,9 +21,8 @@ public class EnterpriseLogin extends BaseEntity{
     @Column(name = "login_ip")
     private String loginIp;//登录ip
 
-    @ManyToOne
-    @JoinColumn(name = "enterprise_id")
-    private Enterprise enterprise;//企业
+    @Column(name = "enterprise_sub_id")
+    private Long enterpriseSubId;//子企业id
 
     public String getUsername() {
         return username;
@@ -48,11 +48,11 @@ public class EnterpriseLogin extends BaseEntity{
         this.loginIp = loginIp;
     }
 
-    public Enterprise getEnterprise() {
-        return enterprise;
+    public Long getEnterpriseSubId() {
+        return enterpriseSubId;
     }
 
-    public void setEnterprise(Enterprise enterprise) {
-        this.enterprise = enterprise;
+    public void setEnterpriseSubId(Long enterpriseSubId) {
+        this.enterpriseSubId = enterpriseSubId;
     }
 }

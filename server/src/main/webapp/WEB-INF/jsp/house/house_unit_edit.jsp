@@ -49,9 +49,10 @@
 
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" ><span style="color: red;">* </span>户型名称：</label>
-                                <div class="col-sm-6">
+                                <div class="col-sm-2">
                                     <input type="text" name="name" value="${unit.name}" class="form-control"  data-rule="required" maxlength="30"/>
                                 </div>
+                                <label class="col-sm-1 control-label" style="text-align: left">户型</label>
                             </div>
 
                             <div class="form-group">
@@ -67,7 +68,7 @@
 
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" ><span style="color: red;">* </span>面积：</label>
-                                <div class="col-sm-6">
+                                <div class="col-sm-2">
                                     <input type="text" name="totalArea" value="${unit.totalArea}" class="form-control"
                                            data-rule="required; price" data-rule-price="[/^\d{0,8}\.{0,1}(\d{1,2})?$/, '请输入正确的面积']"/>
                                 </div>
@@ -87,7 +88,7 @@
 
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >参考总价：</label>
-                                <div class="col-sm-6">
+                                <div class="col-sm-2">
                                     <input type="text" name="totalPrice" value="${unit.totalPrice}" class="form-control"
                                            data-rule="price" data-rule-price="[/^\d{0,8}\.{0,1}(\d{1,2})?$/, '请输入正确的参考总价']"/>
                                 </div>
@@ -121,7 +122,7 @@
 
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >360全景：</label>
-                                <div class="col-sm-6">
+                                <div class="col-sm-3">
                                     <input type="text" name="fullView" value="${unit.fullView}" class="form-control"/>
                                 </div>
                             </div>
@@ -232,8 +233,8 @@
 
                 //初始化值
 
-                if("${unit.direction}" != ''){
-                    $("#directionSelect option[value="+"${unit.direction.id}"+"]").attr("selected", true);
+                if("${unit.directionId}" != ''){
+                    $("#directionSelect option[value="+"${unit.directionId}"+"]").attr("selected", true);
                 }
 
                 if("${unit.d3ModelRecogUrl}" != ''){
@@ -317,7 +318,7 @@
             },
             //返回
             back : function(){
-                window.location.href = "${contextPath}/admin/house/unit/index/${unit.houseId}";
+                window.location.href = "${contextPath}/admin/house/unit/index/${houseId}";
             }
         }
     };

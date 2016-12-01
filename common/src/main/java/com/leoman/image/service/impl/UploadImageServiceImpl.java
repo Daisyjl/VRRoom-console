@@ -47,6 +47,7 @@ public class UploadImageServiceImpl extends AbstractUploadService implements Upl
     }
 
     @Override
+    @Transactional
     public Image uploadImage(MultipartFile file, String... thumbSizes) {
         try {
             FileBo fileBo = saveImage(file);
@@ -85,6 +86,7 @@ public class UploadImageServiceImpl extends AbstractUploadService implements Upl
                 }
                 image.setThumbs(JsonUtil.obj2Json(thumb));
             }
+            imageService.create(image);
             return image;
         } catch (Exception e) {
             GeneralExceptionHandler.log(e);
@@ -112,7 +114,7 @@ public class UploadImageServiceImpl extends AbstractUploadService implements Upl
         List<Image> images = new ArrayList<Image>();
         for(MultipartFile file : files){
             Image image = uploadImage(file);
-            imageService.create(image);
+//            imageService.create(image);
             images.add(image);
         }
         return images;

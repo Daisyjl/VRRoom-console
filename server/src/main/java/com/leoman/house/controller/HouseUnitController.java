@@ -9,6 +9,7 @@ import com.leoman.direction.service.DirectionService;
 import com.leoman.entity.Configue;
 import com.leoman.house.entity.House;
 import com.leoman.house.entity.HouseUnit;
+import com.leoman.house.entity.HouseUnitImage;
 import com.leoman.house.service.HouseUnitService;
 import com.leoman.house.service.impl.HouseServiceImpl;
 import com.leoman.utils.ImageUtil;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -72,7 +74,8 @@ public class HouseUnitController extends GenericEntityController<House,House,Hou
      * @return
      */
     @RequestMapping(value = "/edit")
-    public String edit(Long id, Model model) throws Exception {
+    public String edit(Long houseId, Long id, Model model) throws Exception {
+        List<HouseUnitImage> d3ImageList = new ArrayList<>();
         if(id != null){
             HouseUnit unit = houseUnitService.queryByPK(id);
             if(StringUtils.isNotBlank(unit.getPlaneImage().getPath())){
@@ -90,13 +93,15 @@ public class HouseUnitController extends GenericEntityController<House,House,Hou
 
             ImageUtil.setImagePath(unit.getD3ImageList());
 
-            List<Direction> directionList = directionService.queryAll();
             model.addAttribute("unit", unit);
-            model.addAttribute("directionList", directionList);
-            model.addAttribute("d3ImageList", JSONArray.fromObject(unit.getD3ImageList()));
+            d3ImageList = unit.getD3ImageList();
         }
+        List<Direction> directionList = directionService.queryAll();
         List<Bedroom> bedroomList = bedroomService.queryAll();
+        model.addAttribute("directionList", directionList);
         model.addAttribute("bedroomList", bedroomList);
+        model.addAttribute("d3ImageList", JSONArray.fromObject(d3ImageList));
+        model.addAttribute("houseId", houseId);
         return "house/house_unit_edit";
     }
 

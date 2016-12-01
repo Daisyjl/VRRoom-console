@@ -38,6 +38,7 @@
                         <form id="formId" method="post" class="form-horizontal" role="form">
 
                             <input id="id" name="id" type="hidden" value="${priceRange.id}">
+                            <input name="type" type="hidden" value="${priceRange.type}">
 
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >价格范围从：</label>

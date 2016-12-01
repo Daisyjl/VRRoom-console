@@ -58,7 +58,7 @@ public class FileController extends CommonController {
             }else{
                 image = uploadImageService.uploadImage(file,thumbSizes.split(","));
             }
-            imageService.create(image);
+//            imageService.create(image);
             image.setPath(Configue.getUploadUrl()+image.getPath());
             WebUtil.print(response, new Result(true).data(image).msg("上传图片成功!"));
         }catch (Exception e){
@@ -131,7 +131,7 @@ public class FileController extends CommonController {
                 }
 
                 Image image = uploadImageService.uploadImage(file);
-                imageService.create(image);
+//                imageService.create(image);
                 image.setPath(Configue.getUploadUrl()+image.getPath());
 
                 imageList.add(image);
@@ -198,7 +198,6 @@ public class FileController extends CommonController {
             }
 
             image = uploadImageService.uploadImage(file);
-            imageService.create(image);
             image.setPath(Configue.getUploadUrl()+image.getPath());
 
 

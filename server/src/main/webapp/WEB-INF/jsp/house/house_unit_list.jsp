@@ -88,131 +88,7 @@
     </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="lotteryModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content" >
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="lotteryModalLabel">新增户型</h4>
-            </div>
-            <div class="modal-body" >
-                <form id="unitForm" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
-                    <input type="hidden" name="id" value="">
-                    <input type="hidden" name="houseId" value="${houseId}">
 
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" ><span style="color: red;">* </span>户型名称：</label>
-                        <div class="col-sm-6">
-                            <input type="text" name="name" value="" class="form-control"  data-rule="required" maxlength="30"/>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" ><span style="color: red;">* </span>户型类型：</label>
-                        <div class="col-sm-6">
-                            <select class="form-control input-sm" name="typeName" data-rule="required">
-                                <option value="">---请选择---</option>
-                                <option value="一室一厅一卫">一室一厅一卫</option>
-                                <option value="两室一厅一卫">两室一厅一卫</option>
-                                <option value="三室两厅一卫">三室两厅一卫</option>
-                                <option value="三室两厅两卫">三室两厅两卫</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" ><span style="color: red;">* </span>面积：</label>
-                        <div class="col-sm-6">
-                            <input type="text" name="totalArea" value="" class="form-control"
-                                   data-rule="required; price" data-rule-price="[/^\d{0,8}\.{0,1}(\d{1,2})?$/, '请输入正确的面积']"/>
-                        </div>
-                        <label class="col-sm-3 control-label" style="text-align: left">平方</label>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" >朝向：</label>
-                        <div class="col-sm-6">
-                            <select class="form-control input-sm" name="towards">
-                                <option value="">---请选择---</option>
-                                <option value="正南">正南</option>
-                                <option value="东南">东南</option>
-                                <option value="东">东</option>
-                                <option value="西南">西南</option>
-                                <option value="北">北</option>
-                                <option value="西">西</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" >参考总价：</label>
-                        <div class="col-sm-6">
-                            <input type="text" name="totalPrice" value="" class="form-control"
-                                   data-rule="price" data-rule-price="[/^\d{0,8}\.{0,1}(\d{1,2})?$/, '请输入正确的参考总价']"/>
-                        </div>
-                        <label class="col-sm-3 control-label" style="text-align: left">万</label>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label"><span style="color: red;">* </span>户型图上传：</label>
-                        <div class="col-sm-5">
-                            <input type="file" name="planeFile" id="planeFile" style="display:none;"/>
-                            <a href="javascript:void(0);" onclick="$('#planeFile').click();">
-                                <img id="planeImg" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">3d户型图上传：</label>
-                        <div class="col-sm-5">
-                            <input type="file" name="d3File" id="d3File" style="display:none;"/>
-                            <a href="javascript:void(0);" onclick="$('#d3File').click();">
-                                <img id="d3Img" src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 150px; display: inline; margin-bottom: 5px;" border="1"/>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" >360全景：</label>
-                        <div class="col-sm-6">
-                            <input type="text" name="fullView" value="" class="form-control"/>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" >3D模型识别图：</label>
-                        <div class="col-sm-6">
-                            <input type="file" name="d3ModelRecogFile" class="default" />
-                        </div>
-                        <div class="col-sm-3">
-                            <a id="d3ModelRecogFileUrl" style="display: none;">下载模型</a>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" >3D模型：</label>
-                        <div class="col-sm-6">
-                            <input type="file" name="d3ModelFile" class="default"/>
-                        </div>
-                        <div class="col-sm-3">
-                            <a id="d3ModelFileUrl" style="display: none;">下载模型</a>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" onclick="$houseUnit.fn.save()" class="btn btn-primary">保存</button>
-            </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
-<!-- Modal end -->
 
 <%@ include file="../inc/footer.jsp" %>
 <!-- 配置文件 -->
@@ -229,13 +105,6 @@
         },
         fn: {
             init: function () {
-                $("#planeFile").uploadPreview({
-                    Img: "planeImg",
-                });
-
-                $("#d3File").uploadPreview({
-                    Img: "d3Img",
-                });
 
                 $("#unitDiv").empty();
                 $.post("${contextPath}/admin/house/unit/list",{'houseId':"${houseId}"},function(result){
@@ -259,48 +128,8 @@
                 });
             },
             openModal : function (id){
-                id = (id != '' && id != undefined)?("?id="+id):"";
-                window.location.href = "admin/house/unit/edit"+id;
-                /*if(id != '' && id != undefined){
-                    $.post("${contextPath}/admin/house/unit/detail/"+id, function(result){
-                        if(result.status == 0){
-                            var obj = result.data.houseUnit;
-                            $("#unitForm").find("[name=id]").val(obj.id);
-                            $("#unitForm").find("[name=name]").val(obj.name);
-                            $("#unitForm").find("[name=typeName]").val(obj.typeName);
-                            $("#unitForm").find("[name=totalArea]").val(obj.totalArea);
-                            $("#unitForm").find("[name=totalPrice]").val(obj.totalPrice);
-                            if(obj.planeImage != null){
-                                $("#unitForm").find("#planeImg").attr("src", obj.planeImage.uploadUrl);
-                            }
-                            if(obj.d3Image != null){
-                                $("#unitForm").find("#d3Img").attr("src", obj.d3Image.uploadUrl);
-                            }
-                            $("#unitForm").find("[name=fullView]").val(obj.fullView);
-                            if(obj.d3ModelRecogUrl != null && obj.d3ModelRecogUrl != ''){
-                                $("#unitForm").find("#d3ModelRecogFileUrl").show();
-                                $("#unitForm").find("#d3ModelRecogFileUrl").attr("href", obj.d3ModelRecogUrl);
-                            }
-                            if(obj.d3ModelUrl != null && obj.d3ModelUrl != ''){
-                                $("#unitForm").find("#d3ModelFileUrl").show();
-                                $("#unitForm").find("#d3ModelFileUrl").attr("href", obj.d3ModelUrl);
-                            }
-
-                            //设置户型类型和朝向的下拉框的值
-                            $("[name=typeName]").find("option[value="+obj.typeName+"]").attr("selected", true);
-                            $("[name=towards]").find("option[value="+obj.towards+"]").attr("selected", true);
-                            $("#myModal").modal("show");
-                        }else{
-                            $leoman.alertMsg(result.msg);
-                        }
-                    });
-                }else{
-                    $("#unitForm").find("input, select").val("");
-                    $("#unitForm").find("img").attr("src","static/images/add.jpg");
-                    $("#unitForm").find("[name=houseId]").val("${houseId}");
-                    $("#myModal").modal("show");
-                }*/
-
+                id = (id != '' && id != undefined)?("&id="+id):"";
+                window.location.href = "admin/house/unit/edit?houseId=${houseId}"+id;
             },
             //保存弹出的新增户型
             save : function (){

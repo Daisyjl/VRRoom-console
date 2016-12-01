@@ -159,9 +159,34 @@ public class Query implements Serializable {
             return;
         if (value.indexOf("%") < 0)
             value = "%" + value + "%";
-        Predicate predicate = criteriaBuilder.or(criteriaBuilder.like(from.get(propertyName.get(0)), value.toString()));
-        for (int i = 1; i < propertyName.size(); ++i)
-            predicate = criteriaBuilder.or(predicate, criteriaBuilder.like(from.get(propertyName.get(i)), value));
+
+        String[] names1 = null;
+        if(propertyName.get(0).contains(".")) {
+            names1 = propertyName.get(0).split("\\.");
+        }
+        Path p1 = null;
+        if(names1 == null) {
+            p1 = from.get(propertyName.get(0));
+        }
+        else {
+            p1 = from.get(names1[0]).get(names1[1]);
+        }
+
+        Predicate predicate = criteriaBuilder.or(criteriaBuilder.like(p1, value.toString()));
+        for (int i = 1; i < propertyName.size(); ++i){
+            String[] names = null;
+            if(propertyName.get(i).contains(".")) {
+                names = propertyName.get(i).split("\\.");
+            }
+            Path p = null;
+            if(names == null) {
+                p = from.get(propertyName.get(i));
+            }
+            else {
+                p = from.get(names[0]).get(names[1]);
+            }
+            predicate = criteriaBuilder.or(predicate, criteriaBuilder.like(p, value));
+        }
         this.predicates.add(predicate);
     }
 

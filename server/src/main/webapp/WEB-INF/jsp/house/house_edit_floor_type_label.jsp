@@ -167,7 +167,7 @@
         <a href="javascript:void(0);" onclick="$houseFloor.fn.AddTempImg(this)">
             <img src="${contextPath}/static/images/add.jpg" style="height: 150px; width: 200px; display: inline; margin-bottom: 5px;" border="1"/>
         </a>
-        <a href="javascript:void(0)" target="_blank" class="btn btn-primary btn-sm" role="button" style="color: white; display: none;margin-bottom: 5px;">添加锚点</a>
+        <!--<a href="javascript:void(0)" target="_blank" class="btn btn-primary btn-sm" role="button" style="color: white; display: none;margin-bottom: 5px;">添加锚点</a>-->
     </div>
 
     <label class="col-sm-1 control-label">选择户型：</label>
@@ -538,13 +538,13 @@
                 $("#transverseDiv_"+tempFloorId).append(template);
 
                 //给第一张图片加锚点
-                if($("#transverseDiv_"+tempFloorId).find("[name=transverseGroup]").length == 1){
+                /*if($("#transverseDiv_"+tempFloorId).find("[name=transverseGroup]").length == 1){
                     template.find(".btn-sm").attr("onclick","$houseFloor.fn.editLabel(this)");
                     //已存在的横切面才可以打锚点
                     if(typeUnitId != null && typeUnitId != undefined){
                         template.find(".btn-sm").show();
                     }
-                }
+                }*/
 
                 $houseFloor.v.tempTransverseId++;
                 $houseFloor.v.tempImageId++;
@@ -646,7 +646,6 @@
                         };
                         floorJson.labelArr.push(label);
                     }
-                    console.info(floorJson.labelArr);
 
                     if(floorJson.bigImageId == '' || floorJson.smallImageId == '' || floorJson.labelArr.length == 0){
                         $leoman.alertMsg("楼层图和锚点信息不能为空");

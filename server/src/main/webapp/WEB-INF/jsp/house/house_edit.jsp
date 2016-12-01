@@ -604,7 +604,7 @@
             save : function() {
                 if(!$("#formId").isValid()) return;
 
-                if($("[name=imageIds]").length == 0){
+                if($("#imageDiv [name=imageIds]").length == 0){
                     $leoman.alertMsg("请至少上传一张封面图");
                     return ;
                 }

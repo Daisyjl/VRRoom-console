@@ -38,47 +38,11 @@
                         <form id="formId" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
 
                             <input id="id" name="id" type="hidden" value="${enterprise.id}">
-                            <input type="hidden" id="provinceId" value="${enterprise.city.province.id}">
-                            <input type="hidden" id="cityId" value="${enterprise.city.id}">
 
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >企业名称</label>
                                 <div class="col-sm-6">
                                     <input type="text" name="name" value="${enterprise.name}" class="form-control" required/>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label" >企业账号</label>
-                                <div class="col-sm-6">
-                                    <input type="text" name="username" value="${enterprise.username}" class="form-control" required/>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label" >企业密码</label>
-                                <div class="col-sm-6">
-                                    <input type="password" id="password" name="password" value="" class="form-control" required/>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label" >确认密码</label>
-                                <div class="col-sm-6">
-                                    <input type="password" id="repassword" name="" value="" class="form-control" equalTo="#password" required/>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label">省:</label>
-
-                                <div class="col-sm-1">
-                                    <select id="provinceSelect" style="width: 150px;" class="form-control"></select>
-                                </div>
-
-                                <label class="col-sm-1 control-label">市:</label>
-                                <div class="col-sm-1">
-                                    <select id="citySelect" style="width: 150px;" class="form-control" name="city.id"></select>
                                 </div>
                             </div>
 
@@ -118,7 +82,6 @@
 </body>
 
 <%@ include file="../inc/footer.jsp" %>
-<script src="http://api.map.baidu.com/api?v=2.0&ak=pcExWaLfoopv7vZ5hO1B8ej8"></script>
 <script>
     $enterprise = {
         v: {
@@ -131,72 +94,10 @@
             init: function () {
                 $enterprise.fn.initEdior();//初始化编辑器
 
-                $enterprise.fn.getProviceList();//初始化省份列表
-
-                //初始化省份改变事件
-                $('#provinceSelect').change(function () {
-                    $('#cityId').val('');
-
-                    var provinceId = $(this).val();
-                    $enterprise.fn.getCityList(provinceId);
-                });
-
                 UM.getEditor('myEditor').setContent($("#intro").html());
             },
             initEdior : function() {
                 $enterprise.v.um = UM.getEditor('myEditor');
-            },
-            getProviceList: function () {
-                var provinceId = $('#provinceId').val();
-
-                $.post("${contextPath}/common/area/provinceList", null, function (result) {
-                    var list = result.data.object.provinceList;
-                    if (result.status == 0) {
-                        // 获取返回的省份列表信息，并循环绑定到select中
-                        var content = "<option value=''>请选择所在省份</option>";
-                        jQuery.each(list, function (i, item) {
-                            content += "<option value='" + item.id + "'>" + item.name + "</option>";
-                        });
-                        $('#provinceSelect').append(content);
-                    } else {
-                        $leoman.alertMsg(result.msg);
-                    }
-
-                    if (null != provinceId && provinceId != '') {
-                        $('#provinceSelect').val(provinceId);
-                    }
-                });
-
-                var sourceId = 0;
-                if (null == provinceId || provinceId == '') {
-                    sourceId = $('#provinceSelect option:selected').val();
-                } else {
-                    sourceId = provinceId;
-                }
-
-                $enterprise.fn.getCityList(sourceId);
-            },
-            getCityList: function (sourceId) {
-                $('#citySelect').html('');
-
-                $.post("${contextPath}/common/area/cityList", {provinceId: sourceId}, function (result) {
-                    var list = result.data.object.cityList;
-                    if (result.status == 0) {
-                        // 获取返回的城市列表信息，并循环绑定到select中
-                        var content = "<option value=''>请选择所在城市</option>";
-                        jQuery.each(list, function (i, item) {
-                            content += "<option value='" + item.id + "'>" + item.name + "</option>";
-                        });
-                        $('#citySelect').append(content);
-                    } else {
-                        $leoman.alertMsg(result.msg);
-                    }
-
-                    var cityId = $('#cityId').val();
-                    if (null != cityId && cityId != '') {
-                        $('#citySelect').val(cityId);
-                    }
-                });
             },
             save : function() {
                 if(!$("#formId").valid()) return;
