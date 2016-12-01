@@ -73,24 +73,21 @@
 <script src="${contextPath}/static/js/dataformat.js"></script>
 
 <!-- upload -->
-<script src="${contextPath}/html/js/fileupload.min.js"></script>
+<script src="${contextPath}/static/js/fileupload.min.js"></script>
 <script src="${contextPath}/static/js/plugins/bootstrap-fileinput/js/fileinput.js" type="text/javascript"></script>
 <script src="${contextPath}/static/js/plugins/bootstrap-fileinput/js/fileinput_locale_zh.js" type="text/javascript"></script>
 
-<script src="${contextPath}/html/js/uploadPreview.js"></script>
+<script src="${contextPath}/static/js/uploadPreview.js"></script>
 
 <!-- icheck -->
-<script src="${contextPath}/static/html/js/iCheck/jquery.icheck.js"></script>
+<script src="${contextPath}/static/js/iCheck/jquery.icheck.js"></script>
 
 <!-- tags input -->
-<script src="${contextPath}/static/html/js/jquery-tags-input/jquery.tagsinput.js"></script>
-<script src="${contextPath}/static/html/js/tagsinput-init.js"></script>
-
-<script type="text/javascript" src="${contextPath}/static/html/js/jquery.validate.min.js"></script>
-<script src="${contextPath}/static/html/js/jquery.validate.extend.js"></script>
+<script src="${contextPath}/static/js/jquery-tags-input/jquery.tagsinput.js"></script>
+<script src="${contextPath}/static/js/tagsinput-init.js"></script>
 
 <!-- confirm -->
-<script type="text/javascript" src="${contextPath}/html/js/confirm.js"></script>
+<script type="text/javascript" src="${contextPath}/static/js/confirm.js"></script>
 
 <!-- editor -->
 <script type="text/javascript" charset="utf-8" src="${contextPath}/static/umeditor/js/umeditor.config.js"></script>
@@ -102,7 +99,7 @@
 <script src="static/js/msgbox/msgbox.js"></script>
 
 <!--multi-select-->
-<script type="text/javascript" src="${contextPath}/static/html/js/jquery-multi-select/js/jquery.multi-select.js"></script>
+<script type="text/javascript" src="${contextPath}/static/js/jquery-multi-select/js/jquery.multi-select.js"></script>
 
 <script type="text/javascript">
 	$(function() {
