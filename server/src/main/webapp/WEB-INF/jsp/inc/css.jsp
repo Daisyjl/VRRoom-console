@@ -49,10 +49,10 @@
 <script src="static/datepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
 
 <!--icheck-->
-<link href="${contextPath}/static/html/js/iCheck/skins/minimal/minimal.css" rel="stylesheet">
+<link href="${contextPath}/static/js/iCheck/skins/minimal/minimal.css" rel="stylesheet">
 
 <!--tags input-->
-<link rel="stylesheet" type="text/css" href="${contextPath}/static/html/js/jquery-tags-input/jquery.tagsinput.css" />
+<link rel="stylesheet" type="text/css" href="${contextPath}/static/js/jquery-tags-input/jquery.tagsinput.css" />
 
 <!-- editor -->
 <link href="${contextPath}/static/umeditor/_css/umeditor.css" type="text/css" rel="stylesheet">

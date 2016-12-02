@@ -1,19 +1,17 @@
 package com.leoman.permissions.admin.controller;
 
-import com.leoman.entity.Constant;
-import com.leoman.pay.util.MD5Util;
-import com.leoman.permissions.admin.entity.Admin;
-import com.leoman.permissions.admin.service.impl.AdminServiceImpl;
-import com.leoman.permissions.admin.service.AdminService;
 import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
-import com.leoman.permissions.adminrole.entity.AdminRole;
-import com.leoman.permissions.adminrole.service.AdminRoleService;
+import com.leoman.enterprise.service.EnterpriseService;
+import com.leoman.entity.Constant;
+import com.leoman.pay.util.MD5Util;
+import com.leoman.permissions.admin.entity.Admin;
+import com.leoman.permissions.admin.service.AdminService;
+import com.leoman.permissions.admin.service.impl.AdminServiceImpl;
 import com.leoman.permissions.role.entity.Role;
 import com.leoman.permissions.role.service.RoleService;
-import com.leoman.enterprise.service.EnterpriseService;
 import com.leoman.utils.JsonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,9 +40,6 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
     private RoleService roleService;
 
     @Autowired
-    private AdminRoleService adminRoleService;
-
-    @Autowired
     private EnterpriseService enterpriseService;
 
     /**
@@ -56,60 +49,36 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
     public String index(Model model,HttpServletRequest request) {
         Admin admin = adminService.findByUsername("admin");
         model.addAttribute("admin", admin);
-//        UserInfo userInfo = this.getUser(request);
-//        model.addAttribute("userInfo",userInfo);
         return "permissions/admin/list";
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> list(String username, Integer draw, Integer start, Integer length ,Long enterpriseId) {
+    public Map<String, Object> list(String username, Integer draw, Integer start, Integer length) {
         int pagenum = getPageNum(start, length);
 
         Query query = Query.forClass(Admin.class, adminService);
         query.setPagenum(pagenum);
         query.setPagesize(length);
         query.like("username", username);
-        query.eq("enterprise.id",enterpriseId);
         Page<Admin> page = adminService.queryPage(query);
 
         List<Admin> list = page.getContent();
-        for(Admin a : list){
-            String name = roleService.findName(a.getId());
-            if(StringUtils.isNotBlank(name)){
-                a.setRoleName(name);
-            }else {
-                a.setRoleName("");
-            }
+        for(Admin admin : list){
+            Role role = roleService.queryByPK(admin.getRoleId());
+            admin.setRole(role);
         }
-//        try {
-//            page =
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        Page<Admin> page = adminService.page(pagenum,length);
         return DataTableFactory.fitting(draw, page);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Long id, Model model,HttpServletRequest request) {
-        Admin admin = new Admin() ;
         if (id != null) {
-            admin = adminService.queryByPK(id);
+            Admin admin = adminService.queryByPK(id);
             model.addAttribute("admin", admin);
-            List<AdminRole> adminRoles = adminRoleService.queryByProperty("adminId",id);
-            if(!adminRoles.isEmpty() && adminRoles.size()>0){
-                model.addAttribute("roleId",adminRoles.get(0).getRoleId());
-            }
         }
         //角色表
         model.addAttribute("role",roleService.queryAll());
-        //企业表
-        model.addAttribute("enterprise",enterpriseService.queryAll());
-
-        /*UserInfo userInfo = this.getUser(request);
-        model.addAttribute("userInfo",userService.findByMobile(admin.getMobile()));*/
-
         return "permissions/admin/add";
     }
 
@@ -144,7 +113,7 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
         return true;
     }
 
-    @RequestMapping(value = "/role/select", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/role/select", method = RequestMethod.POST)
     @ResponseBody
     public Result roleSelect(Long adminId) {
         Admin admin = adminService.queryByPK(adminId);
@@ -164,10 +133,10 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
         return map;
     }
 
-    /**
+    *//**
      * 保存选中的角色
      * @return
-     */
+     *//*
     @RequestMapping(value = "/role/save", method = RequestMethod.POST)
     @ResponseBody
     public Result toRole(String roleIds, Long adminId) {
@@ -191,7 +160,7 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
             return Result.failure();
         }
         return Result.success();
-    }
+    }*/
 
     /**
      * 删除
@@ -200,42 +169,14 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
      */
     @RequestMapping(value = "/del", method = RequestMethod.POST)
     @ResponseBody
-    public Integer del(Long id,String ids) {
-        if (id==null && StringUtils.isBlank(ids)){
-            return 1;
-        }
-        try {
-            if(id!=null){
-                if(id==1){
-                    return 2;
-                }
-                adminService.delete(adminService.queryByPK(id));
-                List<AdminRole> adminRoles = adminRoleService.queryByProperty("adminId",id);
-                if(!adminRoles.isEmpty() && adminRoles.size()>0){
-                    for(AdminRole a : adminRoles){
-                        adminRoleService.delete(a);
-                    }
-                }
-            }else {
-                Long[] ss = JsonUtil.json2Obj(ids,Long[].class);
-                for (Long _id : ss) {
-                    if(_id==1){
-                        return 2;
-                    }
-                    adminService.delete(adminService.queryByPK(_id));
-                    List<AdminRole> adminRoles = adminRoleService.queryByProperty("adminId",_id);
-                    if(!adminRoles.isEmpty() && adminRoles.size()>0){
-                        for(AdminRole a : adminRoles){
-                            adminRoleService.delete(a);
-                        }
-                    }
-                }
+    public Result del(String ids) {
+        String[] idArr = JsonUtil.json2Obj(ids,String[].class);
+        for (String id : idArr) {
+            if(StringUtils.isNotEmpty(id)){
+                adminService.deleteByPK(Long.valueOf(id));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 1;
         }
-        return 0;
+        return new Result().success();
     }
 
 

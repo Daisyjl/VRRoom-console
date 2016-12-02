@@ -1,5 +1,6 @@
 package com.leoman.permissions.role.service;
 
+import com.leoman.common.core.Result;
 import com.leoman.common.service.GenericManager;
 import com.leoman.permissions.role.entity.Role;
 
@@ -8,8 +9,8 @@ import com.leoman.permissions.role.entity.Role;
  */
 public interface RoleService extends GenericManager<Role>{
 
-    public void saveRole(Role role, String[] moduleIds);
+    public Result saveRole(Role role, String moduleIds);
 
-    public String findName(Long adminId);
+//    public String findName(Long adminId);
 
 }

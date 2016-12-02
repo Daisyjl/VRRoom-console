@@ -8,8 +8,7 @@ package com.leoman.house.util;
 * History:
 */
 
-import com.leoman.utils.ImageUtil;
-
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -17,8 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.imageio.ImageIO;
 /**
  * 屏幕上查找指定图片
  * @author Jeby Sun
@@ -175,7 +172,7 @@ public class ImageFindUtil {
                     map.put("left", (x+keyImgWidth));
                     map.put("top", (y+keyImgHeight/2));
                     list.add(map);
-                    System.out.println(count+" -- X坐标:"+(x+keyImgWidth)+","+"Y坐标:"+(y+keyImgHeight/2));
+//                    System.out.println(count+" -- X坐标:"+(x+keyImgWidth)+","+"Y坐标:"+(y+keyImgHeight/2));
                     count++;
 //                    	x= x+keyImgWidth;
 //                    	y = y +keyImgHeight;
@@ -190,7 +187,7 @@ public class ImageFindUtil {
                 }
             }
         }
-        System.out.println("比较了多少次："+i);
+//        System.out.println("比较了多少次："+i);/
         return list;
     }
     

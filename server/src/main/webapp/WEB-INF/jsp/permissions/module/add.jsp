@@ -248,7 +248,7 @@
             },
 
             save : function() {
-                if(!$("#formId").valid()) return;
+                if(!$("#formId").isValid()) return;
 
                 $("#formId").ajaxSubmit({
                     url : "${contextPath}/admin/module/save",

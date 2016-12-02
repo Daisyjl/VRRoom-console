@@ -232,9 +232,12 @@
                 }
 
                 //初始化值
-
                 if("${unit.directionId}" != ''){
                     $("#directionSelect option[value="+"${unit.directionId}"+"]").attr("selected", true);
+                }
+
+                if("${unit.bedroomId}" != ''){
+                    $("select[name=bedroomId] option[value="+"${unit.bedroomId}"+"]").attr("selected", true);
                 }
 
                 if("${unit.d3ModelRecogUrl}" != ''){

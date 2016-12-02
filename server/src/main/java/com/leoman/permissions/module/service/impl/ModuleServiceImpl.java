@@ -49,6 +49,7 @@ public class ModuleServiceImpl extends GenericManagerImpl<Module, ModuleDao> imp
 
         com.leoman.common.service.Query query = com.leoman.common.service.Query.forClass(Module.class, this);
         query.isNull("superModule.id");
+        query.eq("status", 0);
         List<Module> list = this.queryAll(query);
         List<ModuleVo> voList = entityToVo(list);
         return voList;

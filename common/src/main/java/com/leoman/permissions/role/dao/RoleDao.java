@@ -10,7 +10,10 @@ import org.springframework.data.jpa.repository.Query;
 public interface RoleDao extends IBaseJpaRepository<Role>{
 
     //查询角色
-    @Query("SELECT a.name FROM Role a WHERE a.id = (SELECT b.roleId FROM AdminRole b WHERE b.adminId = ?1)")
-    public String findName(Long adminId);
+    @Query("SELECT a.name FROM Role a WHERE a.name = ?1")
+    public Role findName(String name);
+
+    @Query("SELECT a.name FROM Role a WHERE a.name = ?1 and a.id != ?2")
+    public Role findNameAndId(String name, Long id);
 
 }

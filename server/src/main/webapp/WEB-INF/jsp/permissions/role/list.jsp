@@ -93,20 +93,20 @@
 </body>
 
 <script>
-    $admin = {
+    $role = {
         v: {
             list: [],
             dTable: null
         },
         fn: {
             init: function () {
-                $admin.fn.dataTableInit();
+                $role.fn.dataTableInit();
                 $("#c_search").click(function () {
-                    $admin.v.dTable.ajax.reload();
+                    $role.v.dTable.ajax.reload();
                 });
             },
             dataTableInit: function () {
-                $admin.v.dTable = $leoman.dataTable($('#dataTables'), {
+                $role.v.dTable = $leoman.dataTable($('#dataTables'), {
                     "processing": true,
                     "serverSide": true,
                     "searching": false,
@@ -127,19 +127,19 @@
                         {
                             "data": "createDate",
                             "render" : function(data) {
-                                return new Date(data).format("yyyy-MM-dd hh:mm:ss");
+                                return new Date(data).format("yyyy-MM-dd hh:mm");
                             }
                         },
                         {
                             "data": "id",
                             "render": function (data) {
-                                var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$admin.fn.detail(\'" + data + "\')\">" +
+                                var detail = "<button title='查看' class='btn btn-primary add' onclick=\"$role.fn.detail(\'" + data + "\')\">" +
                                         "<i class='fa fa-eye'></i> 查看</button>";
 
-                                var edit = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.add(\'" + data + "\')\">" +
+                                var edit = "<button title='编辑' class='btn btn-primary edit' onclick=\"$role.fn.add(\'" + data + "\')\">" +
                                         "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
 
-                                return detail + "&nbsp;" + edit;
+                                return edit;
                             }
                         }
                     ],
@@ -171,16 +171,16 @@
                             $common.fn.notify(result.msg);
                             return;
                         }
-                        $admin.v.dTable.ajax.reload();
+                        $role.v.dTable.ajax.reload();
                     }
                 });
             },
             responseComplete: function (result, action) {
                 if (result.status == "0") {
                     if (action) {
-                        $admin.v.dTable.ajax.reload(null, false);
+                        $role.v.dTable.ajax.reload(null, false);
                     } else {
-                        $admin.v.dTable.ajax.reload();
+                        $role.v.dTable.ajax.reload();
                     }
                     $leoman.notify(result.msg, "success");
                 } else {
@@ -190,7 +190,7 @@
         }
     }
     $(function () {
-        $admin.fn.init();
+        $role.fn.init();
     })
 </script>
 

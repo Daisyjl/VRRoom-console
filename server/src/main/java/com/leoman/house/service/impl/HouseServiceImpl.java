@@ -13,6 +13,7 @@ import com.leoman.image.entity.Image;
 import com.leoman.image.service.UploadImageService;
 import com.leoman.label.dao.LabelDao;
 import com.leoman.label.entity.Label;
+import com.leoman.utils.ClassUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -140,7 +141,6 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
         if(org.apache.commons.lang.StringUtils.isNotBlank(content)){
             content = content.replace("&lt", "<").replace("&gt", ">");
             house.setIntro(content);
-
         }
 
         //新增
@@ -157,6 +157,10 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
             if(h != null){
                 return new Result().failure(ErrorType.ERROR_CODE_00010);//楼盘名称已存在
             }
+
+            House org = houseDao.findOne(houseId);
+            ClassUtil.copyProperties(org, house);
+            house = org;
 
             //删除楼盘的封面图
             List<HouseImage> imageList = houseImageDao.findListByHouseId(houseId);

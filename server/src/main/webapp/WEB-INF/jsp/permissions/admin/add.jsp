@@ -198,7 +198,7 @@
                 var role_id = $("#roleId").val();
                 console.log(enterprise_id);
                 console.log(role_id);
-                if(!$("#formId").valid()) return;
+                if(!$("#formId").isValid()) return;
                 $("#formId").ajaxSubmit({
                     url : "${contextPath}/admin/admin/save",
                     data : {

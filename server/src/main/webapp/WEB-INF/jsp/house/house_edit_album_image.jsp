@@ -172,7 +172,7 @@
                 });
             },
             save : function() {
-                if(!$("#formId").valid()) return;
+                if(!$("#formId").isValid()) return;
 
                 $leoman.showLoading();
                 $("#formId").ajaxSubmit({

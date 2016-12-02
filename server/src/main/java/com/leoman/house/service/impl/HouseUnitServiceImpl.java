@@ -70,12 +70,10 @@ public class HouseUnitServiceImpl extends GenericManagerImpl<HouseUnit,HouseUnit
 
         Long unitId = houseUnit.getId();
 
-        if(unitId == null){
-            houseUnitDao.save(houseUnit);
-        }else{
-            HouseUnit unit = houseUnitDao.findOne(unitId);
-            ClassUtil.copyProperties(unit, houseUnit);
-            houseUnitDao.save(unit);
+        if(unitId != null){
+            HouseUnit orgUnit = houseUnitDao.findOne(unitId);
+            ClassUtil.copyProperties(orgUnit, houseUnit);
+            houseUnit = orgUnit;
 
             //删除已存在的多张3d户型图
             List<HouseUnitImage> houseUnitImageList = houseUnitImageDao.findByUnitId(unitId);
@@ -86,13 +84,15 @@ public class HouseUnitServiceImpl extends GenericManagerImpl<HouseUnit,HouseUnit
             }
         }
 
+        houseUnitDao.save(houseUnit);
+
         //新增多张3d户型图
         if(!StringUtils.isEmpty(d3ImageId)){
             String [] d3ImageIdArr = d3ImageId.split("\\,");
             for (String id:d3ImageIdArr) {
                 if(!StringUtils.isEmpty(id)){
                     HouseUnitImage hui = new HouseUnitImage();
-                    hui.setUnitId(unitId);
+                    hui.setUnitId(houseUnit.getId());
                     hui.setD3Image(new Image(Integer.valueOf(id)));
                     houseUnitImageDao.save(hui);
                 }

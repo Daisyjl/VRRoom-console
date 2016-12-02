@@ -76,16 +76,10 @@ public class RoleController extends GenericEntityController<Role, Role, RoleServ
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public Result save(Role role,String moduleIds) {
+    public Result save(Role role, String moduleIds) {
 
-        String[] moduleIdss = moduleIds.split(",");
-        try {
-            roleService.saveRole(role,moduleIdss);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Result.failure();
-        }
-        return Result.success();
+        Result result = roleService.saveRole(role, moduleIds);
+        return result;
     }
 
     /**

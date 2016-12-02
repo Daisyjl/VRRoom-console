@@ -37,9 +37,8 @@ public class HouseDynamicServiceImpl extends GenericManagerImpl<HouseDynamic,Hou
 
         if(dynamicId != null){
             HouseDynamic orgDynamic = houseDynamicDao.findOne(dynamicId);
-            if(orgDynamic != null){
-                houseDynamic.setHouseId(orgDynamic.getHouseId());
-            }
+            ClassUtil.copyProperties(orgDynamic, houseDynamic);
+            houseDynamic = orgDynamic;
         }
 
         houseDynamicDao.save(houseDynamic);

@@ -252,7 +252,7 @@
             },
 
             save : function() {
-                if(!$("#formId").valid()) return;
+                if(!$("#formId").isValid()) return;
                 return;
             },
 

@@ -26,6 +26,7 @@ public enum ErrorType {
     ERROR_CODE_00019("此装修类型已存在", 19),
     ERROR_CODE_00020("此价格范围已存在", 20),
     ERROR_CODE_00021("此时间范围已存在", 21),
+    ERROR_CODE_00022("该角色已存在", 22),
 
     ErrorType;
 

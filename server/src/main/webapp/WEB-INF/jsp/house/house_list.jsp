@@ -160,7 +160,7 @@
                             "data": "createDate",
                             "render": function (data) {
                                 var date = new Date(data);
-                                return date.format('yyyy-MM-dd h:m:s');
+                                return date.format('yyyy-MM-dd hh:mm');
                             }
                         },
                         {

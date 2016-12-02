@@ -79,6 +79,7 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
         query.setPagesize(length);
         query.notEq("status", 1);
         query.like("name", name);
+        query.addOrder("id", "desc");
         Page<House> page = houseService.queryPage(query);
         for (House house:page.getContent()) {
             houseService.setHouse(house);

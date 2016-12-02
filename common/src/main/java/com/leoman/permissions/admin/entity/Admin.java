@@ -1,6 +1,7 @@
 package com.leoman.permissions.admin.entity;
 
 import com.leoman.entity.BaseEntity;
+import com.leoman.permissions.role.entity.Role;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
@@ -23,12 +24,14 @@ public class Admin extends BaseEntity {
     @Column(name = "password")
     private String password = "";
 
-
     @Column(name = "last_login_date")
     private Long lastLoginDate;
 
+    @Column(name = "role_id")
+    private Long roleId;//角色
+
     @Transient
-    private String roleName;
+    private Role role;
 
     public String getUsername() {
         return username;
@@ -62,16 +65,24 @@ public class Admin extends BaseEntity {
         this.lastLoginDate = lastLoginDate;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     @Override
     public String toString() {
         return "username :" + this.username + "password:" + this.password;
+    }
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 }

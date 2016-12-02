@@ -15,6 +15,17 @@
     <meta name="author" content="">
     <title>新增/编辑角色</title>
     <%@ include file="../../inc/css.jsp" %>
+    <style type="text/css">
+        .radio label, .checkbox label {
+            padding-left: 0px;
+            margin-bottom: 0;
+            font-weight: 400;
+            cursor: pointer
+        }
+        div.checkbox{
+            margin-right: 50px;
+        }
+    </style>
 </head>
 <body>
 
@@ -37,30 +48,50 @@
                         <form id="formId" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
 
                             <input id="id" name="id" type="hidden" value="${role.id}">
-                            <input id="createDate" name="createDate" type="hidden" value="${role.createDate}">
+                            <input type="hidden" name="moduleIds" id="moduleIds" value="">
+
                             <div class="form-group">
                                 <label for="name" class="col-sm-1 control-label" >角色名称</label>
-                                <div class="col-sm-6">
+                                <div class="col-sm-2">
                                     <input type="text" id="name" name="name" value="${role.name}" class="form-control" required maxlength="20"/>
                                 </div>
                             </div>
+
                             <div class="form-group">
                                 <label for="name" class="col-sm-1 control-label" >模块授权</label>
-                                <div class="col-sm-6">
-                                    <c:forEach items="${modules}" var="module">
-                                        ${module.name}:&nbsp;
-                                        <c:forEach items="${module.list}" var="subModule">
-                                            <input type="checkbox" name="moduleIds" value="${subModule.id}" <c:if test="${fns:contains(subModule.id, subModules)}"> checked="checked" </c:if> /> ${subModule.name}
-                                            &nbsp;
-                                        </c:forEach>
-                                        <hr>
-                                    </c:forEach>
-                                </div>
                             </div>
+
+                            <c:forEach items="${modules}" var="module">
+
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label"></label>
+                                    <div class="col-sm-2 icheck minimal selectall" style="width: 180px;">
+                                        <div class="checkbox">
+                                            <input type="checkbox">
+                                            <label style="font-weight: bold;">${module.name}</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-9 icheck minimal">
+                                        <c:forEach items="${module.list}" var="subModule">
+
+                                            <div class="checkbox">
+                                                <c:if test="${fns:contains(subModule.id, subModules)}"><input type="checkbox" checked value="${subModule.id}"></c:if>
+                                                <c:if test="${!fns:contains(subModule.id, subModules)}"><input type="checkbox" value="${subModule.id}"></c:if>
+                                                <label>${subModule.name}</label>
+                                            </div>
+
+                                        </c:forEach>
+                                    </div>
+                                </div>
+
+                            </c:forEach>
+
                             <div class="form-group">
                                 <label class="col-sm-1 control-label"></label>
                                 <div class="col-sm-6">
-                                    <button type="button" onclick="$admin.fn.save()" class="btn btn-primary">保存</button>
+                                    <button type="button" onclick="$role.fn.save()" class="btn btn-primary">保存</button>
+                                    <button type="button" onclick="$role.fn.back()" class="btn btn-primary">返回</button>
                                 </div>
                             </div>
 
@@ -85,7 +116,7 @@
 
 <%@ include file="../../inc/footer.jsp" %>
 <script>
-    $admin = {
+    $role = {
         v: {
             list: [],
             chart: null,
@@ -93,37 +124,57 @@
         },
         fn: {
             init: function () {
-
-            },
-
-            save : function() {
-                if(!$("#formId").valid()) return;
-                var checked = $("input[name='moduleIds']:checkbox:checked");
-                var moduleIds = [];
-                checked.each(function(){
-                    moduleIds.push($(this).val());
+                $('.minimal input').iCheck({
+                    checkboxClass: 'icheckbox_minimal',
+                    radioClass: 'iradio_minimal',
+                    increaseArea: '20%' // optional
                 });
-                console.log("moduleIds:" + moduleIds);
+
+                $(".selectall").on('ifClicked', function(){
+                    //如果点击之前是选中的，则点击全选为取消全选
+                    if($(this).find("input").is(":checked")){
+                        $(this).next().find(".icheckbox_minimal").removeClass("checked");
+                    }
+                    //如果点击之前不是选中的，则点击全选为全选
+                    else{
+                        $(this).next().find(".icheckbox_minimal").addClass("checked");
+                    }
+                });
+            },
+            save : function() {
+                if(!$("#formId").isValid()) return;
+                var checkArr = $(".icheckbox_minimal.checked").find("input");
+                var moduleIds = [];
+                checkArr.each(function(){
+                    if($(this).val() != 'on'){
+                        moduleIds.push($(this).val());
+                    }
+                });
+                if(moduleIds.length == 0){
+                    $leoman.alertMsg("请至少选择一个菜单模块");
+                    return ;
+                }
+                $("#moduleIds").val(moduleIds);
                 $("#formId").ajaxSubmit({
                     url : "${contextPath}/admin/role/save",
-                    data : {
-                        "moduleIds" : moduleIds
-                    },
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            window.location.href = "${contextPath}/admin/role/index";
+                            $role.fn.back();
                         }
                         else {
-                            alert("操作失败");
+                            $leoman.alertMsg(result.msg);
                         }
                     }
                 });
+            },
+            back:function(){
+                window.location.href = "${contextPath}/admin/role/index";
             }
         }
     }
     $(function () {
-        $admin.fn.init();
+        $role.fn.init();
     })
 </script>
 

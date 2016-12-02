@@ -49,8 +49,6 @@
                         <form id="formId" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
 
                             <input type="hidden" name="id" value="${house.id}">
-                            <input type="hidden" name="status" value="${house.status}">
-                            <input type="hidden" name="bigImage.id" value="${house.bigImage.id}">
                             <input type="hidden" name="openTime" value="">
                             <input type="hidden" name="dealTime" value="">
                             <input type="hidden" name="privilege" value="">
@@ -134,7 +132,7 @@
 
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >开发商：</label>
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     <input type="text" name="developers" value="${house.developers}" class="form-control" />
                                 </div>
                             </div>
@@ -627,6 +625,7 @@
 
                 $("#tags_1").val(lableArr.join(","));*/
 
+                //开盘时间和交房时间
                 var openTime = $("#openTime").val();
                 var dealTime = $("#dealTime").val();
 
@@ -640,6 +639,7 @@
                     $("[name=dealTime]").val(dealDate);
                 }
 
+                //购房优惠
                 var privilArr = [];
                 $("#formId [name=privil]").each(function(){
                     privilArr.push($(this).val());
@@ -647,6 +647,7 @@
 
                 $("[name=privilege]").val(privilArr.join("|"));
 
+                //是否上门和是否直播
                 var isDoor = $("#isDoor").parent().hasClass("checked")==true?1:0;
                 $("[name=isDoor]").val(isDoor);
 
