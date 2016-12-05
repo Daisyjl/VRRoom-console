@@ -5,6 +5,8 @@ import com.leoman.common.service.GenericManager;
 import com.leoman.enterprise.entity.Enterprise;
 import com.leoman.enterprise.entity.EnterpriseSub;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Created by Administrator on 2016/9/6.
  */

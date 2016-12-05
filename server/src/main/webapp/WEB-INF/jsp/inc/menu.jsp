@@ -12,17 +12,11 @@
                 <li>
                     <a href="#"><i class="${topModule.moduleIcon}"></i> ${topModule.name}<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
-                        <c:forEach items="${topModule.list}" var="subModule">
+                        <c:forEach items="${topModule.subModuleList}" var="subModule">
                         <li>
                             <a href="${contextPath}${subModule.url}"><i class="${subModule.moduleIcon}"></i> ${subModule.name}</a>
                         </li>
                         </c:forEach>
-                        <%--<li >
-                            <a href="admin/payrecord/index"><i class="fa fa-user fa-fw"></i>缴费列表</a>
-                        </li>
-                        <li >
-                            <a href="admin/webpay/index"><i class="fa fa-user fa-fw"></i>网站收支</a>
-                        </li>--%>
                     </ul>
                 </li>
             </c:forEach>
@@ -40,31 +34,7 @@
                     </li>
                 </ul>
             </li>
-            <li>
-                <a href="#"><i class="fa fa-user fa-fw"></i>资讯管理<span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level">
-                    <li >
-                        <a href="admin/info/index"><i class="fa fa-user fa-fw"></i>资讯列表</a>
-                    </li>
-                    <li >
-                        <a href="admin/msg/index"><i class="fa fa-user fa-fw"></i>消息列表</a>
-                    </li>
-                    <li >
-                        <a href="admin/act/index"><i class="fa fa-user fa-fw"></i>活动说明</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="#"><i class="fa fa-user fa-fw"></i>抢购管理<span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level">
-                    <li >
-                        <a href="admin/pro/index"><i class="fa fa-user fa-fw"></i>抢购列表</a>
-                    </li>
-                    <li >
-                        <a href="admin/order/index"><i class="fa fa-user fa-fw"></i>订单列表</a>
-                    </li>
-                </ul>
-            </li>
+
             <li>
                 <a href="#"><i class="fa fa-user fa-fw"></i>业务员管理<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
@@ -76,19 +46,6 @@
                     </li>
                 </ul>
             </li>--%>
-            <!-- 微信菜单测试
-            <li>
-                <a href="#"><i class="fa fa-user fa-fw"></i>微信菜单测试<span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level">
-                    <li >
-                        <a href="admin/pro/index"><i class="fa fa-user fa-fw"></i>资讯列表</a>
-                    </li>
-                    <li >
-                        <a href="admin/order/index"><i class="fa fa-user fa-fw"></i>订单列表</a>
-                    </li>
-                </ul>
-            </li>
-            -->
         </ul>
     </div>
     <!-- /.sidebar-collapse -->

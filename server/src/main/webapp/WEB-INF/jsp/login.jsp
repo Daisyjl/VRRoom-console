@@ -19,7 +19,6 @@
     <!-- Bootstrap Core CSS -->
     <link href="static/css/bootstrap.min.css" rel="stylesheet">
 
-
     <!-- Custom CSS -->
     <link href="static/css/sb-admin-2.css" rel="stylesheet">
 

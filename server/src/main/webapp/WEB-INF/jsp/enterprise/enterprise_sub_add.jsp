@@ -43,14 +43,14 @@
 
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >企业账号</label>
-                                <div class="col-sm-6">
+                                <div class="col-sm-2">
                                     <input type="text" name="username" value="${enterpriseSub.username}" class="form-control" data-rule="required"/>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >所属企业</label>
-                                <div class="col-sm-6">
+                                <div class="col-sm-2">
                                     <select class="form-control" name="enterpriseId">
                                         <c:forEach items="${enterpriseList}" var="enterprise">
                                             <option value="${enterprise.id}">${enterprise.name}</option>
@@ -61,14 +61,14 @@
 
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >企业密码</label>
-                                <div class="col-sm-6">
+                                <div class="col-sm-2">
                                     <input type="password" id="password" name="password" value="" class="form-control"  data-rule="required; length(6~)"/>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >确认密码</label>
-                                <div class="col-sm-6">
+                                <div class="col-sm-2">
                                     <input type="password" id="repassword" name="" value="" class="form-control" data-rule="required; match(password);"/>
                                 </div>
                             </div>
@@ -125,6 +125,11 @@
         },
         fn: {
             init: function () {
+
+                if("${enterpriseSub.enterpriseId}" != ''){
+                    $("[name=enterpriseId] option[value="+"${enterpriseSub.enterpriseId}"+"]").attr("selected", true);
+                }
+
                 $enterpriseSub.fn.getProviceList();//初始化省份列表
 
                 //初始化省份改变事件

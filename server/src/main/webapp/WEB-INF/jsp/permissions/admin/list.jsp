@@ -68,8 +68,7 @@
                                     <th>创建时间</th>
                                     <th>手机号</th>
                                     <th>最后登录时间</th>
-                                    <th>权限</th>
-                                    <th>企业</th>
+                                    <th>角色</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
@@ -108,11 +107,6 @@
                 $("#c_search").click(function () {
                     $admin.v.dTable.ajax.reload();
                 });
-
-                $('#my_multi_select1').multiSelect();
-                $("#getOptionBtn").click(function () {
-                    $admin.fn.getOption();
-                });
             },
             dataTableInit: function () {
                 $admin.v.dTable = $leoman.dataTable($('#dataTables'), {
@@ -139,67 +133,28 @@
                                 return new Date(data).format("yyyy-MM-dd hh:mm:ss");
                             }
                         },
-                        {
-                            "data": "mobile"
-                        },
+                        {"data": "mobile"},
                         {
                             "data": "lastLoginDate",
                             "render": function (data) {
                                 return new Date(data).format("yyyy-MM-dd hh:mm:ss");
                             }
                         },
-                        {
-                            "data": "roleName",
-                            "sDefaultContent" : ""
-                        },
-                        {
-                            "data": "enterprise.name",
-                            "render" : function(data){
-                                if(data==null){
-                                    return "——";
-                                }else {
-                                    return data;
-                                }
-                            },
-                            "sDefaultContent" : ""
-                        },
+                        {"data": "role.name"},
                         {
                             "data": "id",
                             "render": function (data, type, row, meta) {
-                                if(row.username == "admin") {
-                                    return "";
-                                }
-                                else {
+                                var edit = "<button title='编辑' class='btn btn-primary edit' onclick=\"$admin.fn.add(\'" + data + "\')\">" +
+                                        "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
 
-                                    var type = $("#userType").val();
-
-                                    var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$admin.fn.detail(\'" + data + "\')\">" +
-                                            "<i class='fa fa-eye'></i> 查看</button>";
-
-                                    var edit = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.add(\'" + data + "\')\">" +
-                                            "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
-
-                                    var reset = "<button title='重置' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.reset(\'" + data + "\')\">" +
-                                            "<i class='fa fa-pencil-square-o'></i> 重置密码</button>";
-
-                                    var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.del(\'" + data + "\')\">" +
-                                            "<i class='fa fa-trash-o'></i> 删除</button>";
-
-                                    var selectRole = "<button title='赋予角色' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.openModal(\'" + data + "\')\">" +
-                                            "<i class='fa fa-exchange'></i> 赋予角色</button>";
-
-                                    if(type != "" && type != null && type ==0){
-                                        return edit  + "&nbsp;" + reset + "&nbsp;" + del;
-                                    }else {
-                                        return edit  + "&nbsp;" + del;
-                                    }
-                                }
+                                var del = "<button title='删除' class='btn btn-primary edit' onclick=\"$admin.fn.del(\'" + data + "\')\">" +
+                                        "<i class='fa fa-trash-o'></i> 删除</button>";
+                                return edit + "&nbsp;" + del;
                             }
                         }
                     ],
                     "fnServerParams": function (aoData) {
                         aoData.username = $("#username").val();
-                        aoData.enterpriseId = $("#enterpriseId").val();
                     }
                 });
             },
@@ -296,40 +251,6 @@
                 });
 
                 $("#myModal").modal("show");
-            },
-            getOption: function () {
-                var selectedValues = $("#my_multi_select1").find('option:selected').map(function () {
-                    return $(this).val();
-                }).get();
-                console.log(selectedValues);
-                $.ajax({
-                    url : "${contextPath}/admin/admin/role/save",
-                    type : 'POST',
-                    data : {
-                        'adminId' : $("#adminId").val(),
-                        'roleIds' : JSON.stringify(selectedValues)
-                    },
-                    success : function(result) {
-                        if(result.status == 0) {
-                            window.location.href = "${contextPath}/admin/admin/index";
-                        }
-                        else {
-                            alert("操作错误");
-                        }
-                    }
-                });
-            },
-            responseComplete: function (result, action) {
-                if (result.status == "0") {
-                    if (action) {
-                        $admin.v.dTable.ajax.reload(null, false);
-                    } else {
-                        $admin.v.dTable.ajax.reload();
-                    }
-                    $leoman.notify(result.msg, "success");
-                } else {
-                    $leoman.notify(result.msg, "error");
-                }
             }
         }
     }

@@ -24,4 +24,6 @@ public interface ModuleService extends GenericManager<Module>{
     public List<ModuleVo> findListModuleByUserId(Long userId);
 
     public List<ModuleVo> findInModuelIds(List<BigInteger> moduleIds);
+
+    public List<Module> findListByRoleId(Long roleId);
 }

@@ -8,9 +8,13 @@ import com.leoman.enterprise.dao.EnterpriseSubLoginDao;
 import com.leoman.enterprise.entity.EnterpriseSub;
 import com.leoman.enterprise.entity.EnterpriseSubLogin;
 import com.leoman.enterprise.service.EnterpriseSubService;
+import com.leoman.utils.ClassUtil;
+import com.leoman.utils.HttpRequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by Daisy on 2016/10/11.
@@ -39,16 +43,21 @@ public class EnterpriseSubServiceImpl extends GenericManagerImpl<EnterpriseSub,E
 
         //新增
         if(id == null){
-            EnterpriseSub es = enterpriseSubDao.findByEnterpriseAndCity(enterpriseSub.getEnterprise().getId(), enterpriseSub.getCity().getId());
+            EnterpriseSub es = enterpriseSubDao.findByEnterpriseAndCity(enterpriseSub.getEnterpriseId(), enterpriseSub.getCity().getId());
             if(es != null){
                 return new Result().failure(ErrorType.ERROR_CODE_0009);//该企业账号已存在
             }
             enterpriseSubLogin = new EnterpriseSubLogin();
         }else{
-            EnterpriseSub es = enterpriseSubDao.findByEnterpriseAndCityAndId(enterpriseSub.getEnterprise().getId(), enterpriseSub.getCity().getId(), id);
+            EnterpriseSub es = enterpriseSubDao.findByEnterpriseAndCityAndId(enterpriseSub.getEnterpriseId(), enterpriseSub.getCity().getId(), id);
             if(es != null){
                 return new Result().failure(ErrorType.ERROR_CODE_0009);//该企业账号已存在
             }
+            EnterpriseSub org = enterpriseSubDao.findOne(id);
+            ClassUtil.copyProperties(org,enterpriseSub);
+            enterpriseSub = org;
+
+            //获取对应的企业账号登录
             enterpriseSubLogin = enterpriseSubLoginDao.findByEnterpriseSubId(id);
         }
 

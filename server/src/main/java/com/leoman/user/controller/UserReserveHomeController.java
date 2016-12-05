@@ -55,6 +55,7 @@ public class UserReserveHomeController extends GenericEntityController<UserReser
         query.setPagesize(length);
         List<String> propertyName = Arrays.asList(new String[]{"user.nickname", "user.mobile", "house.name"});
         query.orLike(propertyName, searchContent);
+        query.addOrder("id", "desc");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         if(StringUtils.isNotBlank(startDate)){
             query.ge("createDate", format.parse(startDate).getTime());

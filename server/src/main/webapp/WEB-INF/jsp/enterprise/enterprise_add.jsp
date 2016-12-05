@@ -41,7 +41,7 @@
 
                             <div class="form-group">
                                 <label class="col-sm-1 control-label" >企业名称</label>
-                                <div class="col-sm-6">
+                                <div class="col-sm-2">
                                     <input type="text" name="name" value="${enterprise.name}" class="form-control" required/>
                                 </div>
                             </div>
@@ -100,7 +100,7 @@
                 $enterprise.v.um = UM.getEditor('myEditor');
             },
             save : function() {
-                if(!$("#formId").valid()) return;
+                if(!$("#formId").isValid()) return;
                 $("#intro").val($enterprise.v.um.getContent());
                 $("#formId").ajaxSubmit({
                     url : "${contextPath}/admin/enterprise/save",

@@ -65,7 +65,7 @@
                                 <tr>
                                     <th><input type="checkbox" onclick="$leoman.checkAll(this)" class="checkall"/></th>
                                     <th>企业账号</th>
-                                    <th>所属集团</th>
+                                    <th>所属企业</th>
                                     <th>所在城市</th>
                                     <th>操作</th>
                                 </tr>

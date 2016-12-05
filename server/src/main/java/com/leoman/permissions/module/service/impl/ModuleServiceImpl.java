@@ -7,6 +7,9 @@ import com.leoman.permissions.module.entity.Module;
 import com.leoman.permissions.module.entity.vo.ModuleVo;
 import com.leoman.permissions.module.service.ModuleService;
 import com.leoman.permissions.role.service.RoleService;
+import com.leoman.permissions.rolemodule.dao.RoleModuleDao;
+import com.leoman.permissions.rolemodule.entity.RoleModule;
+import com.leoman.permissions.rolemodule.service.RoleModuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,10 +25,13 @@ import java.util.*;
 public class ModuleServiceImpl extends GenericManagerImpl<Module, ModuleDao> implements ModuleService {
 
     @Autowired
-    private ModuleDao dao;
+    private ModuleDao moduleDao;
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private RoleModuleDao roleModuleDao;
 
     @Override
     public void deleteModules(Long id) {
@@ -212,5 +218,28 @@ public class ModuleServiceImpl extends GenericManagerImpl<Module, ModuleDao> imp
             code += 1000;
         }
         return code;
+    }
+
+    @Override
+    public List<Module> findListByRoleId(Long roleId){
+        List<Module> list = new ArrayList<>();
+        Map<Long, Module> moduleMap = new HashMap<>();
+        //获取角色对应的所有二级菜单
+        List<RoleModule> roleModuleList = roleModuleDao.findByRoleId(roleId);
+        for (RoleModule rm:roleModuleList) {
+            Module module = moduleDao.findOne(rm.getModuleId());
+            //获取该二级菜单对应的一级菜单
+            Module superModule = module.getSuperModule();
+            //如果该一级菜单不存在，则添加该一级菜单
+            if(moduleMap.get(superModule.getId()) == null){
+                moduleMap.put(superModule.getId(), superModule);
+            }
+            moduleMap.get(superModule.getId()).getSubModuleList().add(module);
+        }
+
+        for (Map.Entry<Long, Module> moduleVoEntry : moduleMap.entrySet()) {
+            list.add(moduleVoEntry.getValue());
+        }
+        return list;
     }
 }

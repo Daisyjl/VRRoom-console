@@ -1,7 +1,7 @@
 package com.leoman.permissions.rolemodule.dao;
 
-import com.leoman.common.core.bean.Role;
 import com.leoman.common.dao.IBaseJpaRepository;
+import com.leoman.permissions.module.entity.Module;
 import com.leoman.permissions.rolemodule.entity.RoleModule;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +22,5 @@ public interface RoleModuleDao extends IBaseJpaRepository<RoleModule>{
 
     @Query("select a from RoleModule a where a.roleId = ?1")
     public List<RoleModule> findByRoleId(Long roleId);
+
 }

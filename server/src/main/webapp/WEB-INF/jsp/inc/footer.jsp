@@ -19,7 +19,7 @@
 						<div class="col-sm-5">
 							<input type="password" class="form-control" id="oldPwd"
 								name="oldPwd"
-								data-rule="required;length[6~];remote[member/check/oldPwd]"
+								data-rule="required;length[6~];"
 								placeholder="请输入旧密码">
 						</div>
 					</div>
@@ -29,6 +29,15 @@
 							<input type="password" class="form-control" id="newPwd"
 								name="newPwd" data-rule="required;length[6~]"
 								placeholder="请输入新密码">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="newPwd" class="col-sm-3 control-label">确认新密码:</label>
+						<div class="col-sm-5">
+							<input type="password" class="form-control" id="rePwd"
+								   data-rule="required;length[6~]; match(newPwd);"
+								   placeholder="请输入确认密码">
 						</div>
 					</div>
 				</form>
@@ -110,24 +119,25 @@
 
 	function modifyPwd() {
 		if (!$('#pwdForm').isValid()) {
-			return false;
+			return ;
 		}
-		;
 		$("#pwdForm").ajaxSubmit({
-			dataType : "json",
+			url : "${contextPath}/admin/admin/updatePwd",
+			type : "POST",
 			success : function(result) {
 				if (result.status == '0') {
-					alert(result.msg)
-					location.reload();
+					$leoman.alertMsg("修改密码成功", function(){
+						window.location.reload();
+					});
 				} else {
-					$bluemobi.notify(result.msg, "error");
+					$leoman.alertMsg(result.msg);
 				}
 			}
 		})
 	}
 
 	function showModal() {
+		$("#pwdModal").find("input").val("");
 		$("#pwdModal").modal("show");
-		$bluemobi.clearForm($("#pwdModal"));
 	}
 </script>

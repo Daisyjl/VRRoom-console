@@ -62,6 +62,7 @@ public class EnterpriseSubController extends GenericEntityController<EnterpriseS
         Query query = Query.forClass(EnterpriseSub.class, enterpriseSubService);
         query.setPagenum(pagenum);
         query.setPagesize(length);
+        query.addOrder("id", "desc");
         Page<EnterpriseSub> page = enterpriseSubService.queryPage(query);
         for (EnterpriseSub es:page.getContent()) {
             Enterprise enterprise = enterpriseService.queryByPK(es.getEnterpriseId());

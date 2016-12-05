@@ -2,6 +2,8 @@ package com.leoman.permissions.module.entity;
 
 import com.leoman.entity.BaseEntity;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -37,6 +39,9 @@ public class Module extends BaseEntity{
 
     @Column(name = "status")
     private Integer status;
+
+    @Transient
+    private List<Module> subModuleList = new ArrayList<>();
 
 //    public List<Module> getSubModuleList() {
 //        return subModuleList;
@@ -100,5 +105,13 @@ public class Module extends BaseEntity{
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public List<Module> getSubModuleList() {
+        return subModuleList;
+    }
+
+    public void setSubModuleList(List<Module> subModuleList) {
+        this.subModuleList = subModuleList;
     }
 }

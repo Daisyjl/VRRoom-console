@@ -4,9 +4,7 @@ import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
-import com.leoman.enterprise.service.EnterpriseService;
 import com.leoman.entity.Constant;
-import com.leoman.pay.util.MD5Util;
 import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.permissions.admin.service.AdminService;
 import com.leoman.permissions.admin.service.impl.AdminServiceImpl;
@@ -39,9 +37,6 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
     @Autowired
     private RoleService roleService;
 
-    @Autowired
-    private EnterpriseService enterpriseService;
-
     /**
      * 列表页面
      */
@@ -52,6 +47,14 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
         return "permissions/admin/list";
     }
 
+    /**
+     * 列表
+     * @param username
+     * @param draw
+     * @param start
+     * @param length
+     * @return
+     */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> list(String username, Integer draw, Integer start, Integer length) {
@@ -71,6 +74,13 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
         return DataTableFactory.fitting(draw, page);
     }
 
+    /**
+     * 编辑
+     * @param id
+     * @param model
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Long id, Model model,HttpServletRequest request) {
         if (id != null) {
@@ -78,89 +88,21 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
             model.addAttribute("admin", admin);
         }
         //角色表
-        model.addAttribute("role",roleService.queryAll());
+        model.addAttribute("roleList",roleService.queryAll());
         return "permissions/admin/add";
     }
 
     /**
      * 保存
-     *
      * @param admin
      * @return
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public Result save(Admin admin,Long enterprise_id, Long role_id) {
-        return adminService.save(admin,enterprise_id,role_id);
+    public Result save(Admin admin) {
+        Result result = adminService.saveAdmin(admin);
+        return result;
     }
-
-    /**
-     * 验证用户名是否存在
-     *
-     * @param username
-     * @return
-     */
-    @RequestMapping(value = "/check/username", method = RequestMethod.POST)
-    @ResponseBody
-    public boolean checkUsername(String username, Long id) {
-
-        if (id != null) return true;
-
-        List<Admin> list = adminService.queryByProperty("username", username);
-        if (list != null && !list.isEmpty()) {
-            return false;
-        }
-        return true;
-    }
-
-    /*@RequestMapping(value = "/role/select", method = RequestMethod.POST)
-    @ResponseBody
-    public Result roleSelect(Long adminId) {
-        Admin admin = adminService.queryByPK(adminId);
-        List<Role> allRoleList = roleService.queryAll();
-        List<AdminRole> selectRoleList = adminRoleService.queryByProperty("adminId", admin.getId());
-        return Result.success(packagingVo(allRoleList, selectRoleList));
-    }
-
-    public Map<String, List> packagingVo(List<Role> allRoleList, List<AdminRole> selectRoleList) {
-        List<String> list = new ArrayList<String>();
-        for (AdminRole adminRole : selectRoleList) {
-            list.add(String.valueOf(adminRole.getRoleId()));
-        }
-        Map<String, List> map = new HashMap<String, List>();
-        map.put("allRoles", allRoleList);
-        map.put("hasRoels", list);
-        return map;
-    }
-
-    *//**
-     * 保存选中的角色
-     * @return
-     *//*
-    @RequestMapping(value = "/role/save", method = RequestMethod.POST)
-    @ResponseBody
-    public Result toRole(String roleIds, Long adminId) {
-
-        // 先删除改管理员所有角色
-        adminRoleService.deleteByAdminId(adminId);
-
-        Long[] ids = JsonUtil.json2Obj(roleIds,Long[].class);
-        AdminRole adminRole = null;
-        List<AdminRole> list = new ArrayList<AdminRole>();
-        for (Long id : ids) {
-            adminRole = new AdminRole();
-            adminRole.setRoleId(id);
-            adminRole.setAdminId(adminId);
-            list.add(adminRole);
-        }
-        try {
-            adminRoleService.saveList(list);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Result.failure();
-        }
-        return Result.success();
-    }*/
 
     /**
      * 删除
@@ -179,28 +121,23 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
         return new Result().success();
     }
 
-
     /**
-     * 重置密码
-     * @param id
+     * 修改密码
+     * @param request
+     * @param oldPwd
+     * @param newPwd
      * @return
      */
-    @RequestMapping(value = "/reset")
+    @RequestMapping(value = "/updatePwd", method = RequestMethod.POST)
     @ResponseBody
-    public Result reset(Long id){
-        try{
-            Admin admin = adminService.queryByPK(id);
-            admin.setPassword(MD5Util.MD5Encode("888888","UTF-8"));
-            adminService.save(admin);
-        }catch (Exception e){
-            e.printStackTrace();
-            return Result.failure();
-        }
-        return Result.success();
+    public Result updatePwd(HttpServletRequest request, String oldPwd, String newPwd) {
+
+        Admin admin = getAdmin(request);
+        Result result = adminService.updatePwd(admin.getId(), oldPwd, newPwd);
+        return result;
     }
 
-
-    public Admin getUser(HttpServletRequest request){
+    public Admin getAdmin(HttpServletRequest request){
         Admin admin = (Admin) request.getSession().getAttribute(Constant.SESSION_MEMBER_GLOBLE);
         return admin;
     }

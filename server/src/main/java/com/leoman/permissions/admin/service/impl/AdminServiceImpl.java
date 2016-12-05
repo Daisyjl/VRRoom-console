@@ -1,25 +1,16 @@
 package com.leoman.permissions.admin.service.impl;
 
+import com.leoman.common.core.ErrorType;
 import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
-import com.leoman.pay.util.MD5Util;
 import com.leoman.permissions.admin.dao.AdminDao;
 import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.permissions.admin.service.AdminService;
+import com.leoman.utils.ClassUtil;
+import com.leoman.utils.Md5Util;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.Transient;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by Administrator on 2016/3/8.
@@ -35,44 +26,46 @@ public class AdminServiceImpl extends GenericManagerImpl<Admin, AdminDao> implem
         return adminDao.findByUsername(username);
     }
 
+
     @Override
-    public Page<Admin> page(Integer pageNum, Integer pageSize) {
-        PageRequest pageRequest = new PageRequest(pageNum - 1, pageSize, Sort.Direction.DESC, "id");
-        Page<Admin> page = adminDao.findAll(new Specification<Admin>() {
-            @Override
-            public Predicate toPredicate(Root<Admin> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Predicate result = null;
-                List<Predicate> predicateList = new ArrayList<Predicate>();
+    @Transactional
+    public Result saveAdmin(Admin admin) {
+        Long adminId = admin.getId();
+        admin.setPassword(Md5Util.md5(admin.getPassword()));
 
-                if (predicateList.size() > 0) {
-                    result = cb.and(predicateList.toArray(new Predicate[]{}));
-                }
-
-                if (result != null) {
-                    query.where(result);
-                }
-                return query.getGroupRestriction();
+        if(adminId == null){
+            Admin a = adminDao.findByUsername(admin.getUsername());
+            if(a != null){
+                return Result.failure(ErrorType.ERROR_CODE_00023);//该管理员账号已存在
             }
-
-        }, pageRequest);
-
-        return page;
-    }
-
-    @Override
-    @Transient
-    public Result save(Admin admin, Long enterpriseId, Long roleId) {
-        admin.setLastLoginDate(System.currentTimeMillis());
-        try {
-            admin.setPassword(MD5Util.MD5Encode(admin.getPassword(),"UTF-8"));
-            save(admin);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Result.failure();
+            admin.setLastLoginDate(System.currentTimeMillis());
+        }else{
+            Admin a = adminDao.findByUsernameAndId(admin.getUsername(), adminId);
+            if(a != null){
+                return Result.failure(ErrorType.ERROR_CODE_00023);//该管理员账号已存在
+            }
+            Admin org = adminDao.findOne(adminId);
+            ClassUtil.copyProperties(org, admin);
+            admin = org;
         }
+
+        adminDao.save(admin);
+
         return Result.success();
     }
 
+    @Override
+    @Transactional
+    public Result updatePwd(Long adminId, String oldPwd, String newPwd) {
+        Admin admin = adminDao.findOne(adminId);
+        if(admin != null){
+            if(!admin.getPassword().equals(Md5Util.md5(oldPwd))){
+                return Result.failure(ErrorType.ERROR_CODE_0005);//旧密码错误
+            }
+            admin.setPassword(Md5Util.md5(newPwd));
+        }
+        return Result.success();
+    }
 
 
 }

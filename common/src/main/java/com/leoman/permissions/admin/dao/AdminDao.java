@@ -13,6 +13,8 @@ import javax.persistence.QueryHint;
 public interface AdminDao extends IBaseJpaRepository<Admin> {
 
     @Query("select a from Admin a where a.username = ?1")
-    @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
     public Admin findByUsername(String username);
+
+    @Query("select a from Admin a where a.username = ?1 and a.id != ?2")
+    public Admin findByUsernameAndId(String username, Long id);
 }

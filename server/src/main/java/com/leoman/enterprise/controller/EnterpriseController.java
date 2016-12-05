@@ -53,6 +53,7 @@ public class EnterpriseController extends GenericEntityController<Enterprise,Ent
         Query query = Query.forClass(Enterprise.class, enterpriseService);
         query.setPagenum(pagenum);
         query.setPagesize(length);
+        query.addOrder("id", "desc");
         Page<Enterprise> page = enterpriseService.queryPage(query);
         return DataTableFactory.fitting(draw, page);
     }

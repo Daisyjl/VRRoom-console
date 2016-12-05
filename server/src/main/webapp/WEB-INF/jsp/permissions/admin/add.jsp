@@ -37,54 +37,40 @@
                         <form id="formId" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
 
                             <input id="id" name="id" type="hidden" value="${admin.id}">
-                            <input id="createDate" name="createDate" type="hidden" value="${admin.createDate}">
+                            <%--<input id="createDate" name="createDate" type="hidden" value="${admin.createDate}">--%>
                             <div class="form-group">
                                 <label for="username" class="col-sm-1 control-label" >账号</label>
-                                <div class="col-sm-6">
-                                    <input type="text" id="username" name="username" value="${admin.username}" class="form-control" required minlength="6" maxlength="20"/>
+                                <div class="col-sm-2">
+                                    <input type="text" id="username" name="username" value="${admin.username}" class="form-control" data-rule="required; length(5~)"/>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="password" class="col-sm-1 control-label">密码</label>
-                                <div class="col-sm-6">
-                                    <input type="password" id="password" name="password" class="form-control" required minlength="6"/>
+                                <div class="col-sm-2">
+                                    <input type="password" id="password" name="password" class="form-control" data-rule="required; length(6~)"/>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="password" class="col-sm-1 control-label">确认密码</label>
-                                <div class="col-sm-6">
-                                    <input type="password" id="password2" name="password2" class="form-control" required equalTo="#password" minlength="6"/>
+                                <div class="col-sm-2">
+                                    <input type="password" id="password2" class="form-control" data-rule="required; length(6~); 确认密码: match(password);"/>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="mobile" class="col-sm-1 control-label">手机</label>
-                                <div class="col-sm-6">
-                                    <input type="text" id="mobile" name="mobile" value="${admin.mobile}" class="form-control" required mobile="true"/>
+                                <div class="col-sm-2">
+                                    <input type="text" id="mobile" name="mobile" value="${admin.mobile}" class="form-control" data-rule="required; mobile"
+                                           data-rule-mobile="[/^1[34578]\d{9}$/, '请输入正确的手机号']"/>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="roleId" class="col-sm-1 control-label">权限</label>
-                                <div class="col-sm-6">
-                                    <select class="form-control input-sm" id="roleId" name="roleId" required>
-                                        <option value="">请选择</option>
-                                        <c:forEach var="v" items="${role}">
-                                            <option value="${v.id}">${v.name}</option>
+                                <label for="roleId" class="col-sm-1 control-label">角色</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control input-sm" id="roleId" name="roleId">
+                                        <c:forEach var="role" items="${roleList}">
+                                            <option value="${role.id}">${role.name}</option>
                                         </c:forEach>
                                     </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="div_hidden" id="div_hidden" style="display: none">
-                                    <label for="enterpriseId" class="col-sm-1 control-label">企业</label>
-                                    <div class="col-sm-6">
-                                        <select class="form-control input-sm" id="enterpriseId" name="enterpriseId" required>
-                                            <option value="">请选择</option>
-                                            <c:forEach var="v" items="${enterprise}">
-                                                <option value="${v.id}">${v.name}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
                                 </div>
                             </div>
 
@@ -92,7 +78,7 @@
                                 <label class="col-sm-1 control-label"></label>
                                 <div class="col-sm-6">
                                     <button type="button" onclick="$admin.fn.save()" class="btn btn-primary">保存</button>
-                                    <button type="button" class="btn btn-primary" onclick="history.go(-1);">返回</button>
+                                    <button type="button" class="btn btn-primary" onclick="$admin.fn.back()">返回</button>
                                 </div>
                             </div>
 
@@ -125,96 +111,26 @@
         },
         fn: {
             init: function () {
-                var userType = $("#userType").val();
-                console.log("userType :"+userType);
-                var role,
-                        enterprise;
-                if(userType == 0){
-                    role = 12;
-                    enterprise = $("#userEp").val();
-                }else {
-                    role = $("#role").val();
-                    enterprise = $("#enterprise").val();
-                }
-                console.log("role :"+role);
-                console.log("enterprise :"+enterprise);
-                if(role!=null && role!=""){
-                    $("#roleId").attr("disabled",true);
-                    $("#roleId option").each(function(){
-                        if($(this).val() == role){
-                            $(this).attr("selected",true)
-                        }
-                    })
-                }
-
-                if(enterprise!=null && enterprise!=""){
-                    $("#enterpriseId").attr("disabled",true);
-                    $("#enterpriseId option").each(function(){
-                        if($(this).val() == enterprise){
-                            $(this).attr("selected",true)
-                        }
-                    })
-                }
-                $admin.fn.chk();
-                $("#roleId").change(function(){
-//                    var checkText=$("#role").find("option:selected").text();
-//                    if(checkText=="企业管理员"){
-                    $admin.fn.chk();
-                });
-
-                $("#formId").validate({
-                    rules : {
-                        username : {
-                            remote : {
-                                url : "${contextPath}/admin/admin/check/username",
-                                type : "post",
-                                data : {
-                                    "username" : function() {
-                                        return $("#username").val()
-                                    },
-                                    "id" : function() {
-                                        return $("#id").val()
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    messages : {
-                        username : {
-                            remote : "用户名已存在"
-                        }
-                    }
-                });
-            },
-            chk: function(){
-                if($("#roleId").val()==12){
-                    $("#div_hidden").css('display','block');
-                }else {
-                    $("#div_hidden").css('display','none');
+                if("${admin.roleId}" != ''){
+                    $("[name=roleId] option[value="+"${admin.roleId}"+"]").attr("selected", true);
                 }
             },
             save : function() {
-                var enterprise_id = $("#enterpriseId").val();
-                var role_id = $("#roleId").val();
-                console.log(enterprise_id);
-                console.log(role_id);
                 if(!$("#formId").isValid()) return;
                 $("#formId").ajaxSubmit({
                     url : "${contextPath}/admin/admin/save",
-                    data : {
-                        enterprise_id : enterprise_id,
-                        role_id : role_id
-                    },
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            window.location.href = "${contextPath}/admin/admin/index";
-                        }
-                        else {
-                            alert("操作失败");
+                            $admin.fn.back();
+                        }else {
+                            $leoman.alertMsg(result.msg);
                         }
                     }
                 });
+            },
+            back : function(){
+                window.location.href = "admin/admin/index";
             }
         }
     }
