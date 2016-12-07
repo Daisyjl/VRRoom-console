@@ -11,4 +11,7 @@ import java.util.List;
  */
 public interface ModuleDao extends IBaseJpaRepository<Module>{
 
+    @Query("select a from Module a where a.superModule.id = ?1 and a.status = 0")
+    public List<Module> findByPid(Long pid);
+
 }

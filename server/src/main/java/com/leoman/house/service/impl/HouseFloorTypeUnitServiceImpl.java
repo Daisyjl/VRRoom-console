@@ -26,4 +26,6 @@ public class HouseFloorTypeUnitServiceImpl extends GenericManagerImpl<HouseFloor
     public List<HouseFloorTypeUnit> findByFloorTypeId(Long floorTypeId) {
         return houseFloorTypeUnitDao.findByFloorTypeId(floorTypeId);
     }
+
+
 }

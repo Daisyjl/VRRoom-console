@@ -149,7 +149,8 @@ public class ModuleServiceImpl extends GenericManagerImpl<Module, ModuleDao> imp
             vo = new ModuleVo();
             vo.setId(module.getId());
             vo.setName(module.getName());
-            List<Module> list2 = this.queryByProperty("superModule.id", module.getId());
+//            List<Module> list2 = this.queryByProperty("superModule.id", module.getId());
+            List<Module> list2 = moduleDao.findByPid(module.getId());
             List<ModuleVo> voList2 = null;
             if (list2 != null) {
                 voList2 = new ArrayList<ModuleVo>();

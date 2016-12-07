@@ -16,6 +16,18 @@
     <title>楼信息</title>
     <%@ include file="../inc/css.jsp" %>
 
+    <style type="text/css">
+        .radio label, .checkbox label {
+            padding-left: 0px;
+            margin-bottom: 0;
+            font-weight: 400;
+            cursor: pointer
+        }
+        div.checkbox{
+            margin-right: 50px;
+        }
+    </style>
+
 </head>
 <body>
 
@@ -267,8 +279,8 @@
 
                 }
 
-                if("${ridgepole.direction}" != ''){
-                    $("#directionId option[value="+"${ridgepole.direction.id}"+"]").attr("selected", true);
+                if("${ridgepole.directionId}" != ''){
+                    $("#directionId option[value="+"${ridgepole.directionId}"+"]").attr("selected", true);
                 }
 
 
