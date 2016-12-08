@@ -63,6 +63,9 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
     @Autowired
     private RegionDao regionDao;
 
+    @Autowired
+    private HousePriceDao housePriceDao;
+
 
     private String [] allowedArr = {".jpg", ".jpeg", ".png", ".gif", "bmp"};
 
@@ -85,7 +88,7 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
             this.value = value;
         }
 
-    };
+    }
 
     @Override
     public void setHouse(House house){
@@ -159,6 +162,15 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
             }
 
             House org = houseDao.findOne(houseId);
+
+            //如果价格改变，则保存价格走势
+            if(house.getUnitPrice() != null && !house.getUnitPrice().equals(org.getUnitPrice())){
+                HousePrice housePrice = new HousePrice();
+                housePrice.setHouseId(houseId);
+                housePrice.setPrice(house.getUnitPrice());
+                housePriceDao.save(housePrice);
+            }
+
             ClassUtil.copyProperties(org, house);
             house = org;
 
@@ -171,6 +183,9 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
                     }
                 }
             }
+
+
+
 
         }
 

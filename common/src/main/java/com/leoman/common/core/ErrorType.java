@@ -28,6 +28,7 @@ public enum ErrorType {
     ERROR_CODE_00021("此时间范围已存在", 21),
     ERROR_CODE_00022("该角色已存在", 22),
     ERROR_CODE_00023("该管理员账号已存在", 23),
+    ERROR_CODE_00024("该版本号已存在", 24),
 
     ErrorType;
 
