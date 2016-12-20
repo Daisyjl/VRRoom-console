@@ -105,4 +105,20 @@
         </taglib>
     </jsp-config>
 
+    <!-- 强制SSL配置，即普通的请求也会重定向为SSL请求 -->
+    <!--<security-constraint>
+        <web-resource-collection>
+            <web-resource-name>SSL</web-resource-name>
+            <url-pattern>/admin/*</url-pattern>&lt;!&ndash; hello使用SSL &ndash;&gt;
+        </web-resource-collection>
+        <user-data-constraint>
+            <description>SSL required</description>
+            &lt;!&ndash; CONFIDENTIAL: 要保证服务器和客户端之间传输的数据不能够被修改，且不能被第三方查看到 &ndash;&gt;
+            &lt;!&ndash; INTEGRAL: 要保证服务器和client之间传输的数据不能够被修改 &ndash;&gt;
+            &lt;!&ndash; NONE: 指示容器必须能够在任一的连接上提供数据。（即用HTTP或HTTPS，由客户端来决定）&ndash;&gt;
+
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>-->
+
 </web-app>

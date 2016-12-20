@@ -101,6 +101,9 @@ public class House extends BaseEntity{
     @Column(name = "intro")
     private String intro;//简介
 
+    @Column(name = "view_url")
+    private String viewUrl;//全景链接
+
     @Transient
     private Integer roomNum;//房间数
 
@@ -337,5 +340,13 @@ public class House extends BaseEntity{
 
     public void setIsLive(Integer isLive) {
         this.isLive = isLive;
+    }
+
+    public String getViewUrl() {
+        return viewUrl;
+    }
+
+    public void setViewUrl(String viewUrl) {
+        this.viewUrl = viewUrl;
     }
 }

@@ -87,6 +87,13 @@
                             </div>
 
                             <div class="form-group">
+                                <label class="col-sm-1 control-label" >全景链接：</label>
+                                <div class="col-sm-4">
+                                    <input type="text" name="viewUrl" value="${house.viewUrl}" class="form-control"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label class="col-sm-1 control-label">楼盘特色：</label>
                                 <%--<div class="col-sm-3">
                                     <input id="tags_1" type="text" name="label" class="tags" value="${house.label}" />

@@ -183,10 +183,6 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
                     }
                 }
             }
-
-
-
-
         }
 
         //保存
@@ -207,6 +203,14 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
             if(imageIdArr.length > 0){
                 house.setBigImage(new Image(Integer.valueOf(imageIdArr[0])));
             }
+        }
+
+        //新增时新增一条楼盘价格数据
+        if(houseId == null){
+            HousePrice housePrice = new HousePrice();
+            housePrice.setHouseId(houseId);
+            housePrice.setPrice(house.getUnitPrice());
+            housePriceDao.save(housePrice);
         }
 
         return new Result().success();
