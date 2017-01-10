@@ -283,6 +283,7 @@
                                     <input type="hidden" id="longitude" name="lng" value="${house.lng}">
                                     <input type="hidden" id="latitude" name="lat" value="${house.lat}">
                                     <input type="hidden" id="district" name="district" value="${house.region.name}" data-rule="required">
+                                    <input type="hidden" id="city" name="city" value="${house.region.city.name}" data-rule="required">
                                 </div>
                                 <label class="col-sm-1 control-label" >详细地址：</label>
                                 <div class="col-sm-2">
@@ -772,6 +773,7 @@
             $("[name=address]").val(address);
             $("#longitude").val(rs.point.lng);
             $("#latitude").val(rs.point.lat);
+            $("#city").val(addComp.city);
             $("#district").val(addComp.district);
 
         });

@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartRequest;
  */
 public interface HouseService extends GenericManager<House> {
 
-    public Result saveHouse(House house, String imageIds, String district);
+    public Result saveHouse(House house, String imageIds, String district, String city);
 
     public void setHouse(House house);
 

@@ -129,13 +129,13 @@ public class HouseServiceImpl extends GenericManagerImpl<House,HouseDao> impleme
      */
     @Override
     @Transactional
-    public Result saveHouse(House house, String imageIds, String district){
+    public Result saveHouse(House house, String imageIds, String district, String city){
 
         Long houseId = house.getId();
 
         //设置省市区
-        if(!StringUtils.isEmpty(district)){
-            Region reg = regionDao.findByName(district);
+        if(!StringUtils.isEmpty(district) && !StringUtils.isEmpty(city)){
+            Region reg = regionDao.findByNameAndCity(district, city);
             house.setRegion(reg);
         }
 

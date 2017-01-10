@@ -168,9 +168,9 @@ public class HouseController extends GenericEntityController<House,House,HouseSe
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public Result save(House house, String imageIds, String district) {
+    public Result save(House house, String imageIds, String district, String city) {
 
-        Result result = houseService.saveHouse(house, imageIds, district);
+        Result result = houseService.saveHouse(house, imageIds, district, city);
         return result;
     }
 
